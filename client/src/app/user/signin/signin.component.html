@@ -1,0 +1,20 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <md-card style="width: 300px">
+    <h1>Sign in</h1>
+
+    <form #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+      <md-card-content fxLayout="column">
+          <md-input-container>
+            <input type="email" name="email" required ngModel mdInput placeholder="Email">
+          </md-input-container>
+          <md-input-container>
+            <input type="password" name="password" required ngModel mdInput placeholder="Password" minlength="6">
+          </md-input-container>
+      </md-card-content>
+      <md-card-actions fxLayoutAlign="end center">
+        <span class="color-warn">{{errorMessage}}</span>
+        <button type="submit" md-raised-button color='primary'>Sign in</button>
+      </md-card-actions>
+    </form>
+  </md-card>
+</div>
