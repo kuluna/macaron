@@ -13,5 +13,14 @@ namespace macaron.Data
         /// Constructor
         /// </summary>
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
+
+        /// <summary>
+        /// Projects
+        /// </summary>
+        public DbSet<Project> Projects { get; set; }
+        /// <summary>
+        /// Platforms
+        /// </summary>
+        public DbSet<Platform> Platforms { get; set; }
     }
 }
