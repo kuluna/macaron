@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { Router } from '@angular/router';
 
 import { environment as env } from '../../../environments/environment';
 
@@ -18,7 +19,7 @@ export class SigninComponent implements OnInit {
   // login error message
   errorMessage: string;
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private route: Router) { }
 
   ngOnInit() {
   }
@@ -30,6 +31,7 @@ export class SigninComponent implements OnInit {
     this.http.post(env.apiBaseAddress + 'api/user/signin', value).subscribe(res => {
         // success
         console.log(res.json().userName);
+        this.route.navigate(['/projects']);
     }, error => {
         // fail
         this.errorMessage = 'Invalid email or password.';

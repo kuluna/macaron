@@ -8,11 +8,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SigninComponent } from './user/signin/signin.component';
+import { ProjectsComponent } from './projects/projects.component';
+import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SigninComponent
+    SigninComponent,
+    ProjectsComponent,
+    ProjectDetailComponent
   ],
   imports: [
     BrowserModule,

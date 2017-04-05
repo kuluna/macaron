@@ -1,0 +1,12 @@
+<div style="margin: 16px">
+  <h1>Projects</h1>
+
+  <md-card>
+    <md-list>
+      <md-list-item *ngFor="let project of projects" [routerLink]="[project.id]">
+        {{project.id}}: 
+        <h3>{{project.name}}</h3>
+      </md-list-item>
+    </md-list>
+  </md-card>
+</div>
