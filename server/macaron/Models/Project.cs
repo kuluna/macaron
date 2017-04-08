@@ -22,14 +22,14 @@ namespace macaron.Models
         [Required, MinLength(1)]
         public string Name { get; set; }
         /// <summary>
-        /// Target platforms
-        /// </summary>
-        public List<Platform> Platforms { get; set; }
-        /// <summary>
         /// Arcive
         /// </summary>
         [Required]
         public bool Arcived { get; set; }
+        /// <summary>
+        /// Milestones
+        /// </summary>
+        public List<Milestone> Milestones { get; set; }
         /// <summary>
         /// Created datetime
         /// </summary>

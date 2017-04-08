@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +32,7 @@ namespace macaron.Controllers
         [HttpGet]
         public async Task<IEnumerable<Project>> Get()
         {
-            return await db.Projects.Include(p => p.Platforms).ToListAsync();
+            return await db.Projects.Include(p => p.Milestones).ToListAsync();
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace macaron.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var project = await db.Projects.Where(p => p.Id == id).Include(p => p.Platforms).SingleOrDefaultAsync();
+            var project = await db.Projects.Where(p => p.Id == id).Include(p => p.Milestones).SingleOrDefaultAsync();
             if (project == null)
             {
                 return NotFound();
@@ -112,26 +111,26 @@ namespace macaron.Controllers
         }
 
         /// <summary>
-        /// Add target platform
+        /// Add target milestone
         /// </summary>
         /// <param name="id">Project ID</param>
         /// <param name="req">Request body</param>
         /// <returns>Project</returns>
-        [HttpPost("{id}/platforms")]
-        public async Task<IActionResult> AddPlatformAsync(int id, [FromBody] PlatformCreateRequest req)
+        [HttpPost("{id}/milestones")]
+        public async Task<IActionResult> AddMilestone(int id, [FromBody] MilestoneCreateRequest req)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var project = await db.Projects.Where(p => p.Id == id).Include(p => p.Platforms).SingleOrDefaultAsync();
+            var project = await db.Projects.Where(p => p.Id == id).Include(p => p.Milestones).SingleOrDefaultAsync();
             if (project == null)
             {
                 return NotFound();
             }
             
-            project.Platforms.Add(req.ToPlatform());
+            project.Milestones.Add(req.ToMilestone());
             await db.SaveChangesAsync();
             return Created($"{HttpContext.Request.PathBase}/api/projects/{id}", project);
         }

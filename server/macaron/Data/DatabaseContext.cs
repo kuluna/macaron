@@ -19,8 +19,17 @@ namespace macaron.Data
         /// </summary>
         public DbSet<Project> Projects { get; set; }
         /// <summary>
+        /// Milestones
+        /// </summary>
+        public DbSet<Milestone> Milestones { get; set; }
+        /// <summary>
         /// Platforms
         /// </summary>
         public DbSet<Platform> Platforms { get; set; }
+        /// <summary>
+        /// Testcases
+        /// </summary>
+        public DbSet<Testcase> Testcases { get; set; }
+
     }
 }

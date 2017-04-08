@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace macaron.Models.Request
 {
@@ -20,13 +18,29 @@ namespace macaron.Models.Request
         /// <summary>
         /// Convert to model
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Project</returns>
         public Project ToProject()
         {
+            var defaultMilestone = new List<Milestone>
+            {
+                new Milestone()
+                {
+                    Name = Name,
+                    Platforms = new List<Platform>
+                    {
+                        new Platform()
+                        {
+                            Name = "default"
+                        }
+                    },
+                    Testcases = new List<Testcase>()
+                }
+            };
+
             return new Project()
             {
                 Name = Name,
-                Platforms = new List<Platform>(),
+                Milestones = defaultMilestone,
                 Arcived = false,
                 CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow
