@@ -29,7 +29,7 @@ namespace macaron.Models
         /// <summary>
         /// Milestones
         /// </summary>
-        public List<Milestone> Milestones { get; set; }
+        public virtual List<Milestone> Milestones { get; set; }
         /// <summary>
         /// Created datetime
         /// </summary>

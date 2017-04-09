@@ -43,7 +43,7 @@ namespace macaron.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var project = await db.Projects.Where(p => p.Id == id).Include(p => p.Milestones).SingleOrDefaultAsync();
+            var project = await db.Projects.Where(p => p.Id == id).Include(p => p.Milestones).FirstOrDefaultAsync();
             if (project == null)
             {
                 return NotFound();
@@ -111,7 +111,7 @@ namespace macaron.Controllers
         }
 
         /// <summary>
-        /// Add target milestone
+        /// Add milestone
         /// </summary>
         /// <param name="id">Project ID</param>
         /// <param name="req">Request body</param>
@@ -133,6 +133,35 @@ namespace macaron.Controllers
             project.Milestones.Add(req.ToMilestone());
             await db.SaveChangesAsync();
             return Created($"{HttpContext.Request.PathBase}/api/projects/{id}", project);
+        }
+
+        /// <summary>
+        /// Add target platform
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="milestoneId">Milestone ID</param>
+        /// <param name="req">Request body</param>
+        /// <returns>Project</returns>
+        [HttpPost("{projectId}/milestones/{milestoneId}/platforms")]
+        public async Task<IActionResult> AddPlatform(int projectId, int milestoneId, [FromBody] PlatformCreateRequest req)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var milestone = await db.Milestones.Where(m => m.ProjectId == projectId && m.Id == milestoneId)
+                                               .Include(m => m.Platforms)
+                                               .Include(m => m.Testcases)
+                                               .SingleOrDefaultAsync();
+            if (milestone == null)
+            {
+                return NotFound();
+            }
+
+            milestone.Platforms.Add(req.ToPlatform());
+            await db.SaveChangesAsync();
+            return Created("", milestone);
         }
     }
 }

@@ -13,6 +13,10 @@ namespace macaron.Models
         [Key]
         public int Id { get; set; }
         /// <summary>
+        /// Parent milestone ID
+        /// </summary>
+        public int MilestoneId { get; set; }
+        /// <summary>
         /// Name
         /// </summary>
         [Required, MinLength(1)]

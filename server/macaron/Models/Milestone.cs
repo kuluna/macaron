@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace macaron.Models
@@ -14,17 +15,29 @@ namespace macaron.Models
         [Key]
         public int Id { get; set; }
         /// <summary>
+        /// Parent project ID
+        /// </summary>
+        public int ProjectId { get; set; }
+        /// <summary>
         /// Name
         /// </summary>
         [Required, MinLength(1)]
         public string Name { get; set; }
         /// <summary>
-        /// Platforms
+        /// Completion date of milestone(Expect)
         /// </summary>
-        public List<Platform> Platforms { get; set; }
+        public DateTimeOffset? ExpectedCompleteDate { get; set; }
         /// <summary>
-        /// Test case
+        /// Completion date of milestone
         /// </summary>
-        public List<Testcase> Testcases { get; set; }
+        public DateTimeOffset? CompleteDate { get; set; }
+        /// <summary>
+        /// Target platforms
+        /// </summary>
+        public virtual List<Platform> Platforms { get; set; }
+        /// <summary>
+        /// Test cases
+        /// </summary>
+        public virtual List<Testcase> Testcases { get; set; }
     }
 }
