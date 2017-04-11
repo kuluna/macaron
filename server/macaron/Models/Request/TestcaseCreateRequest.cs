@@ -1,22 +1,17 @@
-﻿using System;
+﻿using macaron.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
-namespace macaron.Models
+namespace macaron.Models.Request
 {
     /// <summary>
-    /// Testcase
+    /// Request body(Testcase create)
     /// </summary>
-    public class Testcase
+    public class TestcaseCreateRequest
     {
-        /// <summary>
-        /// Id
-        /// </summary>
-        [Key]
-        public int Id { get; set; }
-        /// <summary>
-        /// Parent milestone ID
-        /// </summary>
-        public int MilestoneId { get; set; }
         /// <summary>
         /// Want you to test carefully
         /// </summary>
@@ -41,22 +36,12 @@ namespace macaron.Models
         /// </summary>
         [Required, MinLength(1)]
         public string Expect { get; set; }
-        /// <summary>
-        /// Order (ASC)
-        /// </summary>
-        [Required]
-        public int Order { get; set; }
-        /// <summary>
-        /// Last update
-        /// </summary>
-        [Required]
-        public DateTimeOffset LastUpdateDate { get; set; }
 
         /// <summary>
-        /// Copy the new testcase object(empty id)
+        /// Convert to model
         /// </summary>
-        /// <returns>New testcase object</returns>
-        public Testcase Copy()
+        /// <returns>Test case</returns>
+        public async Task<Testcase> ToTestcaseAsync(DatabaseContext db)
         {
             return new Testcase()
             {
@@ -65,8 +50,8 @@ namespace macaron.Models
                 Precondition = Precondition,
                 Test = Test,
                 Expect = Expect,
-                Order = Order,
-                LastUpdateDate = LastUpdateDate
+                Order = await db.Testcases.MaxAsync(t => t.Order) + 1,
+                LastUpdateDate = DateTimeOffset.UtcNow
             };
         }
     }

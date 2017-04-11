@@ -141,7 +141,7 @@ namespace macaron.Controllers
         /// <param name="projectId">Project ID</param>
         /// <param name="milestoneId">Milestone ID</param>
         /// <param name="req">Request body</param>
-        /// <returns>Project</returns>
+        /// <returns>Milestone</returns>
         [HttpPost("{projectId}/milestones/{milestoneId}/platforms")]
         public async Task<IActionResult> AddPlatform(int projectId, int milestoneId, [FromBody] PlatformCreateRequest req)
         {
@@ -160,6 +160,34 @@ namespace macaron.Controllers
             }
 
             milestone.Platforms.Add(req.ToPlatform());
+            await db.SaveChangesAsync();
+            return Created("", milestone);
+        }
+
+        /// <summary>
+        /// Add test case
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="milestoneId">Milestone ID</param>
+        /// <param name="req">Request body</param>
+        /// <returns>Milestone</returns>
+        [HttpPost("{projectId}/milestones/{milestoneId}/testcases")]
+        public async Task<IActionResult> AddTestcase(int projectId, int milestoneId, [FromBody] TestcaseCreateRequest req)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var milestone = await db.Milestones.Where(m => m.ProjectId == projectId && m.Id == milestoneId)
+                                               .Include(m => m.Platforms)
+                                               .Include(m => m.Testcases)
+                                               .SingleOrDefaultAsync();
+            if (milestone == null)
+            {
+                return NotFound();
+            }
+
+            milestone.Testcases.Add(await req.ToTestcaseAsync(db));
             await db.SaveChangesAsync();
             return Created("", milestone);
         }
