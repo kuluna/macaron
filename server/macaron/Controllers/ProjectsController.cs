@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using macaron.Models.Request;
 using macaron.Models.Response;
 using System;
+using macaron.Models;
 
 namespace macaron.Controllers
 {
@@ -25,6 +26,8 @@ namespace macaron.Controllers
         {
             this.db = db;
         }
+
+#region Projects
 
         /// <summary>
         /// Get all projects
@@ -111,6 +114,21 @@ namespace macaron.Controllers
             return NoContent();
         }
 
+        #endregion
+
+        #region Milestones
+
+        /// <summary>
+        /// Get all milestones
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <returns></returns>
+        [HttpGet("{projectId}/milestones")]
+        public async Task<IEnumerable<Milestone>> GetMilestones(int projectId)
+        {
+            return await db.Milestones.Where(m => m.ProjectId == projectId).ToListAsync();
+        }
+
         /// <summary>
         /// Add milestone
         /// </summary>
@@ -165,6 +183,8 @@ namespace macaron.Controllers
             return Created("", milestone);
         }
 
+#endregion
+
         /// <summary>
         /// Add test case
         /// </summary>
@@ -188,7 +208,7 @@ namespace macaron.Controllers
                 return NotFound();
             }
 
-            milestone.Testcases.Add(await req.ToTestcaseAsync(db));
+            milestone.Testcases.Add(req.ToTestcase());
             await db.SaveChangesAsync();
             return Created("", milestone);
         }

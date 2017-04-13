@@ -24,6 +24,11 @@ namespace macaron.Models
         [Required, MinLength(1)]
         public string Name { get; set; }
         /// <summary>
+        /// Progress
+        /// </summary>
+        [Required, MaxLength(3)]
+        public int Progress { get; set; }
+        /// <summary>
         /// Completion date of milestone(Expect)
         /// </summary>
         public DateTimeOffset? ExpectedCompleteDate { get; set; }

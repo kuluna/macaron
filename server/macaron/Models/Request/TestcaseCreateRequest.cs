@@ -41,7 +41,7 @@ namespace macaron.Models.Request
         /// Convert to model
         /// </summary>
         /// <returns>Test case</returns>
-        public async Task<Testcase> ToTestcaseAsync(DatabaseContext db)
+        public Testcase ToTestcase()
         {
             return new Testcase()
             {
@@ -50,7 +50,6 @@ namespace macaron.Models.Request
                 Precondition = Precondition,
                 Test = Test,
                 Expect = Expect,
-                Order = await db.Testcases.MaxAsync(t => t.Order) + 1,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
         }
