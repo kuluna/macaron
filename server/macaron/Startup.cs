@@ -58,14 +58,12 @@ namespace macaron
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })
-                .AddEntityFrameworkStores<DatabaseContext>()
-                .AddDefaultTokenProviders();
+                    .AddEntityFrameworkStores<DatabaseContext>()
+                    .AddDefaultTokenProviders();
 
             services.AddMvc();
 
             services.AddCors();
-
-            services.AddRouting(options => { options.LowercaseUrls = true; });
 
             services.AddSwaggerGen(c =>
             {
