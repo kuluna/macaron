@@ -1,9 +1,5 @@
-﻿using macaron.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
 namespace macaron.Models.Request
 {
@@ -12,6 +8,14 @@ namespace macaron.Models.Request
     /// </summary>
     public class TestcaseCreateRequest
     {
+        /// <summary>
+        /// Track the base testcase id
+        /// </summary>
+        public int? TrackingId { get; set; }
+        /// <summary>
+        /// Branch name (if null, automatically "master")
+        /// </summary>
+        public string BranchName { get; set; }
         /// <summary>
         /// Want you to test carefully
         /// </summary>
@@ -45,6 +49,11 @@ namespace macaron.Models.Request
         {
             return new Testcase()
             {
+                TrackingId = TrackingId,
+                BranchName = BranchName ?? "master",
+                IsCommited = false,
+                CommitMode = CommitMode.Add,
+                Order = int.MaxValue,
                 MoreCareful = MoreCareful,
                 Estimates = Estimates,
                 Precondition = Precondition,

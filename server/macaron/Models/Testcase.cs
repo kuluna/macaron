@@ -18,7 +18,7 @@ namespace macaron.Models
         /// <summary>
         /// Track the base testcase id
         /// </summary>
-        public int TrackingId { get; set; }
+        public int? TrackingId { get; set; }
         /// <summary>
         /// Branch name (default: master)
         /// </summary>
@@ -68,10 +68,6 @@ namespace macaron.Models
         /// </summary>
         [Required]
         public DateTimeOffset LastUpdateDate { get; set; }
-        /// <summary>
-        /// Revisions
-        /// </summary>
-        public virtual Testcase Revision { get; set; }
     }
 
     /// <summary>
