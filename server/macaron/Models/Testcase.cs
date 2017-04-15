@@ -16,6 +16,11 @@ namespace macaron.Models
         [Key]
         public int Id { get; set; }
         /// <summary>
+        /// Parent milestone ID
+        /// </summary>
+        [Required]
+        public int MilestoneId { get; set; }
+        /// <summary>
         /// Track the base testcase id
         /// </summary>
         public int? TrackingId { get; set; }

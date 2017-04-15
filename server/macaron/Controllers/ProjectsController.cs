@@ -6,7 +6,6 @@ using macaron.Data;
 using Microsoft.EntityFrameworkCore;
 using macaron.Models.Request;
 using macaron.Models.Response;
-using System;
 using macaron.Models;
 
 namespace macaron.Controllers
@@ -34,7 +33,7 @@ namespace macaron.Controllers
         /// </summary>
         /// <returns>Projects</returns>
         [HttpGet]
-        public async Task<IEnumerable<ProjectResponse>> Get()
+        public async Task<IEnumerable<ProjectResponse>> GetProjects()
         {
             return await db.Projects.AsNoTracking().Select(p => new ProjectResponse(p)).ToListAsync();
         }
@@ -45,7 +44,7 @@ namespace macaron.Controllers
         /// <param name="projectId">ID</param>
         /// <returns>Project</returns>
         [HttpGet("{projectId}")]
-        public async Task<IActionResult> Get(int projectId)
+        public async Task<IActionResult> GetProject(int projectId)
         {
             var project = await db.Projects.Where(p => p.Id == projectId).SingleOrDefaultAsync();
             if (project == null)
@@ -62,7 +61,7 @@ namespace macaron.Controllers
         /// <param name="req">Request body</param>
         /// <returns>Project</returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]ProjectCreateRequest req)
+        public async Task<IActionResult> PostProject([FromBody]ProjectCreateRequest req)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +82,7 @@ namespace macaron.Controllers
         /// <param name="req">Request body</param>
         /// <returns>Project</returns>
         [HttpPut("{projectId}")]
-        public async Task<IActionResult> Put(int projectId, [FromBody]ProjectUpdateRequest req)
+        public async Task<IActionResult> PutProject(int projectId, [FromBody]ProjectUpdateRequest req)
         {
             var project = await db.Projects.Where(p => p.Id == projectId).SingleOrDefaultAsync();
             if (project == null)
@@ -101,7 +100,7 @@ namespace macaron.Controllers
         /// </summary>
         /// <param name="projectId">ID</param>
         [HttpDelete("{projectId}")]
-        public async Task<IActionResult> Delete(int projectId)
+        public async Task<IActionResult> DeleteProject(int projectId)
         {
             var project = await db.Projects.FindAsync(projectId);
             if (project == null)
@@ -116,7 +115,7 @@ namespace macaron.Controllers
 
         #endregion
 
-        #region Milestones
+#region Milestones
 
         /// <summary>
         /// Get all milestones
@@ -127,6 +126,24 @@ namespace macaron.Controllers
         public async Task<IEnumerable<Milestone>> GetMilestones(int projectId)
         {
             return await db.Milestones.Where(m => m.ProjectId == projectId).ToListAsync();
+        }
+
+        /// <summary>
+        /// Get the milestone
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="milestoneId">Milestone ID</param>
+        /// <returns>Milestone</returns>
+        [HttpGet("{projectId}/milestones/{milestoneId}")]
+        public async Task<IActionResult> GetMilestone(int projectId, int milestoneId)
+        {
+            var milestone = await db.Milestones.Where(m => m.ProjectId == projectId && m.Id == milestoneId).SingleOrDefaultAsync();
+            if (milestone == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(milestone);
         }
 
         /// <summary>
@@ -183,7 +200,29 @@ namespace macaron.Controllers
             return Created("", milestone);
         }
 
-#endregion
+        #endregion
+
+#region Testcases
+
+        /// <summary>
+        /// Get all testcases
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="milestoneId">Milestone ID</param>
+        /// <returns>Testcases</returns>
+        [HttpGet("{projectId}/milestones/{milestoneId}/testcases")]
+        public async Task<IActionResult> GetTestcases(int projectId, int milestoneId)
+        {
+            if (!await db.Milestones.AnyAsync(m => m.ProjectId == projectId && m.Id == milestoneId))
+            {
+                return NotFound();
+            }
+
+            var testcases = await db.Testcases.Where(t => t.MilestoneId == milestoneId)
+                                              .OrderBy(t => t.Order)
+                                              .OrderByDescending(t => t.LastUpdateDate).ToListAsync();
+            return Ok(testcases);
+        }
 
         /// <summary>
         /// Add test case
@@ -192,7 +231,7 @@ namespace macaron.Controllers
         /// <param name="milestoneId">Milestone ID</param>
         /// <param name="req">Request body</param>
         /// <returns>Milestone</returns>
-        [HttpPost("{projectId}/milestones/{milestoneId}/tests")]
+        [HttpPost("{projectId}/milestones/{milestoneId}/testcases")]
         public async Task<IActionResult> AddTestcase(int projectId, int milestoneId, [FromBody] TestcaseCreateRequest req)
         {
             if (!ModelState.IsValid)
@@ -212,5 +251,7 @@ namespace macaron.Controllers
             await db.SaveChangesAsync();
             return Created("", milestone);
         }
+
+#endregion
     }
 }
