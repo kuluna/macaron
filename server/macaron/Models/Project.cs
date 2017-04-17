@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace macaron.Models
 {
@@ -21,6 +19,10 @@ namespace macaron.Models
         /// </summary>
         [Required, MinLength(1)]
         public string Name { get; set; }
+        /// <summary>
+        /// Description(markdown)
+        /// </summary>
+        public string Description { get; set; }
         /// <summary>
         /// Arcive
         /// </summary>

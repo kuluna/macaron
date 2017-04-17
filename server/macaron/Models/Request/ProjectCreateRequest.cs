@@ -14,6 +14,10 @@ namespace macaron.Models.Request
         /// </summary>
         [Required, MinLength(1)]
         public string Name { get; set; }
+        /// <summary>
+        /// Description(Markdown)
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         /// Convert to model
@@ -40,6 +44,7 @@ namespace macaron.Models.Request
             return new Project()
             {
                 Name = Name,
+                Description = Description,
                 Milestones = defaultMilestone,
                 Arcived = false,
                 CreatedDate = DateTimeOffset.UtcNow,

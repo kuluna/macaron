@@ -17,10 +17,13 @@ namespace macaron.Models.Request
         [Required, MinLength(1)]
         public string Name { get; set; }
         /// <summary>
+        /// Description(Markdown)
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
         /// Arcive
         /// </summary>
-        [Required]
-        public bool Arcived { get; set; }
+        public bool? Arcived { get; set; }
 
         /// <summary>
         /// Update data
@@ -29,7 +32,8 @@ namespace macaron.Models.Request
         public void Update(ref Project project)
         {
             project.Name = Name;
-            project.Arcived = Arcived;
+            project.Description = Description ?? project.Description;
+            project.Arcived = Arcived ?? project.Arcived;
             project.LastUpdateDate = DateTimeOffset.UtcNow;
         }
     }
