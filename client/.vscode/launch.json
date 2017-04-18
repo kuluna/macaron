@@ -5,19 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "type": "chrome",
             "request": "launch",
-            "name": "プログラムの起動",
-            "program": "${workspaceRoot}\\serve",
-            "outFiles": []
+            "name": "Launch Chrome",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceRoot}",
+            "sourceMaps": true,
+            "userDataDir": "${workspaceRoot}/.vscode/chrome",
+            "runtimeArgs": [
+                "--disable-session-crashed-bubble"
+            ]
         },
         {
-            "type": "node",
+            "name": "Attach Chrome",
+            "type": "chrome",
             "request": "attach",
-            "name": "プロセスに添付",
-            "address": "localhost",
-            "port": 5858,
-            "outFiles": []
+            "url": "http://localhost:4200",
+            "port": 9222,
+            "webRoot": "${workspaceRoot}",
+            "sourceMaps": true
         }
     ]
 }
