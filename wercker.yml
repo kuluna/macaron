@@ -1,0 +1,16 @@
+# Select docker image
+box: microsoft/aspnetcore-build
+
+build:
+  steps:
+    # Server
+    - script:
+        name: Server build
+        code: |
+          dotnet restore server
+          dotnet build server/macaron
+          dotnet build server/macaron.test
+    - script:
+        name: Server test
+        code: |
+          dotnet test server/macaron.test/macaron.test.csproj
