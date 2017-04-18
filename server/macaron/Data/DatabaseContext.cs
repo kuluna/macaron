@@ -30,6 +30,9 @@ namespace macaron.Data
         /// Testcases
         /// </summary>
         public DbSet<Testcase> Testcases { get; set; }
-
+        /// <summary>
+        /// Run test logs
+        /// </summary>
+        public DbSet<Testrun> Testruns { get; set; }
     }
 }
