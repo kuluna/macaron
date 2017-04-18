@@ -16,6 +16,10 @@ namespace macaron.Models.Response
         /// </summary>
         public string Name { get; }
         /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
         /// Arcive
         /// </summary>
         public bool Arcived { get; }
@@ -36,6 +40,7 @@ namespace macaron.Models.Response
         {
             Id = project.Id;
             Name = project.Name;
+            Description = project.Description;
             Arcived = project.Arcived;
             CreatedDate = project.CreatedDate;
             LastUpdateDate = project.LastUpdateDate;

@@ -3,6 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using macaron.Models;
+using macaron.Models.Response;
+using System;
 
 namespace macaron.test.pt
 {
@@ -151,6 +154,36 @@ namespace macaron.test.pt
         }
 
 #endregion
+
+        [TestMethod]
+        public void ResponseProject()
+        {
+            var project = new Project()
+            {
+                Id = 1,
+                Name = "res",
+                Description = "desc",
+                Arcived = true,
+                Milestones = new List<Milestone>()
+                {
+                    new Milestone()
+                    {
+                        Id = 1,
+                        Name = "res"
+                    }
+                },
+                CreatedDate = DateTimeOffset.UtcNow,
+                LastUpdateDate = DateTimeOffset.UtcNow.AddDays(1)
+            };
+
+            var res = new ProjectResponse(project);
+            Assert.AreEqual(project.Id, res.Id);
+            Assert.AreEqual(project.Name, res.Name);
+            Assert.AreEqual(project.Description, res.Description);
+            Assert.AreEqual(project.Arcived, res.Arcived);
+            Assert.AreEqual(project.CreatedDate, res.CreatedDate);
+            Assert.AreEqual(project.LastUpdateDate, res.LastUpdateDate);
+        }
 
         private (bool, List<ValidationResult>) ValidateModelState<TModel>(TModel model, bool validateAllProperties = true)
         {
