@@ -3,26 +3,17 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SigninComponent } from './user/signin/signin.component';
 import { ProjectsComponent } from './projects/projects.component';
-import { ProjectOverviewComponent } from './projects/overview/projectoverview.component';
+import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
+import { ProjectMilestonesComponent } from './projects/milestones/projectmilestones.component';
 
 const routes: Routes = [
-  {
-    path: 'user/signin',
-    component: SigninComponent
-  },
-  {
-    path: 'projects',
-    component: ProjectsComponent
-  },
-  {
-    path: 'projects/:id',
-    children: [
-      {
-        path: '', redirectTo: 'overview', pathMatch: 'full',
-      },
-      {
-        path: 'overview', component: ProjectOverviewComponent
-      }
+  { path: 'user/signin', component: SigninComponent },
+  { path: 'projects', component: ProjectsComponent },
+  { path: 'projects/:id', children: [
+      { path: '', component: ProjectDetailComponent },
+      { path: 'milestones', children: [
+        { path: '', component: ProjectMilestonesComponent }
+      ]}
     ]
   }
 ];

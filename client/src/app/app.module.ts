@@ -10,14 +10,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SigninComponent } from './user/signin/signin.component';
 import { ProjectsComponent } from './projects/projects.component';
-import { ProjectOverviewComponent } from './projects/overview/projectoverview.component';
+import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
+import { ProjectMilestonesComponent } from './projects/milestones/projectmilestones.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SigninComponent,
     ProjectsComponent,
-    ProjectOverviewComponent
+    ProjectDetailComponent,
+    ProjectMilestonesComponent
   ],
   imports: [
     BrowserAnimationsModule,
