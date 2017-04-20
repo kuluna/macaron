@@ -3,6 +3,15 @@ box: microsoft/aspnetcore-build
 
 build:
   steps:
+    # Client
+    - npm-install:
+        cwd: client/
+    - script:
+        name: Client build
+        cwd: client/
+        code: |
+          npm run lint
+          npm run build --prod
     # Server
     - script:
         name: Server build
