@@ -1,6 +1,25 @@
-<div *ngIf="project">
-  <p>
-    {{project.name}}
+<nav md-tab-nav-bar color="primary">
+  <a md-tab-link [routerLink]="['overview']" [active]="true">Overview</a>
+  <a md-tab-link [routerLink]="['milestones']">Milestones</a>
+  <a md-tab-link>Testcases</a>
+  <a md-tab-link>Testrun</a>
+</nav>
 
-  </p>
+<div *ngIf="project" style="margin: 16px">
+  <div fxLayout="row" fxLayoutAlign=" center">
+    <h2 fxFlex>{{project.name}}</h2>
+    <a md-button>EDIT</a>
+    <a md-button color="warn">DELETE</a>
+  </div>
+  <p style="margin-bottom: 16px">{{project.description}}</p>
+
+  <div fxLayout="row" fxLayoutAlign="space-around center">
+    <md-card>
+      <h3>{{project.milestones.length}} Milestone</h3>
+      <div *ngFor="let milestone of project.milestones">
+        {{milestone.name}}
+      </div>
+    </md-card>
+  </div>
+
 </div>

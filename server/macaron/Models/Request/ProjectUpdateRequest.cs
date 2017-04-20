@@ -29,7 +29,7 @@ namespace macaron.Models.Request
         /// Update data
         /// </summary>
         /// <param name="project">Project</param>
-        public void Update(ref Project project)
+        public void Update(Project project)
         {
             project.Name = Name;
             project.Description = Description ?? project.Description;

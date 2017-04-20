@@ -1,5 +1,7 @@
 <md-toolbar color="primary">
-  <span class="md-space">macaron</span>
-  <a [routerLink]="['/user/signin']">Sign in</a>
+  <span style="margin-right: 8px">macaron</span>
+  <a md-button [routerLink]="['/projects']">All projects</a>
+  <span fxFlex></span>
+  <a md-button [routerLink]="['/user/signin']">Sign in</a>
 </md-toolbar>
 <router-outlet></router-outlet>

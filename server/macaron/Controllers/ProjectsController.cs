@@ -42,17 +42,29 @@ namespace macaron.Controllers
         /// Get the project
         /// </summary>
         /// <param name="projectId">ID</param>
+        /// <param name="detail">Get the all project info</param>
         /// <returns>Project</returns>
         [HttpGet("{projectId}")]
-        public async Task<IActionResult> GetProject(int projectId)
+        public async Task<IActionResult> GetProject(int projectId, [FromQuery] bool detail = false)
         {
             var project = await db.Projects.Where(p => p.Id == projectId).SingleOrDefaultAsync();
             if (project == null)
             {
                 return NotFound();
             }
-            
-            return Ok(new ProjectResponse(project));
+
+            if (detail)
+            {
+                var milestones = await db.Milestones.Where(m => m.ProjectId == projectId)
+                                                    .Include(m => m.Platforms)
+                                                    .Include(m => m.Testcases)
+                                                    .OrderByDescending(m => m.Id).ToListAsync();
+                return Ok(new ProjectDetailResponse(project, milestones));
+            }
+            else
+            {
+                return Ok(new ProjectResponse(project));
+            }
         }
 
         /// <summary>
@@ -84,13 +96,18 @@ namespace macaron.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> PutProject(int projectId, [FromBody]ProjectUpdateRequest req)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var project = await db.Projects.Where(p => p.Id == projectId).SingleOrDefaultAsync();
             if (project == null)
             {
                 return NotFound();
             }
-
-            req.Update(ref project);
+            
+            req.Update(project);
             await db.SaveChangesAsync();
             return Ok(new ProjectResponse(project));
         }

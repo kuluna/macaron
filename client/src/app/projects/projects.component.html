@@ -4,8 +4,8 @@
   <md-card>
     <md-list>
       <md-list-item *ngFor="let project of projects" [routerLink]="[project.id]">
-        {{project.id}}: 
-        <h3>{{project.name}}</h3>
+        <h3 fxFlex>{{project.name}}</h3>
+        <span>{{project.lastUpdateDate | date}}</span>
       </md-list-item>
     </md-list>
   </md-card>

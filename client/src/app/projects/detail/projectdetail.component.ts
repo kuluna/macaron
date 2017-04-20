@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Project } from '../../apiclient.service';
+import { ProjectsClient, Project, Milestone } from '../../apiclient.service';
 
 @Component({
   selector: 'app-projectdetail',

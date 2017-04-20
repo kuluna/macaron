@@ -125,7 +125,7 @@ namespace macaron.test.pt
                  Description = "after",
                  Arcived = true
             };
-            req.Update(ref project);
+            req.Update(project);
 
             Assert.AreEqual(req.Name, project.Name);
             Assert.AreEqual(req.Description, project.Description);
@@ -146,7 +146,7 @@ namespace macaron.test.pt
             {
                 Name = "updated"
             };
-            req.Update(ref project);
+            req.Update(project);
 
             Assert.AreEqual(req.Name, project.Name);
             Assert.AreEqual("before", project.Description);

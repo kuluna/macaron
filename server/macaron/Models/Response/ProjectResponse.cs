@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace macaron.Models.Response
 {
@@ -44,6 +45,27 @@ namespace macaron.Models.Response
             Arcived = project.Arcived;
             CreatedDate = project.CreatedDate;
             LastUpdateDate = project.LastUpdateDate;
+        }
+    }
+
+    /// <summary>
+    /// Response body(project include milestones)
+    /// </summary>
+    public class ProjectDetailResponse : ProjectResponse
+    {
+        /// <summary>
+        /// Milestones
+        /// </summary>
+        public ICollection<Milestone> Milestones { get; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="project">Project model</param>
+        /// <param name="milestones">Milestones model</param>
+        public ProjectDetailResponse(Project project, ICollection<Milestone> milestones) : base(project)
+        {
+            Milestones = milestones;
         }
     }
 }

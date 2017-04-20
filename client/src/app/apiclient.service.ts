@@ -14,8 +14,8 @@ export class ProjectsClient {
                     .map(res => res.json() as Project[]);
   }
 
-  getProject(projectId: number): Observable<Project> {
-    return this.http.get(env.apiBaseAddress + 'api/projects/' + projectId)
+  getProject(projectId: number, detail = true): Observable<Project> {
+    return this.http.get(env.apiBaseAddress + 'api/projects/' + projectId + '?detail=' + detail)
                     .map(res => res.json() as Project);
   }
 
@@ -30,6 +30,7 @@ export class Project {
   Name: string;
   Description: string | null;
   Arcived: boolean;
+  Milestones: Array<Milestone>;
   CreateDate: Date;
   LastUpdateDate: Date;
 }

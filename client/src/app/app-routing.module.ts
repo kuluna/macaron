@@ -16,7 +16,14 @@ const routes: Routes = [
   },
   {
     path: 'projects/:id',
-    component: ProjectDetailComponent
+    children: [
+      {
+        path: '', redirectTo: 'overview', pathMatch: 'full',
+      },
+      {
+        path: 'overview', component: ProjectDetailComponent
+      }
+    ]
   }
 ];
 
