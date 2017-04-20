@@ -185,6 +185,31 @@ namespace macaron.test.pt
             Assert.AreEqual(project.LastUpdateDate, res.LastUpdateDate);
         }
 
+        [TestMethod]
+        public void ResponseProjectDetail()
+        {
+            var project = new Project()
+            {
+                Id = 1,
+                Name = "res",
+                Description = "desc",
+                Arcived = true,
+                Milestones = new List<Milestone>()
+                {
+                    new Milestone()
+                    {
+                        Id = 1,
+                        Name = "res"
+                    }
+                },
+                CreatedDate = DateTimeOffset.UtcNow,
+                LastUpdateDate = DateTimeOffset.UtcNow.AddDays(1)
+            };
+
+            var res = new ProjectDetailResponse(project, project.Milestones);
+            Assert.AreEqual(project.Milestones, res.Milestones);
+        }
+
         private (bool, List<ValidationResult>) ValidateModelState<TModel>(TModel model, bool validateAllProperties = true)
         {
             var result = new List<ValidationResult>();
