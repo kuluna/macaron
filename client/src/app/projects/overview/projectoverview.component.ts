@@ -3,12 +3,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectsClient, Project, Milestone } from '../../apiclient.service';
 
 @Component({
-  selector: 'app-projectdetail',
-  templateUrl: './projectdetail.component.html',
-  styleUrls: ['./projectdetail.component.scss'],
+  selector: 'app-projectoverview',
+  templateUrl: './projectoverview.component.html',
+  styleUrls: ['./projectoverview.component.scss'],
   providers: [ProjectsClient]
 })
-export class ProjectDetailComponent implements OnInit {
+export class ProjectOverviewComponent implements OnInit {
   project: Project;
 
   constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }

@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SigninComponent } from './user/signin/signin.component';
 import { ProjectsComponent } from './projects/projects.component';
-import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
+import { ProjectOverviewComponent } from './projects/overview/projectoverview.component';
 
 const routes: Routes = [
   {
@@ -21,7 +21,7 @@ const routes: Routes = [
         path: '', redirectTo: 'overview', pathMatch: 'full',
       },
       {
-        path: 'overview', component: ProjectDetailComponent
+        path: 'overview', component: ProjectOverviewComponent
       }
     ]
   }
