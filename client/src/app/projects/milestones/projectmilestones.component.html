@@ -5,6 +5,8 @@
   <a md-tab-link>Testrun</a>
 </nav>
 
-<p>
-  projectmilestones works!
-</p>
+<div *ngIf="milestones" style="margin: 16px">
+  <p>
+    {{milestones | json}}
+  </p>
+</div>

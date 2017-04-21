@@ -20,7 +20,7 @@ export class ProjectsClient {
   }
 
   getMilestones(projectId: number): Observable<Milestone[]> {
-    return this.http.get(env.apiBaseAddress + 'api/projects/' + projectId)
+    return this.http.get(env.apiBaseAddress + 'api/projects/' + projectId + '/milestones')
                     .map(res => res.json() as Milestone[]);
   }
 }
@@ -30,7 +30,7 @@ export class Project {
   Name: string;
   Description: string | null;
   Arcived: boolean;
-  Milestones: Array<Milestone>;
+  Milestones: Milestone[];
   CreateDate: Date;
   LastUpdateDate: Date;
 }
@@ -41,8 +41,8 @@ export class Milestone {
   Progress: number;
   ExpectedCompleteDate: Date;
   CompleteDate: Date;
-  Platforms: Array<Platform>;
-  Testcases: Array<Testcase>;
+  Platforms: Platform[];
+  Testcases: Testcase[];
 }
 
 export class Platform {

@@ -14,7 +14,7 @@ export class ProjectDetailComponent implements OnInit {
   constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.activeRoute.params.map(params => params['id'] as number)
+    this.activeRoute.params.map(params => params['projectId'] as number)
                            .switchMap(id => this.projectsClient.getProject(id))
                            .subscribe(project => this.project = project);
   }

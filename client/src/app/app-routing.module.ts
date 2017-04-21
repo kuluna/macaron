@@ -9,7 +9,7 @@ import { ProjectMilestonesComponent } from './projects/milestones/projectmilesto
 const routes: Routes = [
   { path: 'user/signin', component: SigninComponent },
   { path: 'projects', component: ProjectsComponent },
-  { path: 'projects/:id', children: [
+  { path: 'projects/:projectId', children: [
       { path: '', component: ProjectDetailComponent },
       { path: 'milestones', children: [
         { path: '', component: ProjectMilestonesComponent }
