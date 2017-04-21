@@ -1,0 +1,21 @@
+<nav md-tab-nav-bar color="primary">
+  <a md-tab-link [routerLink]="['./../../']">Overview</a>
+  <a md-tab-link [routerLink]="['./../']" [active]="true">Milestones</a>
+  <a md-tab-link>Testcases</a>
+  <a md-tab-link>Testrun</a>
+</nav>
+
+<div style="margin: 16px">
+  <h2>New milestone</h2>
+
+  <md-card>
+    <md-card-content>
+      <md-input-container>
+        <input type="text" [(ngModel)]="milestoneName" required mdInput placeholder="Milestone name" (keyup.enter)="createMilestone(milestoneName)">
+      </md-input-container>
+    </md-card-content>
+    <md-card-actions fxLayoutAlign="end ">
+      <button md-raised-button color="accent" (click)="createMilestone(milestoneName)">CREATE</button>
+    </md-card-actions>
+  </md-card>
+</div>

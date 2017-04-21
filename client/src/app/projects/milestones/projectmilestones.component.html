@@ -6,7 +6,31 @@
 </nav>
 
 <div *ngIf="milestones" style="margin: 16px">
-  <p>
-    {{milestones | json}}
-  </p>
+  <div fxLayout="row" fxLayoutAlign=" center" style="margin-bottom: 16px">
+    <h2 fxFlex>Milestones</h2>
+    <a md-raised-button color="primary" [routerLink]="['new']">NEW</a>
+  </div>
+
+  <md-card *ngFor="let milestone of milestones">
+    <md-card-title>{{milestone.name}}</md-card-title>
+    <md-card-subtitle>
+      <div *ngIf="milestone.expectedCompleteDate as expected; else tbd">Will complete at {{expected | date}}</div>
+      <ng-template #tbd>TBD</ng-template>
+    </md-card-subtitle>
+    <md-card-content>
+      <div style="text-align: end">{{milestone.progress}} %</div>
+      <md-progress-bar [value]="milestone.progress"></md-progress-bar>
+    </md-card-content>
+    <md-card-actions fxLayoutAlign="end ">
+      <a md-button>VIEW</a>
+      <a md-button color="accent">RUN TESTS</a>
+    </md-card-actions>
+  </md-card>
+
+
+  <hr style="margin: 32px 0" />
+
+
+  <h4>Debug area</h4>
+  {{milestones | json}}
 </div>

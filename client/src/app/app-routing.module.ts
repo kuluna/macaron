@@ -5,6 +5,7 @@ import { SigninComponent } from './user/signin/signin.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
 import { ProjectMilestonesComponent } from './projects/milestones/projectmilestones.component';
+import { ProjectMilestoneNewComponent } from './projects/milestones/new/projectmilestonenew.component';
 
 const routes: Routes = [
   { path: 'user/signin', component: SigninComponent },
@@ -12,7 +13,8 @@ const routes: Routes = [
   { path: 'projects/:projectId', children: [
       { path: '', component: ProjectDetailComponent },
       { path: 'milestones', children: [
-        { path: '', component: ProjectMilestonesComponent }
+        { path: '', component: ProjectMilestonesComponent },
+        { path: 'new', component: ProjectMilestoneNewComponent }
       ]}
     ]
   }

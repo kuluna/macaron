@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProjectsClient, Milestone, Platform, Testcase } from '../../apiclient.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { ProjectsClient, Milestone, Platform, Testcase } from '../../apiclient.s
   providers: [ProjectsClient]
 })
 export class ProjectMilestonesComponent implements OnInit {
-  milestones: Array<Milestone>;
+  milestones: Milestone[];
 
   constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }
 

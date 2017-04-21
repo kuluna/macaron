@@ -12,6 +12,7 @@ import { SigninComponent } from './user/signin/signin.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
 import { ProjectMilestonesComponent } from './projects/milestones/projectmilestones.component';
+import { ProjectMilestoneNewComponent } from './projects/milestones/new/projectmilestonenew.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ProjectMilestonesComponent } from './projects/milestones/projectmilesto
     SigninComponent,
     ProjectsComponent,
     ProjectDetailComponent,
-    ProjectMilestonesComponent
+    ProjectMilestonesComponent,
+    ProjectMilestoneNewComponent
   ],
   imports: [
     BrowserAnimationsModule,
