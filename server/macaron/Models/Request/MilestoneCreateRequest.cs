@@ -14,6 +14,10 @@ namespace macaron.Models.Request
         /// </summary>
         [Required, MinLength(1)]
         public string Name { get; set; }
+        /// <summary>
+        /// Completion date of milestone(Expect)
+        /// </summary>
+        public DateTimeOffset? ExpectedCompleteDate { get; set; }
 
         /// <summary>
         /// Convert to model
@@ -24,6 +28,7 @@ namespace macaron.Models.Request
             return new Milestone()
             {
                 Name = Name,
+                ExpectedCompleteDate = ExpectedCompleteDate,
                 Testcases = new List<Testcase>()
             };
         }

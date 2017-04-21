@@ -9,13 +9,16 @@
   <h2>New milestone</h2>
 
   <md-card>
-    <md-card-content>
+    <md-card-content fxLayout="column">
       <md-input-container>
-        <input type="text" [(ngModel)]="milestoneName" required mdInput placeholder="Milestone name" (keyup.enter)="createMilestone(milestoneName)">
+        <input type="text" [(ngModel)]="name" required mdInput placeholder="Milestone name">
+      </md-input-container>
+      <md-input-container>
+        <input type="date" [(ngModel)]="dueDate" mdInput placeholder="Due date">
       </md-input-container>
     </md-card-content>
     <md-card-actions fxLayoutAlign="end ">
-      <button md-raised-button color="accent" (click)="createMilestone(milestoneName)">CREATE</button>
+      <button md-raised-button color="accent" (click)="createMilestone(name, dueDate)">CREATE</button>
     </md-card-actions>
   </md-card>
 </div>

@@ -81,4 +81,5 @@ export enum CommitMode {
 
 export class MilestoneCreateRequest {
   name: string;
+  expectedCompleteDate: Date | null;
 }
