@@ -66,16 +66,6 @@ namespace macaron.test.pt
             Assert.IsFalse(project.Arcived);
             Assert.IsNotNull(project.CreatedDate);
             Assert.IsNotNull(project.LastUpdateDate);
-
-            var milestone = project.Milestones.First();
-            Assert.AreEqual(project.Name, milestone.Name);
-            Assert.AreEqual(0, milestone.Progress);
-            Assert.IsNull(milestone.ExpectedCompleteDate);
-            Assert.IsNull(milestone.CompleteDate);
-            Assert.AreEqual(0, milestone.Testcases.Count);
-
-            var platform = milestone.Platforms.First();
-            Assert.AreEqual("default", platform.Name);
         }
 
 #endregion
@@ -164,12 +154,14 @@ namespace macaron.test.pt
                 Name = "res",
                 Description = "desc",
                 Arcived = true,
-                Milestones = new List<Milestone>()
+                Testcases = new List<Testcase>()
                 {
-                    new Milestone()
+                    new Testcase()
                     {
                         Id = 1,
-                        Name = "res"
+                        ProjectId = 1,
+                        Test = "testing",
+                        Expect = "all ok"
                     }
                 },
                 CreatedDate = DateTimeOffset.UtcNow,
@@ -194,20 +186,22 @@ namespace macaron.test.pt
                 Name = "res",
                 Description = "desc",
                 Arcived = true,
-                Milestones = new List<Milestone>()
+                Testcases = new List<Testcase>()
                 {
-                    new Milestone()
+                    new Testcase()
                     {
                         Id = 1,
-                        Name = "res"
+                        ProjectId = 1,
+                        Test = "testing",
+                        Expect = "all ok"
                     }
                 },
                 CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow.AddDays(1)
             };
 
-            var res = new ProjectDetailResponse(project, project.Milestones);
-            Assert.AreEqual(project.Milestones, res.Milestones);
+            var res = new ProjectDetailResponse(project, project.Testcases);
+            Assert.AreEqual(project.Testcases, res.Testcases);
         }
 
         private (bool, List<ValidationResult>) ValidateModelState<TModel>(TModel model, bool validateAllProperties = true)
