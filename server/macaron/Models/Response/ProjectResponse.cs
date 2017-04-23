@@ -56,16 +56,16 @@ namespace macaron.Models.Response
         /// <summary>
         /// Milestones
         /// </summary>
-        public ICollection<Milestone> Milestones { get; }
+        public ICollection<Testcase> Testcases { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="project">Project model</param>
-        /// <param name="milestones">Milestones model</param>
-        public ProjectDetailResponse(Project project, ICollection<Milestone> milestones) : base(project)
+        /// <param name="testcases">Testcase model</param>
+        public ProjectDetailResponse(Project project, ICollection<Testcase> testcases) : base(project)
         {
-            Milestones = milestones;
+            Testcases = testcases;
         }
     }
 }

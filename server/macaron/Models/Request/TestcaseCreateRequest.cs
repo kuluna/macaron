@@ -13,6 +13,10 @@ namespace macaron.Models.Request
         /// </summary>
         public int? TrackingId { get; set; }
         /// <summary>
+        /// Section
+        /// </summary>
+        public string SectionName { get; set; }
+        /// <summary>
         /// Branch name (if null, automatically "master")
         /// </summary>
         public string BranchName { get; set; }
@@ -50,6 +54,7 @@ namespace macaron.Models.Request
             return new Testcase()
             {
                 TrackingId = TrackingId,
+                SectionName = SectionName,
                 BranchName = BranchName ?? "master",
                 IsCommited = false,
                 CommitMode = CommitMode.Add,

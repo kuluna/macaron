@@ -16,10 +16,10 @@ namespace macaron.Models
         [Key]
         public int Id { get; set; }
         /// <summary>
-        /// Parent milestone ID
+        /// Parent project ID
         /// </summary>
         [Required]
-        public int MilestoneId { get; set; }
+        public int ProjectId { get; set; }
         /// <summary>
         /// Track the base testcase id
         /// </summary>
@@ -44,6 +44,10 @@ namespace macaron.Models
         /// </summary>
         [Required]
         public int Order { get; set; }
+        /// <summary>
+        /// Section
+        /// </summary>
+        public string SectionName { get; set; }
         /// <summary>
         /// Want you to test carefully
         /// </summary>

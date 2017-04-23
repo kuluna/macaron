@@ -25,27 +25,10 @@ namespace macaron.Models.Request
         /// <returns>Project</returns>
         public Project ToProject()
         {
-            var defaultMilestone = new List<Milestone>
-            {
-                new Milestone()
-                {
-                    Name = Name,
-                    Platforms = new List<Platform>
-                    {
-                        new Platform()
-                        {
-                            Name = "default"
-                        }
-                    },
-                    Testcases = new List<Testcase>()
-                }
-            };
-
             return new Project()
             {
                 Name = Name,
                 Description = Description,
-                Milestones = defaultMilestone,
                 Arcived = false,
                 CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow

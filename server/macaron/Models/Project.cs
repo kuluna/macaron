@@ -29,9 +29,9 @@ namespace macaron.Models
         [Required]
         public bool Arcived { get; set; }
         /// <summary>
-        /// Milestones
+        /// Testcases
         /// </summary>
-        public virtual List<Milestone> Milestones { get; set; }
+        public virtual ICollection<Testcase> Testcases { get; set; }
         /// <summary>
         /// Created datetime
         /// </summary>

@@ -55,11 +55,9 @@ namespace macaron.Controllers
 
             if (detail)
             {
-                var milestones = await db.Milestones.Where(m => m.ProjectId == projectId)
-                                                    .Include(m => m.Platforms)
-                                                    .Include(m => m.Testcases)
-                                                    .OrderByDescending(m => m.Id).ToListAsync();
-                return Ok(new ProjectDetailResponse(project, milestones));
+                var testcases = await db.Testcases.Where(m => m.ProjectId == projectId)
+                                                  .OrderByDescending(m => m.Id).ToListAsync();
+                return Ok(new ProjectDetailResponse(project, testcases));
             }
             else
             {
@@ -131,144 +129,51 @@ namespace macaron.Controllers
         }
 
         #endregion
-
-#region Milestones
-
-        /// <summary>
-        /// Get all milestones
-        /// </summary>
-        /// <param name="projectId">Project ID</param>
-        /// <returns></returns>
-        [HttpGet("{projectId}/milestones")]
-        public async Task<IEnumerable<Milestone>> GetMilestones(int projectId)
-        {
-            return await db.Milestones.Where(m => m.ProjectId == projectId).ToListAsync();
-        }
-
-        /// <summary>
-        /// Get the milestone
-        /// </summary>
-        /// <param name="projectId">Project ID</param>
-        /// <param name="milestoneId">Milestone ID</param>
-        /// <returns>Milestone</returns>
-        [HttpGet("{projectId}/milestones/{milestoneId}")]
-        public async Task<IActionResult> GetMilestone(int projectId, int milestoneId)
-        {
-            var milestone = await db.Milestones.Where(m => m.ProjectId == projectId && m.Id == milestoneId).SingleOrDefaultAsync();
-            if (milestone == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(milestone);
-        }
-
-        /// <summary>
-        /// Add milestone
-        /// </summary>
-        /// <param name="projectId">Project ID</param>
-        /// <param name="req">Request body</param>
-        /// <returns>Project</returns>
-        [HttpPost("{projectId}/milestones")]
-        public async Task<IActionResult> AddMilestone(int projectId, [FromBody] MilestoneCreateRequest req)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var project = await db.Projects.Where(p => p.Id == projectId).Include(p => p.Milestones).SingleOrDefaultAsync();
-            if (project == null)
-            {
-                return NotFound();
-            }
-            
-            project.Milestones.Add(req.ToMilestone());
-            await db.SaveChangesAsync();
-            return Created($"{HttpContext.Request.PathBase}/api/projects/{projectId}", project);
-        }
-
-        /// <summary>
-        /// Add target platform
-        /// </summary>
-        /// <param name="projectId">Project ID</param>
-        /// <param name="milestoneId">Milestone ID</param>
-        /// <param name="req">Request body</param>
-        /// <returns>Milestone</returns>
-        [HttpPost("{projectId}/milestones/{milestoneId}/platforms")]
-        public async Task<IActionResult> AddPlatform(int projectId, int milestoneId, [FromBody] PlatformCreateRequest req)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var milestone = await db.Milestones.Where(m => m.ProjectId == projectId && m.Id == milestoneId)
-                                               .Include(m => m.Platforms)
-                                               .Include(m => m.Testcases)
-                                               .SingleOrDefaultAsync();
-            if (milestone == null)
-            {
-                return NotFound();
-            }
-
-            milestone.Platforms.Add(req.ToPlatform());
-            await db.SaveChangesAsync();
-            return Created("", milestone);
-        }
-
-        #endregion
-
+        
 #region Testcases
 
         /// <summary>
         /// Get all testcases
         /// </summary>
         /// <param name="projectId">Project ID</param>
-        /// <param name="milestoneId">Milestone ID</param>
         /// <returns>Testcases</returns>
-        [HttpGet("{projectId}/milestones/{milestoneId}/testcases")]
-        public async Task<IActionResult> GetTestcases(int projectId, int milestoneId)
+        [HttpGet("{projectId}/testcases")]
+        public async Task<ICollection<Testcase>> GetTestcases(int projectId)
         {
-            if (!await db.Milestones.AnyAsync(m => m.ProjectId == projectId && m.Id == milestoneId))
-            {
-                return NotFound();
-            }
-
-            var testcases = await db.Testcases.Where(t => t.MilestoneId == milestoneId)
-                                              .OrderBy(t => t.Order)
-                                              .OrderByDescending(t => t.LastUpdateDate).ToListAsync();
-            return Ok(testcases);
+            return await db.Testcases.Where(t => t.ProjectId == projectId)
+                                     .OrderBy(t => t.Order)
+                                     .OrderByDescending(t => t.LastUpdateDate).ToListAsync();
         }
 
         /// <summary>
         /// Add test case
         /// </summary>
         /// <param name="projectId">Project ID</param>
-        /// <param name="milestoneId">Milestone ID</param>
         /// <param name="req">Request body</param>
         /// <returns>Milestone</returns>
-        [HttpPost("{projectId}/milestones/{milestoneId}/testcases")]
-        public async Task<IActionResult> AddTestcase(int projectId, int milestoneId, [FromBody] TestcaseCreateRequest req)
+        [HttpPost("{projectId}/testcases")]
+        public async Task<IActionResult> AddTestcase(int projectId, [FromBody] TestcaseCreateRequest req)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var milestone = await db.Milestones.Where(m => m.ProjectId == projectId && m.Id == milestoneId)
-                                               .Include(m => m.Platforms)
-                                               .Include(m => m.Testcases)
-                                               .SingleOrDefaultAsync();
-            if (milestone == null)
+
+            var project = await db.Projects.Where(p => p.Id == projectId)
+                                           .Include(p => p.Testcases)
+                                           .SingleOrDefaultAsync();
+            if (project == null)
             {
                 return NotFound();
             }
 
-            milestone.Testcases.Add(req.ToTestcase());
+            var testcase = req.ToTestcase();
+            project.Testcases.Add(testcase);
             await db.SaveChangesAsync();
-            return Created("", milestone);
+            return Created($"/api/{projectId}/testcases/{testcase.Id}", testcase);
         }
 
 #endregion
+
     }
 }
