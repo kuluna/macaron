@@ -11,8 +11,7 @@ import { AppComponent } from './app.component';
 import { SigninComponent } from './user/signin/signin.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
-import { ProjectMilestonesComponent } from './projects/milestones/projectmilestones.component';
-import { ProjectMilestoneNewComponent } from './projects/milestones/new/projectmilestonenew.component';
+import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases.component';
 
 @NgModule({
   declarations: [
@@ -20,8 +19,7 @@ import { ProjectMilestoneNewComponent } from './projects/milestones/new/projectm
     SigninComponent,
     ProjectsComponent,
     ProjectDetailComponent,
-    ProjectMilestonesComponent,
-    ProjectMilestoneNewComponent
+    ProjectTestcasesComponent
   ],
   imports: [
     BrowserAnimationsModule,

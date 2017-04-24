@@ -1,7 +1,6 @@
 <nav md-tab-nav-bar color="primary">
   <a md-tab-link [routerLink]="['./']" [active]="true">Overview</a>
-  <a md-tab-link [routerLink]="['milestones']">Milestones</a>
-  <a md-tab-link>Testcases</a>
+  <a md-tab-link [routerLink]="['testcases']">Testcases</a>
   <a md-tab-link>Testrun</a>
 </nav>
 
@@ -15,10 +14,7 @@
 
   <div fxLayout="row" fxLayoutAlign="space-around center">
     <md-card>
-      <h3>{{project.milestones.length}} Milestone</h3>
-      <div *ngFor="let milestone of project.milestones">
-        {{milestone.name}}
-      </div>
+      <h3>{{project.testcases.length}} testcases</h3>
     </md-card>
   </div>
 
