@@ -2,11 +2,11 @@
   <h1>Projects</h1>
 
   <md-card>
-    <md-list>
+    <md-nav-list>
       <md-list-item *ngFor="let project of projects" [routerLink]="[project.id]">
         <h3 fxFlex>{{project.name}}</h3>
         <span>{{project.lastUpdateDate | date}}</span>
       </md-list-item>
-    </md-list>
+    </md-nav-list>
   </md-card>
 </div>
