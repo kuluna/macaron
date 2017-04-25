@@ -5,5 +5,32 @@
 </nav>
 
 <app-bodycontent>
-  <h3>New testcase</h3>
+    <h2>New Testcase</h2>
+
+    <md-card>
+      <md-card-content fxLayout="column">
+        <div fxLayout="row" fxLayoutAlign=" center">
+          <md-input-container fxFlex>
+            <input mdInput placeholder="Section name">
+          </md-input-container>
+          <md-slide-toggle style="margin-left: 16px">More careful</md-slide-toggle>
+        </div>
+        <md-input-container>
+          <input type="number" step="0.1" min="0" value="0" required mdInput placeholder="Estimates (hour)">
+        </md-input-container>
+        <md-input-container>
+          <textarea mdInput placeholder="Precondition"></textarea>
+        </md-input-container>
+        <md-input-container>
+          <textarea required rows="4" mdInput placeholder="Test"></textarea>
+        </md-input-container>
+        <md-input-container>
+          <textarea required rows="4" mdInput placeholder="Expect"></textarea>
+        </md-input-container>
+      </md-card-content>
+
+      <md-card-actions fxLayoutAlign="end ">
+        <button md-raised-button color="primary">CREATE</button>
+      </md-card-actions>
+    </md-card>
 </app-bodycontent>
