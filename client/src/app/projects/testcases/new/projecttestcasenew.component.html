@@ -35,6 +35,7 @@
 
         <md-card-actions fxLayoutAlign="end center">
           <div [hidden]="!submitting"><md-spinner color="accent" style="width:24px;height: 24px"></md-spinner></div>
+          <md-checkbox [(ngModel)]="moreCreate" [ngModelOptions]="{standalone: true}" style="margin-right: 16px">More</md-checkbox>
           <button type="submit" [disabled]="!testcaseForm.form.valid || submitting" md-raised-button color="primary">CREATE</button>
         </md-card-actions>
       </form>
