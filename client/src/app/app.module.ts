@@ -8,18 +8,24 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BodyContentComponent } from './bodycontent.component';
+
 import { SigninComponent } from './user/signin/signin.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
 import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases.component';
+import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    BodyContentComponent,
     SigninComponent,
     ProjectsComponent,
     ProjectDetailComponent,
-    ProjectTestcasesComponent
+    ProjectTestcasesComponent,
+    ProjectTestcaseNewComponent
   ],
   imports: [
     BrowserAnimationsModule,
