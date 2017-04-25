@@ -23,6 +23,11 @@ export class ProjectsClient {
     return this.http.get(env.apiBaseAddress + 'api/projects/' + projectId + '/testcases')
                     .map(res => res.json() as Testcase[]);
   }
+
+  postTestcase(projectId: number, body: TestcaseCreateRequest): Observable<Testcase> {
+    return this.http.post(env.apiBaseAddress + 'api/projects/' + projectId + '/testcases', body)
+                    .map(res => res.json() as Testcase);
+  }
 }
 
 // models
@@ -56,4 +61,17 @@ export class Testcase {
 
 export enum CommitMode {
   Add, Modify, Delete
+}
+
+// requests
+
+export class TestcaseCreateRequest {
+  trackingId: number | null;
+  sectionName: string | null;
+  branchName: string;
+  moreCareful: boolean;
+  estimates: number;
+  precondition: string | null;
+  test: string;
+  expect: string;
 }

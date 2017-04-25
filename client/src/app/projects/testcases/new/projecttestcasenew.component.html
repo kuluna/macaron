@@ -8,29 +8,35 @@
     <h2>New Testcase</h2>
 
     <md-card>
-      <md-card-content fxLayout="column">
-        <div fxLayout="row" fxLayoutAlign=" center">
-          <md-input-container fxFlex>
-            <input mdInput placeholder="Section name">
+      <form #testcaseForm="ngForm" (ngSubmit)="onSubmit(testcaseForm.value, testcaseForm)">
+        <md-card-content fxLayout="column">
+          <div fxLayout="row" fxLayoutAlign=" center">
+            <md-input-container fxFlex>
+              <input name="sectionName" ngModel mdInput placeholder="Section name">
+            </md-input-container>
+            <md-slide-toggle name="moreCareful" ngModel color="primary" style="margin-left: 16px">More careful</md-slide-toggle>
+          </div>
+          <md-input-container>
+            <input type="number" step="0.1" min="0" required name="estimates" ngModel="0" mdInput placeholder="Estimates (hour)">
+            <md-error>Required.</md-error>
           </md-input-container>
-          <md-slide-toggle style="margin-left: 16px">More careful</md-slide-toggle>
-        </div>
-        <md-input-container>
-          <input type="number" step="0.1" min="0" value="0" required mdInput placeholder="Estimates (hour)">
-        </md-input-container>
-        <md-input-container>
-          <textarea mdInput placeholder="Precondition"></textarea>
-        </md-input-container>
-        <md-input-container>
-          <textarea required rows="4" mdInput placeholder="Test"></textarea>
-        </md-input-container>
-        <md-input-container>
-          <textarea required rows="4" mdInput placeholder="Expect"></textarea>
-        </md-input-container>
-      </md-card-content>
+          <md-input-container>
+            <textarea rows="4" name="precondition" ngModel mdInput placeholder="Precondition"></textarea>
+          </md-input-container>
+          <md-input-container>
+            <textarea required rows="4" name="test" ngModel mdInput placeholder="Test"></textarea>
+            <md-error>Required.</md-error>
+          </md-input-container>
+          <md-input-container>
+            <textarea required rows="4" name="expect" ngModel mdInput placeholder="Expect"></textarea>
+            <md-error>Required.</md-error>
+          </md-input-container>
+        </md-card-content>
 
-      <md-card-actions fxLayoutAlign="end ">
-        <button md-raised-button color="primary">CREATE</button>
-      </md-card-actions>
+        <md-card-actions fxLayoutAlign="end center">
+          <div [hidden]="!submitting"><md-spinner color="accent" style="width:24px;height: 24px"></md-spinner></div>
+          <button type="submit" [disabled]="!testcaseForm.form.valid || submitting" md-raised-button color="primary">CREATE</button>
+        </md-card-actions>
+      </form>
     </md-card>
 </app-bodycontent>

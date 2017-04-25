@@ -11,11 +11,6 @@ import { environment as env } from '../../../environments/environment';
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
-  private signin = new FormGroup({
-    email: new FormControl('email', Validators.email),
-    password: new FormControl('password', Validators.required)
-  });
-
   // login error message
   errorMessage: string;
 
