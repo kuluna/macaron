@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace macaron.Models
@@ -77,6 +78,10 @@ namespace macaron.Models
         /// </summary>
         [Required]
         public DateTimeOffset LastUpdateDate { get; set; }
+        /// <summary>
+        /// History the test results
+        /// </summary>
+        public virtual ICollection<Testrun> Testruns { get; set; }
     }
 
     /// <summary>

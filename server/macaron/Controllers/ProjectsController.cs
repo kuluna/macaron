@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using macaron.Models.Request;
 using macaron.Models.Response;
 using macaron.Models;
+using System;
 
 namespace macaron.Controllers
 {
@@ -175,5 +176,52 @@ namespace macaron.Controllers
 
 #endregion
 
+        
+        [HttpPost("{projectId}/testruns")]
+        public async Task<IActionResult> PostTestruns(int projectId, IEnumerable<TestrunCreateRequest> req)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var testruns = TestrunCreateRequest.ToTestruns(req);
+
+            var testcases = await db.Testcases.Where(t => t.ProjectId == projectId)
+                                              .Include(t => t.Testruns)
+                                              .ToListAsync();
+
+            // extract id
+            var runIds = testruns.Select(run => run.TestcaseId).Distinct();
+            var testIds = testcases.Select(test => test.Id);
+
+            if (runIds.Except(testIds).Count() > 0)
+            {
+                return NotFound("Contains the testcase id does not exist.");
+            }
+
+            return Ok();
+        }
+
+        public async Task<IActionResult> PostTestrun(int projectId, TestrunCreateRequest req)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var testcase = await db.Testcases.Where(t => t.ProjectId == projectId && t.Id == req.TestCaseId)
+                                             .Include(t => t.Testruns)
+                                             .SingleOrDefaultAsync();
+            if (testcase == null)
+            {
+                return NotFound();
+            }
+
+            var testrun = req.ToTestrun();
+            testcase.Testruns.Add(testrun);
+            await db.SaveChangesAsync();
+
+            return Ok(testrun);
+        }
     }
 }

@@ -16,15 +16,14 @@ namespace macaron.Models
         [Key]
         public int Id { get; set; }
         /// <summary>
-        /// Parent milestone ID
-        /// </summary>
-        [Required]
-        public int MilestoneId { get; set; }
-        /// <summary>
         /// To record test ID
         /// </summary>
         [Required]
         public int TestcaseId { get; set; }
+        /// <summary>
+        /// Parent milestone ID
+        /// </summary>
+        public int? MilestoneId { get; set; }
         /// <summary>
         /// Test result
         /// </summary>
@@ -35,6 +34,11 @@ namespace macaron.Models
         /// </summary>
         [Required]
         public Guid TestUserId { get; set; }
+        /// <summary>
+        /// Created
+        /// </summary>
+        [Required]
+        public DateTimeOffset CreatedDate { get; set; }
         /// <summary>
         /// Last update
         /// </summary>
