@@ -27,7 +27,7 @@ namespace macaron.Models
         /// <summary>
         /// Test result
         /// </summary>
-        [Required, JsonConverter(typeof(StringEnumConverter))]
+        [Required]
         public TestResult Result { get; set; }
         /// <summary>
         /// Test user ID
@@ -49,6 +49,7 @@ namespace macaron.Models
     /// <summary>
     /// Test status
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum TestResult
     {
         /// <summary>

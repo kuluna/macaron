@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using macaron.Models.Request;
 using macaron.Models.Response;
 using macaron.Models;
-using System;
 
 namespace macaron.Controllers
 {
@@ -139,11 +138,15 @@ namespace macaron.Controllers
         /// <param name="projectId">Project ID</param>
         /// <returns>Testcases</returns>
         [HttpGet("{projectId}/testcases")]
-        public async Task<ICollection<Testcase>> GetTestcases(int projectId)
+        public async Task<ICollection<TestcaseResponse>> GetTestcases(int projectId)
         {
             return await db.Testcases.Where(t => t.ProjectId == projectId)
+                                     .Include(t => t.Testruns)
                                      .OrderBy(t => t.Order)
-                                     .OrderByDescending(t => t.LastUpdateDate).ToListAsync();
+                                     .OrderByDescending(t => t.LastUpdateDate)
+                                     .AsNoTracking()
+                                     .Select(t => new TestcaseResponse(t))
+                                     .ToListAsync();
         }
 
         /// <summary>
@@ -165,63 +168,53 @@ namespace macaron.Controllers
                                            .SingleOrDefaultAsync();
             if (project == null)
             {
-                return NotFound();
+                return NotFound("Contains the testcase id does not exist.");
             }
 
             var testcase = req.ToTestcase();
             project.Testcases.Add(testcase);
             await db.SaveChangesAsync();
-            return Created($"/api/{projectId}/testcases/{testcase.Id}", testcase);
+            return Created($"/api/{projectId}/testcases/{testcase.Id}", new TestcaseResponse(testcase));
         }
 
 #endregion
 
-        
+#region Testruns
+
+        /// <summary>
+        /// Add testrun results
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="requests">Request body</param>
+        /// <returns></returns>
         [HttpPost("{projectId}/testruns")]
-        public async Task<IActionResult> PostTestruns(int projectId, IEnumerable<TestrunCreateRequest> req)
+        public async Task<IActionResult> PostTestruns(int projectId, [FromBody] IEnumerable<TestrunCreateRequest> requests)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var testruns = TestrunCreateRequest.ToTestruns(req);
 
             var testcases = await db.Testcases.Where(t => t.ProjectId == projectId)
                                               .Include(t => t.Testruns)
                                               .ToListAsync();
 
-            // extract id
-            var runIds = testruns.Select(run => run.TestcaseId).Distinct();
-            var testIds = testcases.Select(test => test.Id);
-
-            if (runIds.Except(testIds).Count() > 0)
+            foreach (var req in requests)
             {
-                return NotFound("Contains the testcase id does not exist.");
+                var testcase = testcases.SingleOrDefault(t => t.Id == req.TestcaseId);
+                if (testcase == null)
+                {
+                    return NotFound();
+                }
+
+                var testrun = req.ToTestrun();
+                testcase.Testruns.Add(testrun);
             }
-
-            return Ok();
-        }
-
-        public async Task<IActionResult> PostTestrun(int projectId, TestrunCreateRequest req)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var testcase = await db.Testcases.Where(t => t.ProjectId == projectId && t.Id == req.TestCaseId)
-                                             .Include(t => t.Testruns)
-                                             .SingleOrDefaultAsync();
-            if (testcase == null)
-            {
-                return NotFound();
-            }
-
-            var testrun = req.ToTestrun();
-            testcase.Testruns.Add(testrun);
             await db.SaveChangesAsync();
 
-            return Ok(testrun);
+            return NoContent();
         }
+
+#endregion
     }
 }
