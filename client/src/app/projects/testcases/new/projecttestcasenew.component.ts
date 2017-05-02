@@ -23,7 +23,8 @@ export class ProjectTestcaseNewComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit(value: TestcaseCreateRequest, form: NgForm) {
+  onSubmit(form: NgForm) {
+    const value = form.value as TestcaseCreateRequest;
     // fix md-slide-toggle has no default value
     value.moreCareful = value.moreCareful ? value.moreCareful : false;
 

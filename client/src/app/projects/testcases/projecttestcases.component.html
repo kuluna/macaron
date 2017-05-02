@@ -1,7 +1,7 @@
 <nav md-tab-nav-bar color="primary">
   <a md-tab-link [routerLink]="['../../../']">Overview</a>
   <a md-tab-link [routerLink]="['./']" [active]="true">Testcases</a>
-  <a md-tab-link>Testrun</a>
+  <a md-tab-link [routerLink]="['../../../testrun']">Testrun</a>
 </nav>
 
 <div *ngIf="testcases" style="margin: 16px">

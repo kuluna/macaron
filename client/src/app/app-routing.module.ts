@@ -6,6 +6,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
 import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases.component';
 import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
+import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
 
 const routes: Routes = [
   { path: 'user/signin', component: SigninComponent },
@@ -15,7 +16,8 @@ const routes: Routes = [
       { path: 'testcases', children: [
         { path: '', component: ProjectTestcasesComponent },
         { path: 'new', component: ProjectTestcaseNewComponent }
-      ]}
+      ]},
+      { path: 'testrun', component: ProjectTestrunComponent }
     ]
   }
 ];

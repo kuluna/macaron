@@ -1,14 +1,14 @@
 <nav md-tab-nav-bar color="primary">
   <a md-tab-link [routerLink]="['../../']">Overview</a>
   <a md-tab-link [routerLink]="['./../']" [active]="true">Testcases</a>
-  <a md-tab-link>Testrun</a>
+  <a md-tab-link [routerLink]="['../../testrun']">Testrun</a>
 </nav>
 
 <app-bodycontent>
     <h2>New Testcase</h2>
 
     <md-card>
-      <form #testcaseForm="ngForm" (ngSubmit)="onSubmit(testcaseForm.value, testcaseForm)">
+      <form #testcaseForm="ngForm" (ngSubmit)="onSubmit(testcaseForm)">
         <md-card-content fxLayout="column">
           <div fxLayout="row" fxLayoutAlign=" center">
             <md-input-container fxFlex>
