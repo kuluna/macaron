@@ -28,7 +28,7 @@
     "zone.js": "^0.8.9"
   },
   "devDependencies": {
-    "@angular/cli": "~1.0.0",
+    "@angular/cli": "~1.0.1",
     "@angular/compiler-cli": "^4.1.0",
     "@types/jasmine": "^2.5.47",
     "@types/node": "^6.0.69",
@@ -43,7 +43,7 @@
     "karma-coverage-istanbul-reporter": "^0.2.0",
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
-    "tslint": "~4.5.0",
-    "typescript": "~2.2.2"
+    "tslint": "~5.1.0",
+    "typescript": "~2.3.2"
   }
 }
