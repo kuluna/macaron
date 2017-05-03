@@ -37,7 +37,7 @@ namespace macaron.Models.Response
             LastUpdateDate = model.LastUpdateDate;
             Testruns = model.Testruns;
 
-            var lastTestrun = model.Testruns.LastOrDefault();
+            var lastTestrun = model.Testruns?.LastOrDefault();
             LastTestResult = lastTestrun?.Result ?? TestResult.NotTest;
         }
     }
