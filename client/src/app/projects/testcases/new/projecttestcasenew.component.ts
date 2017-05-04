@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { BodyContentComponent } from '../../../bodycontent.component';
 import { ProjectsClient, Testcase, TestcaseCreateRequest } from '../../../apiclient.service';
 
 @Component({

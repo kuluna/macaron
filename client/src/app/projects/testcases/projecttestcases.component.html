@@ -4,7 +4,7 @@
   <a md-tab-link [routerLink]="['../../../testrun']">Testrun</a>
 </nav>
 
-<div *ngIf="testcases" style="margin: 16px">
+<app-bodycontent *ngIf="testcases">
   <div fxLayout="row" fxLayoutAlign=" center" style="margin-bottom: 16px">
     <h2 fxFlex>{{testcases.length}} Testcases</h2>
     <a md-raised-button color="primary" [routerLink]="['new']">NEW</a>
@@ -24,4 +24,4 @@
       
     </md-card-actions>
   </md-card>
-</div>
+</app-bodycontent>

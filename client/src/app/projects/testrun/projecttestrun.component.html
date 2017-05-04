@@ -4,6 +4,21 @@
   <a md-tab-link [routerLink]="['./']" [active]="true">Testrun</a>
 </nav>
 
-<p>
-  projecttestrun works!
-</p>
+<app-bodycontent *ngIf="testcases">
+  <md-card>
+    <md-card-content>
+      <md-list>
+        <md-list-item *ngFor="let testcase of testcases; let i = index">
+          <span>{{i + 1}}: </span>
+          <span fxFlex>{{testcase.test}}</span>
+          <span>{{testcase.moreCareful}}</span>
+          <div [ngSwitch]="testcase.lastTestResult">
+            <button *ngSwitchCase="'NotTest'" (click)="sendTestResult(testcase, null, 'Ok')" md-raised-button style="margin-left: 8px">Not test</button>
+            <button *ngSwitchCase="'Ok'" (click)="sendTestResult(testcase, null, 'Ng')" md-raised-button color="accent" style="margin-left: 8px">OK</button>
+            <button *ngSwitchCase="'Ng'" (click)="sendTestResult(testcase, null, 'NotTest')" md-raised-button color="warn" style="margin-left: 8px">NG</button>
+          </div>
+        </md-list-item>
+      </md-list>
+    </md-card-content>
+  </md-card>
+</app-bodycontent>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment as env } from '../environments/environment';
 
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
@@ -27,6 +27,10 @@ export class ProjectsClient {
   postTestcase(projectId: number, body: TestcaseCreateRequest): Observable<Testcase> {
     return this.http.post(env.apiBaseAddress + 'api/projects/' + projectId + '/testcases', body)
                     .map(res => res.json() as Testcase);
+  }
+
+  postTestrun(projectId: number, body: TestrunCreateRequest[]): Observable<Response> {
+    return this.http.post(env.apiBaseAddress + 'api/projects/' + projectId + '/testruns', body);
   }
 }
 
@@ -57,11 +61,12 @@ export class Testcase {
   test: string;
   expect: string;
   lastUpdateDate: Date;
+  lastTestResult: TestResult;
 }
 
-export enum CommitMode {
-  Add, Modify, Delete
-}
+export type CommitMode = 'Add' | 'Modify' | 'Delete';
+
+export type TestResult = 'NotTest' | 'Ok' | 'Ng';
 
 // requests
 
@@ -74,4 +79,12 @@ export class TestcaseCreateRequest {
   precondition: string | null;
   test: string;
   expect: string;
+}
+
+export class TestrunCreateRequest {
+  constructor(
+    public testcaseId: number,
+    public milestoneId: number | null,
+    public result: TestResult,
+    public testUserId: string) { }
 }
