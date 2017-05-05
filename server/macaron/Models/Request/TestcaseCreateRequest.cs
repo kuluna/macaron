@@ -9,10 +9,6 @@ namespace macaron.Models.Request
     public class TestcaseCreateRequest
     {
         /// <summary>
-        /// Track the base testcase id
-        /// </summary>
-        public int? TrackingId { get; set; }
-        /// <summary>
         /// Section
         /// </summary>
         public string SectionName { get; set; }
@@ -53,17 +49,18 @@ namespace macaron.Models.Request
         {
             return new Testcase()
             {
-                TrackingId = TrackingId,
+                Revision = 0,
                 SectionName = SectionName,
                 BranchName = BranchName ?? "master",
-                IsCommited = false,
-                CommitMode = CommitMode.Add,
+                CommitMode = (BranchName != null) ? CommitMode.Add : CommitMode.Commited,
                 Order = int.MaxValue,
                 MoreCareful = MoreCareful,
                 Estimates = Estimates,
                 Precondition = Precondition,
                 Test = Test,
                 Expect = Expect,
+                IsDeleted = false,
+                CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
         }

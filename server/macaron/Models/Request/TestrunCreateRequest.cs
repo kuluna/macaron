@@ -18,10 +18,6 @@ namespace macaron.Models.Request
         [Required]
         public int TestcaseId { get; set; }
         /// <summary>
-        /// Parent milestone ID
-        /// </summary>
-        public int? MilestoneId { get; set; }
-        /// <summary>
         /// Test result
         /// </summary>
         [Required]
@@ -41,7 +37,6 @@ namespace macaron.Models.Request
             return new Testrun()
             {
                 TestcaseId = TestcaseId,
-                MilestoneId = MilestoneId,
                 Result = Result,
                 TestUserId = TestUserId,
                 CreatedDate = DateTimeOffset.UtcNow,

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using macaron.Models.Request;
 using macaron.Models.Response;
 using macaron.Models;
+using System;
 
 namespace macaron.Controllers
 {
@@ -140,10 +141,7 @@ namespace macaron.Controllers
         [HttpGet("{projectId}/testcases")]
         public async Task<ICollection<TestcaseResponse>> GetTestcases(int projectId)
         {
-            return await db.Testcases.Where(t => t.ProjectId == projectId)
-                                     .Include(t => t.Testruns)
-                                     .OrderBy(t => t.Order)
-                                     .OrderByDescending(t => t.LastUpdateDate)
+            return await db.Testcases.Where(t => t.ProjectId == projectId && !t.IsDeleted)
                                      .AsNoTracking()
                                      .Select(t => new TestcaseResponse(t))
                                      .ToListAsync();
@@ -171,16 +169,74 @@ namespace macaron.Controllers
                 return NotFound("Contains the testcase id does not exist.");
             }
 
-            var testcase = req.ToTestcase();
-            project.Testcases.Add(testcase);
+            try
+            {
+                var testcase = req.ToTestcase();
+                project.Testcases.Add(testcase);
+                await db.SaveChangesAsync();
+                // commit case id
+                testcase.AllocateId = testcase.Id;
+                await db.SaveChangesAsync();
+
+                return Created($"/api/{projectId}/testcases/{testcase.Id}", new TestcaseResponse(testcase));
+            }
+            catch (Exception er)
+            {
+                Console.WriteLine(er.StackTrace);
+                return BadRequest();
+            }
+        }
+
+#endregion
+
+#region Testplans
+
+        /// <summary>
+        /// Get all test plans
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <returns>Test plans</returns>
+        [HttpGet("{projectId}/testplans")]
+        public async Task<IList<Testplan>> GetTestplans(int projectId)
+        {
+            return await db.Testplans.Where(t => t.ProjectId == projectId)
+                                     .ToListAsync();
+        }
+
+        /// <summary>
+        /// Add the test plan
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="req">Request body</param>
+        /// <returns>Test plan</returns>
+        [HttpPost("{projectId}/testplans")]
+        public async Task<IActionResult> PostTestplans(int projectId, [FromBody] TestplanCreateRequest req)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var project = await db.Projects.Where(p => p.Id == projectId && !p.Arcived)
+                                           .Include(p => p.Testplans)
+                                           .SingleOrDefaultAsync();
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            var testplan = await req.ToTestplanAsync(db);
+            project.Testplans.Add(testplan);
             await db.SaveChangesAsync();
-            return Created($"/api/{projectId}/testcases/{testcase.Id}", new TestcaseResponse(testcase));
+
+            return Created("", testplan);
         }
 
 #endregion
 
 #region Testruns
 
+        /*
         /// <summary>
         /// Add testrun results
         /// </summary>
@@ -194,27 +250,27 @@ namespace macaron.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var testcases = await db.Testcases.Where(t => t.ProjectId == projectId)
-                                              .Include(t => t.Testruns)
-                                              .ToListAsync();
+            
+            var testcaseIds = await db.Testcases.Where(t => t.ProjectId == projectId && !t.IsDeleted)
+                                                .Select(t => t.Id)
+                                                .ToListAsync();
 
             foreach (var req in requests)
             {
-                var testcase = testcases.SingleOrDefault(t => t.Id == req.TestcaseId);
-                if (testcase == null)
+                if (!testcaseIds.Any(id => id == req.TestcaseId))
                 {
                     return NotFound();
                 }
 
                 var testrun = req.ToTestrun();
-                testcase.Testruns.Add(testrun);
+                db.Testruns.Add(testrun);
             }
             await db.SaveChangesAsync();
 
             return NoContent();
         }
+        */
 
-#endregion
+        #endregion
     }
 }

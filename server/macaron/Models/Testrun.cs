@@ -16,14 +16,15 @@ namespace macaron.Models
         [Key]
         public int Id { get; set; }
         /// <summary>
+        /// Parent testplain ID
+        /// </summary>
+        [Required]
+        public int TestplanId { get; set; }
+        /// <summary>
         /// To record test ID
         /// </summary>
         [Required]
         public int TestcaseId { get; set; }
-        /// <summary>
-        /// Parent milestone ID
-        /// </summary>
-        public int? MilestoneId { get; set; }
         /// <summary>
         /// Test result
         /// </summary>

@@ -23,6 +23,10 @@ namespace macaron.Data
         /// </summary>
         public DbSet<Testcase> Testcases { get; set; }
         /// <summary>
+        /// Test plans
+        /// </summary>
+        public DbSet<Testplan> Testplans { get; set; }
+        /// <summary>
         /// Run test logs
         /// </summary>
         public DbSet<Testrun> Testruns { get; set; }

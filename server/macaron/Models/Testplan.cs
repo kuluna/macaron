@@ -5,44 +5,49 @@ using System.ComponentModel.DataAnnotations;
 namespace macaron.Models
 {
     /// <summary>
-    /// Test project
+    /// Test planning
     /// </summary>
-    public class Project
+    public class Testplan
     {
         /// <summary>
-        /// Id
+        /// ID
         /// </summary>
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// Parent project ID
+        /// </summary>
+        [Required]
+        public int ProjectId { get; set; }
         /// <summary>
         /// Name
         /// </summary>
         [Required, MinLength(1)]
         public string Name { get; set; }
         /// <summary>
-        /// Description(markdown)
-        /// </summary>
-        public string Description { get; set; }
-        /// <summary>
-        /// Arcive
-        /// </summary>
-        [Required]
-        public bool Arcived { get; set; }
-        /// <summary>
-        /// Testcases
+        /// Target testcases
         /// </summary>
         public virtual IList<Testcase> Testcases { get; set; }
         /// <summary>
-        /// Test plans
+        /// Run test logs
         /// </summary>
-        public virtual IList<Testplan> Testplans { get; set; }
+        public virtual IList<Testrun> Testruns { get; set; }
         /// <summary>
-        /// Created datetime
+        /// Plan leader
         /// </summary>
         [Required]
-        public DateTimeOffset CreatedDate { get; set; }
+        public Guid LeaderId { get; set; }
         /// <summary>
-        /// Last update datetime
+        /// Due date
+        /// </summary>
+        public DateTimeOffset? DueDate { get; set; }
+        /// <summary>
+        /// Mark the complete this plan
+        /// </summary>
+        [Required]
+        public bool IsCompleted { get; set; }
+        /// <summary>
+        /// Last update
         /// </summary>
         [Required]
         public DateTimeOffset LastUpdateDate { get; set; }

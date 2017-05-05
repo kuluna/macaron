@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace macaron.Models
@@ -12,7 +11,7 @@ namespace macaron.Models
     public class Testcase
     {
         /// <summary>
-        /// Id
+        /// Identity Id
         /// </summary>
         [Key]
         public int Id { get; set; }
@@ -22,23 +21,21 @@ namespace macaron.Models
         [Required]
         public int ProjectId { get; set; }
         /// <summary>
-        /// Track the base testcase id
+        /// Allocated ID
         /// </summary>
-        public int? TrackingId { get; set; }
+        public int? AllocateId { get; set; }
+        /// <summary>
+        /// Revision
+        /// </summary>
+        public int? Revision { get; set; }
         /// <summary>
         /// Branch name (default: master)
         /// </summary>
         [Required]
         public string BranchName { get; set; }
         /// <summary>
-        /// Commited
-        /// </summary>
-        [Required]
-        public bool IsCommited { get; set; }
-        /// <summary>
         /// Commit mode
         /// </summary>
-        [Required, JsonConverter(typeof(StringEnumConverter))]
         public CommitMode CommitMode { get; set; }
         /// <summary>
         /// Order
@@ -74,21 +71,32 @@ namespace macaron.Models
         [Required, MinLength(1)]
         public string Expect { get; set; }
         /// <summary>
+        /// Delete this testcase
+        /// </summary>
+        [Required]
+        public bool IsDeleted { get; set; }
+        /// <summary>
+        /// Created date
+        /// </summary>
+        [Required]
+        public DateTimeOffset CreatedDate { get; set; }
+        /// <summary>
         /// Last update
         /// </summary>
         [Required]
         public DateTimeOffset LastUpdateDate { get; set; }
-        /// <summary>
-        /// History the test results
-        /// </summary>
-        public virtual ICollection<Testrun> Testruns { get; set; }
     }
 
     /// <summary>
     /// Commit mode
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum CommitMode
     {
+        /// <summary>
+        /// Master commited
+        /// </summary>
+        Commited,
         /// <summary>
         /// Add
         /// </summary>
