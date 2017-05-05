@@ -45,7 +45,7 @@ namespace macaron.Models
         /// Mark the complete this plan
         /// </summary>
         [Required]
-        public bool IsCompleted { get; set; }
+        public bool Completed { get; set; }
         /// <summary>
         /// Last update
         /// </summary>

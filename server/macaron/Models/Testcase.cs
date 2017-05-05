@@ -110,4 +110,21 @@ namespace macaron.Models
         /// </summary>
         Delete
     }
+
+    /// <summary>
+    /// Identity the testcase
+    /// </summary>
+    public class TestcaseIdentity
+    {
+        /// <summary>
+        /// Testcase ID
+        /// </summary>
+        [Required]
+        public int TestcaseId { get; set; }
+        /// <summary>
+        /// Revision
+        /// </summary>
+        [Required]
+        public int Revision { get; set; }
+    }
 }

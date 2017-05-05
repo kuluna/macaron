@@ -168,23 +168,15 @@ namespace macaron.Controllers
             {
                 return NotFound("Contains the testcase id does not exist.");
             }
+            
+            var testcase = req.ToTestcase();
+            project.Testcases.Add(testcase);
+            await db.SaveChangesAsync();
+            // commit case id
+            testcase.AllocateId = testcase.Id;
+            await db.SaveChangesAsync();
 
-            try
-            {
-                var testcase = req.ToTestcase();
-                project.Testcases.Add(testcase);
-                await db.SaveChangesAsync();
-                // commit case id
-                testcase.AllocateId = testcase.Id;
-                await db.SaveChangesAsync();
-
-                return Created($"/api/{projectId}/testcases/{testcase.Id}", new TestcaseResponse(testcase));
-            }
-            catch (Exception er)
-            {
-                Console.WriteLine(er.StackTrace);
-                return BadRequest();
-            }
+            return Created($"/api/{projectId}/testcases/{testcase.Id}", new TestcaseResponse(testcase));
         }
 
 #endregion
@@ -200,6 +192,8 @@ namespace macaron.Controllers
         public async Task<IList<Testplan>> GetTestplans(int projectId)
         {
             return await db.Testplans.Where(t => t.ProjectId == projectId)
+                                     .Include(t => t.Testcases)
+                                     .Include(t => t.Testruns)
                                      .ToListAsync();
         }
 
@@ -225,16 +219,45 @@ namespace macaron.Controllers
                 return NotFound();
             }
 
-            var testplan = await req.ToTestplanAsync(db);
+            var testplan = await req.ToTestplanAsync(db, projectId);
             project.Testplans.Add(testplan);
             await db.SaveChangesAsync();
 
             return Created("", testplan);
         }
 
+        /// <summary>
+        /// Update the test plan
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="testplanId">Test plan ID</param>
+        /// <param name="req">Request body</param>
+        /// <returns>Test plan</returns>
+        [HttpPut("{projectId}/testplans/{testplanId}")]
+        public async Task<IActionResult> PutTestplan(int projectId, int testplanId, [FromBody] TestplanUpdateRequest req)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var testplan = await db.Testplans.Where(t => t.ProjectId == projectId && t.Id == testplanId)
+                                             .Include(t => t.Testcases)
+                                             .SingleOrDefaultAsync();
+            if (testplan == null)
+            {
+                return NotFound();
+            }
+
+            await req.UpdateAsync(testplan, db);
+            await db.SaveChangesAsync();
+
+            return Ok(testplan);
+        }
+
 #endregion
 
-#region Testruns
+        #region Testruns
 
         /*
         /// <summary>
