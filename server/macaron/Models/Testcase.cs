@@ -126,5 +126,19 @@ namespace macaron.Models
         /// </summary>
         [Required]
         public int Revision { get; set; }
+        
+        public override bool Equals(object obj)
+        {
+            // block rule
+            if (obj == null || !(obj is TestcaseIdentity))
+            {
+                return false;
+            }
+
+            var compare = obj as TestcaseIdentity;
+            return (TestcaseId == compare.TestcaseId && Revision == compare.Revision);
+        }
+
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

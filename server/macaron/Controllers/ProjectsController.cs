@@ -249,7 +249,7 @@ namespace macaron.Controllers
                 return NotFound();
             }
 
-            await req.UpdateAsync(testplan, db);
+            await req.UpdateAsync(db, testplan, projectId);
             await db.SaveChangesAsync();
 
             return Ok(testplan);

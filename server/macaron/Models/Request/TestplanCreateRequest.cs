@@ -28,7 +28,7 @@ namespace macaron.Models.Request
         /// <summary>
         /// Target branch name
         /// </summary>
-        [Required, MinLength(1)]
+        [MinLength(1)]
         public string BranchName { get; set; }
         /// <summary>
         /// Custom testcases
@@ -45,37 +45,47 @@ namespace macaron.Models.Request
         public DateTimeOffset? DueDate { get; set; }
 
         /// <summary>
-        /// Convert to testplan model
+        /// 
         /// </summary>
-        /// <returns></returns>
-        public async Task<Testplan> ToTestplanAsync(DatabaseContext db, int projectId)
+        /// <param name="db"></param>
+        /// <param name="projectId"></param>
+        /// <returns>Testcases</returns>
+        /// <exception cref="NotImplementedException">This method is not enough other TestPattern's case.</exception>
+        protected async Task<IList<Testcase>> FindTestcaseAsync(DatabaseContext db, int projectId)
         {
-            List<Testcase> testcases = null;
             switch (TestPattern)
             {
                 case TestPattern.Branch:
-                    testcases = await db.Testcases.Where(t =>
+                    return await db.Testcases.Where(t =>
                         t.ProjectId == projectId && t.BranchName.Equals(BranchName))
                         .ToListAsync();
-                    break;
                 case TestPattern.Ng:
                     var failIds = await db.Testruns.Where(t => t.Result == TestResult.Ng).Select(t => t.Id).ToListAsync();
-                    testcases = await db.Testcases.Where(t =>
+                    return await db.Testcases.Where(t =>
                         t.ProjectId == projectId && t.BranchName.Equals(BranchName) && failIds.Contains((int)t.AllocateId))
                         .ToListAsync();
-                    break;
                 case TestPattern.Custom:
-                    testcases = await db.Testcases.Where(t =>
+                    return await db.Testcases.Where(t =>
                         TestcaseIds.Contains(new TestcaseIdentity() { TestcaseId = t.Id, Revision = (int)t.Revision }))
                         .ToListAsync();
-                    break;
+                default:
+                    throw new NotImplementedException("This method is not enough other TestPattern's case.");
             }
+        }
 
+        /// <summary>
+        /// Convert to testplan model
+        /// </summary>
+        /// <param name="db">Database context</param>
+        /// <param name="projectId">Project ID</param>
+        /// <returns>Test plan model</returns>
+        public async Task<Testplan> ToTestplanAsync(DatabaseContext db, int projectId)
+        {
             return new Testplan()
             {
                 Name = Name,
                 LeaderId = LeaderId,
-                Testcases = testcases,
+                Testcases = await FindTestcaseAsync(db, projectId),
                 Testruns = new List<Testrun>(),
                 DueDate = DueDate,
                 Completed = false,

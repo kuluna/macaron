@@ -10,7 +10,7 @@ using System;
 namespace macaron.test.pt
 {
     [TestClass]
-    public class ProjectRequestTest
+    public class ProjectRequestResponseTest
     {
 
 #region ProjectCreateRequest
