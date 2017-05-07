@@ -126,7 +126,12 @@ namespace macaron.Models
         /// </summary>
         [Required]
         public int Revision { get; set; }
-        
+
+        /// <summary>
+        /// True if the same ID and revision.
+        /// </summary>
+        /// <param name="obj">TestcaseIdentity object</param>
+        /// <returns>Result</returns>
         public override bool Equals(object obj)
         {
             // block rule
@@ -139,6 +144,10 @@ namespace macaron.Models
             return (TestcaseId == compare.TestcaseId && Revision == compare.Revision);
         }
 
+        /// <summary>
+        /// Get the hashcode.
+        /// </summary>
+        /// <returns>Cashcode</returns>
         public override int GetHashCode() => base.GetHashCode();
     }
 }
