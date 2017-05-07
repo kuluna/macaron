@@ -1,0 +1,12 @@
+<div *ngIf="activePlans">
+
+  <h3>Active</h3>
+  <div *ngFor="let testplan of activePlans">
+    {{testplan | json}}
+  </div>
+
+  <h3>Complete</h3>
+  <div *ngFor="let testplan of completedPlans">
+    {{testplan | json}}
+  </div>
+</div>

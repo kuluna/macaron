@@ -10,27 +10,37 @@ export class ProjectsClient {
   constructor(private http: Http) { }
 
   getProjects(): Observable<Project[]> {
-    return this.http.get(env.apiBaseAddress + 'api/projects')
-                    .map(res => res.json() as Project[]);
+    return this.get<Project[]>('api/projects');
   }
 
   getProject(projectId: number, detail = true): Observable<Project> {
-    return this.http.get(env.apiBaseAddress + 'api/projects/' + projectId + '?detail=' + detail)
-                    .map(res => res.json() as Project);
+    return this.get<Project>('api/projects/' + projectId + '?detail=' + detail);
   }
 
   getTestcases(projectId: number): Observable<Testcase[]> {
-    return this.http.get(env.apiBaseAddress + 'api/projects/' + projectId + '/testcases')
-                    .map(res => res.json() as Testcase[]);
+    return this.get<Testcase[]>('api/projects/' + projectId + '/testcases');
   }
 
   postTestcase(projectId: number, body: TestcaseCreateRequest): Observable<Testcase> {
-    return this.http.post(env.apiBaseAddress + 'api/projects/' + projectId + '/testcases', body)
-                    .map(res => res.json() as Testcase);
+    return this.post<Testcase>('api/projects/' + projectId + '/testcases', body);
+  }
+
+  getTestplans(projectId: number): Observable<Testplan[]> {
+    return this.get<Testplan[]>('api/projects/' + projectId + '/testplans');
   }
 
   postTestrun(projectId: number, body: TestrunCreateRequest[]): Observable<Response> {
-    return this.http.post(env.apiBaseAddress + 'api/projects/' + projectId + '/testruns', body);
+    return this.post<Response>('api/projects/' + projectId + '/testruns', body);
+  }
+
+  // abstracted http get function
+  private get<T>(path: string): Observable<T> {
+    return this.http.get(env.apiBaseAddress + path).map(res => res.json() as T);
+  }
+
+  // abstracted http post function
+  private post<T>(path: string, body: any): Observable<T> {
+    return this.http.post(env.apiBaseAddress + path, body).map(res => res.json() as T);
   }
 }
 
@@ -67,6 +77,18 @@ export class Testcase {
 export type CommitMode = 'Add' | 'Modify' | 'Delete';
 
 export type TestResult = 'NotTest' | 'Ok' | 'Ng';
+
+export class Testplan {
+  id: number;
+  projectId: number;
+  name: string;
+  testcases: Testcase[];
+  testruns: any;
+  leaderId: string;
+  dueDate: Date | null;
+  completed: boolean;
+  lastUpdateDate: Date;
+}
 
 // requests
 

@@ -16,6 +16,7 @@ import { ProjectDetailComponent } from './projects/detail/projectdetail.componen
 import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases.component';
 import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
 import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
+import { ProjectTestplansComponent } from './projects/testplans/projecttestplans.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.compo
     ProjectDetailComponent,
     ProjectTestcasesComponent,
     ProjectTestcaseNewComponent,
-    ProjectTestrunComponent
+    ProjectTestrunComponent,
+    ProjectTestplansComponent
   ],
   imports: [
     BrowserAnimationsModule,
