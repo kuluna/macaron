@@ -1,12 +1,27 @@
-<div *ngIf="activePlans">
+<nav md-tab-nav-bar color="primary">
+  <a md-tab-link [routerLink]="['../../../']">Overview</a>
+  <a md-tab-link [routerLink]="['../../../testcases']">Testcases</a>
+  <a md-tab-link [routerLink]="['./']" [active]="true">Testplans</a>
+  <a md-tab-link [routerLink]="['../../../testrun']">Testrun</a>
+</nav>
 
+<app-bodycontent>
   <h3>Active</h3>
-  <div *ngFor="let testplan of activePlans">
-    {{testplan | json}}
-  </div>
+  <md-card>
+    <md-list>
+      <md-list-item *ngFor="let plan of activePlans">
+        <h3 fxFlex>{{plan.name}}</h3>
+        <div *ngIf="plan.dueDate; else tbd">{{plan.dueDate}}></div>
+        <ng-template #tbd>TBD</ng-template>
+        <a [routerLink]="[plan.id]" md-button color="accent">VIEW</a>
+      </md-list-item>
+    </md-list>
+  </md-card>
 
   <h3>Complete</h3>
-  <div *ngFor="let testplan of completedPlans">
-    {{testplan | json}}
-  </div>
-</div>
+  <md-card>
+    <div *ngFor="let plan of completedPlans">
+      {{plan | json}}
+    </div>
+  </md-card>
+</app-bodycontent>

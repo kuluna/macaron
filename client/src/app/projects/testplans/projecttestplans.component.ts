@@ -10,7 +10,7 @@ import { Observable, ConnectableObservable } from 'rxjs/Rx';
   providers: [ProjectsClient]
 })
 export class ProjectTestplansComponent implements OnInit {
-  testplans: Observable<Testplan>;
+  testplans: ConnectableObservable<Testplan>;
 
   activePlans: Testplan[] = [] ;
   completedPlans: Testplan[] = [];
@@ -20,9 +20,12 @@ export class ProjectTestplansComponent implements OnInit {
   ngOnInit() {
     this.testplans = this.activeRoute.params.map(params => params['projectId'] as number)
                            .switchMap(id => this.projectsClient.getTestplans(id))
-                           .switchMap(testplans => Observable.from(testplans));
+                           .switchMap(testplans => Observable.from(testplans))
+                           .publish();
 
     this.testplans.filter(testplan => !testplan.completed).subscribe(testplan => this.activePlans.push(testplan));
-    // this.testplans.filter(testplan => testplan.completed);
+    this.testplans.filter(testplan => testplan.completed).subscribe(testplan => this.completedPlans.push(testplan));
+    // start stream
+    this.testplans.connect();
   }
 }

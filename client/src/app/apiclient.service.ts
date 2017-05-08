@@ -59,10 +59,9 @@ export class Project {
 export class Testcase {
   id: number;
   projectId: number;
-  trackingId: number | null;
+  revision: number;
   sectionName: string | null;
   branchName: string;
-  isCommited: boolean;
   commitMode: CommitMode;
   order: number;
   moreCareful: boolean;
@@ -70,11 +69,11 @@ export class Testcase {
   precondition: string | null;
   test: string;
   expect: string;
+  createdDate: Date;
   lastUpdateDate: Date;
-  lastTestResult: TestResult;
 }
 
-export type CommitMode = 'Add' | 'Modify' | 'Delete';
+export type CommitMode = 'Commited' | 'Add' | 'Modify' | 'Delete';
 
 export type TestResult = 'NotTest' | 'Ok' | 'Ng';
 
@@ -93,7 +92,6 @@ export class Testplan {
 // requests
 
 export class TestcaseCreateRequest {
-  trackingId: number | null;
   sectionName: string | null;
   branchName: string;
   moreCareful: boolean;

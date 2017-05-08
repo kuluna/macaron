@@ -1,10 +1,6 @@
-<nav md-tab-nav-bar color="primary">
-  <a md-tab-link [routerLink]="['./']" [active]="true">Overview</a>
-  <a md-tab-link [routerLink]="['testcases']">Testcases</a>
-  <a md-tab-link [routerLink]="['testrun']">Testrun</a>
-</nav>
+<app-projectnav></app-projectnav>
 
-<div *ngIf="project" style="margin: 16px">
+<app-bodycontent *ngIf="project">
   <div fxLayout="row" fxLayoutAlign=" center">
     <h2 fxFlex>{{project.name}}</h2>
     <a md-button>EDIT</a>
@@ -18,4 +14,4 @@
     </md-card>
   </div>
 
-</div>
+</app-bodycontent>
