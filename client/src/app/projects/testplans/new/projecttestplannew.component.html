@@ -1,3 +1,49 @@
-<p>
-  projecttestplannew works!
-</p>
+<nav md-tab-nav-bar color="primary">
+  <a md-tab-link [routerLink]="['../../']">Overview</a>
+  <a md-tab-link [routerLink]="['../../testcases']">Testcases</a>
+  <a md-tab-link [routerLink]="['./../']" [active]="true">Testplans</a>
+  <a md-tab-link [routerLink]="['../../testrun']">Testrun</a>
+</nav>
+
+<app-bodycontent>
+  <h2>New Testplan</h2>
+
+  <md-card>
+    <form #testplanForm="ngForm" (ngSubmit)="onSubmit(testplanForm)">
+      <md-card-content fxLayout="column">
+        <md-input-container>
+          <input name="name" required ngModel mdInput placeholder="Name">
+          <md-error>Required.</md-error>
+        </md-input-container>
+
+        <h4>Testcase</h4>
+        <md-radio-group name="testPattrn" required ngModel="Branch" style="margin-bottom: 16px">
+          <md-radio-button value="Branch" checked="checked">Branch</md-radio-button>
+          <md-radio-button value="Fail">Fail</md-radio-button>
+          <md-radio-button value="Custom" disabled>Custom</md-radio-button>
+        </md-radio-group>
+
+        <md-select name="branchName" placeholder="Branch name" required ngModel>
+          <md-option [value]="'master'">master</md-option>
+          <md-error>Required.</md-error>
+        </md-select>
+
+        <md-input-container>
+          <input name="leaderId" required ngModel mdInput placeholder="Leader ID">
+          <md-error>Required.</md-error>
+        </md-input-container>
+
+        <md-input-container>
+          <input type="date" name="dueDate" ngModel mdInput placeholder="Due date">
+        </md-input-container>
+
+      </md-card-content>
+
+      <md-card-actions fxLayoutAlign="end center">
+        <div [hidden]="!submitting"><md-spinner color="accent" style="width:24px;height: 24px"></md-spinner></div>
+        <md-checkbox [(ngModel)]="moreCreate" [ngModelOptions]="{standalone: true}" style="margin-right: 16px">More</md-checkbox>
+        <button type="submit" [disabled]="!testplanForm.form.valid || submitting" md-raised-button color="primary">CREATE</button>
+      </md-card-actions>
+    </form>
+  </md-card>
+</app-bodycontent>

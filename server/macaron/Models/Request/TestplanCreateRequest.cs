@@ -28,7 +28,6 @@ namespace macaron.Models.Request
         /// <summary>
         /// Target branch name
         /// </summary>
-        [MinLength(1)]
         public string BranchName { get; set; }
         /// <summary>
         /// Custom testcases

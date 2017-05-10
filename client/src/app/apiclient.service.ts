@@ -29,6 +29,10 @@ export class ProjectsClient {
     return this.get<Testplan[]>('api/projects/' + projectId + '/testplans');
   }
 
+  postTestplan(projectId: number, body: TestplanCreateRequest): Observable<Testplan> {
+    return this.post<Testplan>('api/projects/' + projectId + '/testplans', body);
+  }
+
   postTestrun(projectId: number, body: TestrunCreateRequest[]): Observable<Response> {
     return this.post<Response>('api/projects/' + projectId + '/testruns', body);
   }
@@ -73,10 +77,6 @@ export class Testcase {
   lastUpdateDate: Date;
 }
 
-export type CommitMode = 'Commited' | 'Add' | 'Modify' | 'Delete';
-
-export type TestResult = 'NotTest' | 'Ok' | 'Ng';
-
 export class Testplan {
   id: number;
   projectId: number;
@@ -101,6 +101,15 @@ export class TestcaseCreateRequest {
   expect: string;
 }
 
+export class TestplanCreateRequest {
+  name: string;
+  testPattern: TestPattern;
+  branchName: string | null;
+  TestcaseIds: number[];
+  leaderId: string;
+  dueDate: Date | null;
+}
+
 export class TestrunCreateRequest {
   constructor(
     public testcaseId: number,
@@ -108,3 +117,11 @@ export class TestrunCreateRequest {
     public result: TestResult,
     public testUserId: string) { }
 }
+
+// string enum
+
+export type CommitMode = 'Commited' | 'Add' | 'Modify' | 'Delete';
+
+export type TestResult = 'NotTest' | 'Ok' | 'Ng';
+
+export type TestPattern = 'Branch' | 'Ng' | 'Custom';
