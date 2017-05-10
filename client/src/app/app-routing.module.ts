@@ -8,6 +8,7 @@ import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases
 import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
 import { ProjectTestplansComponent } from './projects/testplans/projecttestplans.component';
 import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
+import { ProjectTestplanNewComponent } from './projects/testplans/new/projecttestplannew.component';
 
 const routes: Routes = [
   { path: 'user/signin', component: SigninComponent },
@@ -19,7 +20,8 @@ const routes: Routes = [
         { path: 'new', component: ProjectTestcaseNewComponent }
       ]},
       { path: 'testplans', children: [
-        { path: '', component: ProjectTestplansComponent }
+        { path: '', component: ProjectTestplansComponent },
+        { path: 'new', component: ProjectTestplanNewComponent }
       ] },
       { path: 'testrun', component: ProjectTestrunComponent }
     ]

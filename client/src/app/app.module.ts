@@ -18,6 +18,7 @@ import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases
 import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
 import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
 import { ProjectTestplansComponent } from './projects/testplans/projecttestplans.component';
+import { ProjectTestplanNewComponent } from './projects/testplans/new/projecttestplannew.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ProjectTestplansComponent } from './projects/testplans/projecttestplans
     ProjectTestcasesComponent,
     ProjectTestcaseNewComponent,
     ProjectTestrunComponent,
-    ProjectTestplansComponent
+    ProjectTestplansComponent,
+    ProjectTestplanNewComponent
   ],
   imports: [
     BrowserAnimationsModule,
