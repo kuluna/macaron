@@ -10,6 +10,7 @@ import { Observable, ConnectableObservable } from 'rxjs/Rx';
   providers: [ProjectsClient]
 })
 export class ProjectTestplansComponent implements OnInit {
+  showCompletes = false;
   testplans: ConnectableObservable<Testplan>;
 
   activePlans: Testplan[] = [] ;

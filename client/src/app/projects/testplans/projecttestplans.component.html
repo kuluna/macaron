@@ -23,8 +23,11 @@
     </md-list>
   </md-card>
 
-  <h3>Complete</h3>
-  <md-card>
+  <div fxLayout="row" fxLayoutAlign=" center">
+    <h3 fxFlex>Complete</h3>
+    <button (click)="showCompletes = !showCompletes" md-button color="accent">SHOW / HIDE</button>
+  </div>
+  <md-card *ngIf="showCompletes">
     <div *ngFor="let plan of completedPlans">
       {{plan | json}}
     </div>
