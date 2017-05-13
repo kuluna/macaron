@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Testplan, TestplanCreateRequest } from '../../../apiclient.service';
+import { Observable } from 'rxjs/Rx';
+import { ProjectsClient, Testcase, Testplan, TestplanCreateRequest } from '../../../apiclient.service';
 
 @Component({
   selector: 'app-projecttestplannew',
@@ -14,12 +15,21 @@ export class ProjectTestplanNewComponent implements OnInit {
   submitting = false;
   moreCreate = false;
 
+  branchNames: string[] = [];
+
   constructor(private router: Router,
               private activeRoute: ActivatedRoute,
               private snackBar: MdSnackBar,
               private projectsClient: ProjectsClient) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.activeRoute.params.map(params => params['projectId'] as number)
+                    .switchMap(projectId => this.projectsClient.getTestcases(projectId))
+                    .switchMap(testcases => Observable.from(testcases))
+                    .distinct(testcase => testcase.branchName)
+                    .map(testcase => testcase.branchName)
+                    .subscribe(branchName => this.branchNames.push(branchName));
+  }
 
   onSubmit(form: NgForm) {
     const value = form.value as TestplanCreateRequest;

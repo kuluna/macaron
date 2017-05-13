@@ -16,7 +16,7 @@
     <md-list>
       <md-list-item *ngFor="let plan of activePlans">
         <h3 fxFlex>{{plan.name}}</h3>
-        <div *ngIf="plan.dueDate; else tbd">{{plan.dueDate}}></div>
+        <div *ngIf="plan.dueDate; else tbd">{{plan.dueDate}}</div>
         <ng-template #tbd>TBD</ng-template>
         <a [routerLink]="[plan.id]" md-button color="accent">VIEW</a>
       </md-list-item>
@@ -25,7 +25,10 @@
 
   <div fxLayout="row" fxLayoutAlign=" center">
     <h3 fxFlex>Complete</h3>
-    <button (click)="showCompletes = !showCompletes" md-button color="accent">SHOW / HIDE</button>
+    <button (click)="showCompletes = !showCompletes" md-button color="primary">
+      <span *ngIf="showCompletes; else show">HIDE</span>
+      <ng-template #show>SHOW</ng-template>
+    </button>
   </div>
   <md-card *ngIf="showCompletes">
     <div *ngFor="let plan of completedPlans">

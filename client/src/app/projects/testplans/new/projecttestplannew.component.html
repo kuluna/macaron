@@ -24,7 +24,7 @@
         </md-radio-group>
 
         <md-select name="branchName" placeholder="Branch name" required ngModel>
-          <md-option [value]="'master'">master</md-option>
+          <md-option *ngFor="let branch of branchNames" [value]="branch">{{branch}}</md-option>
           <md-error>Required.</md-error>
         </md-select>
 
