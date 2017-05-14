@@ -9,6 +9,7 @@ using macaron.Models.Response;
 using macaron.Models;
 using System.Data;
 using System;
+using macaron.Services;
 
 namespace macaron.Controllers
 {
@@ -37,7 +38,7 @@ namespace macaron.Controllers
         [HttpGet]
         public async Task<IEnumerable<ProjectResponse>> GetProjects()
         {
-            return await db.Projects.AsNoTracking().Select(p => new ProjectResponse(p)).ToListAsync();
+            return await ProjectService.GetProjectsAsync(db);
         }
 
         /// <summary>
