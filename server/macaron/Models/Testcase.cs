@@ -38,7 +38,7 @@ namespace macaron.Models
         /// </summary>
         public CommitMode CommitMode { get; set; }
         /// <summary>
-        /// Order
+        /// Order(ASC)
         /// </summary>
         [Required]
         public int Order { get; set; }

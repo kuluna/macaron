@@ -26,6 +26,11 @@ namespace macaron.Models
         [Required]
         public int TestcaseId { get; set; }
         /// <summary>
+        /// Testcase revision
+        /// </summary>
+        [Required]
+        public int Revision { get; set; }
+        /// <summary>
         /// Test result
         /// </summary>
         [Required]

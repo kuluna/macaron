@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +17,11 @@ namespace macaron.Models.Request
         [Required]
         public int TestcaseId { get; set; }
         /// <summary>
+        /// Revision
+        /// </summary>
+        [Required]
+        public int Revision { get; set; }
+        /// <summary>
         /// Test result
         /// </summary>
         [Required]
@@ -32,11 +36,13 @@ namespace macaron.Models.Request
         /// Convert the testrun model
         /// </summary>
         /// <returns></returns>
-        public Testrun ToTestrun()
+        public Testrun ToTestrun(int testplanId)
         {
             return new Testrun()
             {
+                TestplanId = testplanId,
                 TestcaseId = TestcaseId,
+                Revision = Revision,
                 Result = Result,
                 TestUserId = TestUserId,
                 CreatedDate = DateTimeOffset.UtcNow,
@@ -47,11 +53,12 @@ namespace macaron.Models.Request
         /// <summary>
         /// Convert all testrun model
         /// </summary>
+        /// <param name="testplanId">Test plan ID</param>
         /// <param name="requests"></param>
         /// <returns></returns>
-        public static IEnumerable<Testrun> ToTestruns(IEnumerable<TestrunCreateRequest> requests)
+        public static IEnumerable<Testrun> ToTestruns(int testplanId, IEnumerable<TestrunCreateRequest> requests)
         {
-            return requests.Select(req => req.ToTestrun());
+            return requests.Select(req => req.ToTestrun(testplanId));
         }
     }
 }
