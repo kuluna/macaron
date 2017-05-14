@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using macaron.Models.Request;
 using macaron.Models.Response;
 using macaron.Models;
+using System.Data;
 using System;
 
 namespace macaron.Controllers
@@ -141,7 +142,7 @@ namespace macaron.Controllers
         [HttpGet("{projectId}/testcases")]
         public async Task<ICollection<TestcaseResponse>> GetTestcases(int projectId)
         {
-            return await db.Testcases.Where(t => t.ProjectId == projectId && !t.IsDeleted)
+            return await db.Testcases.Where(t => t.ProjectId == projectId && !t.IsOutdated)
                                      .AsNoTracking()
                                      .Select(t => new TestcaseResponse(t))
                                      .ToListAsync();
@@ -177,6 +178,86 @@ namespace macaron.Controllers
             await db.SaveChangesAsync();
 
             return Created($"/api/{projectId}/testcases/{testcase.Id}", new TestcaseResponse(testcase));
+        }
+
+        /// <summary>
+        /// Update test case
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="testcaseId">Testcase ID</param>
+        /// <param name="req">Request body</param>
+        /// <returns>Testcase</returns>
+        [HttpPut("{projectId}/testcases/{testcaseId}")]
+        public async Task<IActionResult> PutTestcase(int projectId, int testcaseId, [FromBody] TestcaseUpdateRequest req)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (req.CommitMode != CommitMode.Commited &&
+                (string.IsNullOrWhiteSpace(req.BranchName) || req.BranchName.Equals("master")))
+            {
+                return BadRequest("Master allow only 'Commited' mode.");
+            }
+
+
+            // Serialize transaction because read, up revision, and insert process should be consistently
+            using (var tran = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable))
+            {
+                try
+                {
+                    var project = await db.Projects.Where(p => p.Id == projectId)
+                                                   .Include(p => p.Testcases)
+                                                   .SingleOrDefaultAsync();
+                    var revisions = project?.Testcases.Where(t => t.AllocateId == testcaseId).ToList();
+                    var targetTestcase = revisions?.Where(t => t.Revision == req.TargetRevision).SingleOrDefault();
+                    if (targetTestcase == null)
+                    {
+                        return NotFound();
+                    }
+                    
+
+                    // If merge to master
+                    if (string.IsNullOrWhiteSpace(req.BranchName) || !req.BranchName.Equals(targetTestcase.BranchName))
+                    {
+                        foreach (var t in revisions)
+                        {
+                            t.IsOutdated = true;
+                        }
+                    }
+                    else
+                    {
+                        targetTestcase.IsOutdated = true;
+                    }
+
+                    var newTestcase = req.ToTestcase(revisions, targetTestcase);
+                    project.Testcases.Add(newTestcase);
+                    await db.SaveChangesAsync();
+
+                    tran.Commit();
+                    return Ok(new TestcaseResponse(newTestcase));
+                }
+                catch (Exception e)
+                {
+                    tran.Rollback();
+                    throw e;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delete testcase(all revision)
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="testcaseId">Testcase ID</param>
+        [HttpDelete("{projectId}/testcases/{testcaseId}")]
+        public async Task<IActionResult> DeleteTestcase(int projectId, int testcaseId)
+        {
+            await db.Testcases.Where(t => t.ProjectId == projectId && t.AllocateId == testcaseId)
+                              .ForEachAsync(testcase => testcase.IsOutdated = true);
+            await db.SaveChangesAsync();
+
+            return NoContent();
         }
 
 #endregion
@@ -257,24 +338,29 @@ namespace macaron.Controllers
 
 #endregion
 
-        #region Testruns
-
-        /*
+#region Testruns
+        
         /// <summary>
         /// Add testrun results
         /// </summary>
         /// <param name="projectId">Project ID</param>
+        /// <param name="testplanId">Test plan ID</param>
         /// <param name="requests">Request body</param>
         /// <returns></returns>
-        [HttpPost("{projectId}/testruns")]
-        public async Task<IActionResult> PostTestruns(int projectId, [FromBody] IEnumerable<TestrunCreateRequest> requests)
+        [HttpPost("{projectId}/testplans/{testplanId}/testruns")]
+        public async Task<IActionResult> PostTestruns(int projectId, int testplanId, [FromBody] IEnumerable<TestrunCreateRequest> requests)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            if (!await db.Testplans.AnyAsync(testplan => testplan.ProjectId == projectId && testplan.Id == testplanId))
+            {
+                return NotFound();
+            }
             
-            var testcaseIds = await db.Testcases.Where(t => t.ProjectId == projectId && !t.IsDeleted)
+            var testcaseIds = await db.Testcases.Where(t => t.ProjectId == projectId && !t.IsOutdated)
                                                 .Select(t => t.Id)
                                                 .ToListAsync();
 
@@ -285,15 +371,14 @@ namespace macaron.Controllers
                     return NotFound();
                 }
 
-                var testrun = req.ToTestrun();
+                var testrun = req.ToTestrun(testplanId);
                 db.Testruns.Add(testrun);
             }
             await db.SaveChangesAsync();
 
             return NoContent();
         }
-        */
 
-        #endregion
+#endregion
     }
 }

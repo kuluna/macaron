@@ -23,7 +23,8 @@ namespace macaron.Models
         /// <summary>
         /// Allocated ID
         /// </summary>
-        public int? AllocateId { get; set; }
+        [Required]
+        public int AllocateId { get; set; }
         /// <summary>
         /// Revision
         /// </summary>
@@ -74,12 +75,7 @@ namespace macaron.Models
         /// Delete this testcase
         /// </summary>
         [Required]
-        public bool IsDeleted { get; set; }
-        /// <summary>
-        /// Created date
-        /// </summary>
-        [Required]
-        public DateTimeOffset CreatedDate { get; set; }
+        public bool IsOutdated { get; set; }
         /// <summary>
         /// Last update
         /// </summary>

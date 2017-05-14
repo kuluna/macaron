@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace macaron.Models.Request
 {
@@ -11,6 +9,11 @@ namespace macaron.Models.Request
     /// </summary>
     public class TestcaseUpdateRequest: TestcaseCreateRequest
     {
+        /// <summary>
+        /// Target testcase revision
+        /// </summary>
+        [Required]
+        public int TargetRevision { get; set; }
         /// <summary>
         /// Commit mode
         /// </summary>
@@ -21,14 +24,21 @@ namespace macaron.Models.Request
         /// </summary>
         public int Order { get; set; }
 
-
         /// <summary>
-        /// Update the model
+        /// Create model (update revision)
         /// </summary>
-        /// <param name="model">Model</param>
-        public void Update(Testcase model)
+        /// <param name="revisions">Testcases</param>
+        /// <param name="parent">Parent Testcase model</param>
+        /// <returns>New testcase model</returns>
+        public Testcase ToTestcase(IList<Testcase> revisions, Testcase parent)
         {
-            
+            var model = ToTestcase();
+            model.AllocateId = parent.AllocateId;
+            model.Revision = revisions.Select(t => t.Revision).Max() + 1;
+            model.CommitMode = CommitMode;
+            model.Order = Order;
+
+            return model;
         }
     }
 }

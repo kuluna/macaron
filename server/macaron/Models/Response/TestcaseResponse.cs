@@ -85,7 +85,6 @@ namespace macaron.Models.Response
             Precondition = model.Precondition;
             Test = model.Test;
             Expect = model.Expect;
-            CreatedDate = model.CreatedDate;
             LastUpdateDate = model.LastUpdateDate;
         }
     }

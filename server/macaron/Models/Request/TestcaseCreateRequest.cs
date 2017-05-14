@@ -49,6 +49,7 @@ namespace macaron.Models.Request
         {
             return new Testcase()
             {
+                AllocateId = int.MaxValue, // Temporary
                 Revision = 0,
                 SectionName = SectionName,
                 BranchName = BranchName ?? "master",
@@ -59,8 +60,7 @@ namespace macaron.Models.Request
                 Precondition = Precondition,
                 Test = Test,
                 Expect = Expect,
-                IsDeleted = false,
-                CreatedDate = DateTimeOffset.UtcNow,
+                IsOutdated = false,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
         }
