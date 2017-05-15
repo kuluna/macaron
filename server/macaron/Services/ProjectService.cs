@@ -23,7 +23,10 @@ namespace macaron.Services
         /// <returns>Projects</returns>
         public static async Task<IList<ProjectResponse>> GetProjectsAsync(DatabaseContext db)
         {
-            return await db.Projects.AsNoTracking().Select(p => new ProjectResponse(p)).ToListAsync();
+            return await db.Projects.Where(p => !p.Arcived)
+                                    .AsNoTracking()
+                                    .Select(p => new ProjectResponse(p))
+                                    .ToListAsync();
         }
 
         /// <summary>
