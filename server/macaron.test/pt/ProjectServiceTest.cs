@@ -1,12 +1,16 @@
-﻿using macaron.Data;
+﻿using Newtonsoft.Json;
+using macaron.Data;
 using macaron.Models;
+using macaron.Models.Request;
 using macaron.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using macaron.Models.Response;
 
 namespace macaron.test.pt
 {
@@ -45,40 +49,23 @@ namespace macaron.test.pt
         }
 
         [TestMethod]
-        public void OkActionResult()
+        public async Task AddTestcaseAsync()
         {
-            var res = "OK";
-            var ok = ProjectService.ToActionResult(200, res);
-            Assert.IsTrue(ok is OkObjectResult);
-            Assert.AreEqual(res, (ok as OkObjectResult).Value);
+            await AddInitalDataAsync();
+            var projectId = (await db.Projects.FirstAsync()).Id;
 
-            
-        }
+            var req = new TestcaseCreateRequest()
+            {
+                Test = "test",
+                Expect = "is All OK"
+            };
+            var (res, error) = await ProjectService.AddTestcaseAsync(db, projectId, req);
+            Assert.IsNull(error, error);
 
-        [TestMethod]
-        public void CreatedActionResult()
-        {
-            var res = "Created";
-            var location = @"https://www.google.co.jp/";
-            var created = ProjectService.ToActionResult(201, res, location);
-            Assert.IsTrue(created is CreatedResult);
-            Assert.AreEqual(res, (created as CreatedResult).Value);
-            Assert.AreEqual(location, (created as CreatedResult).Location);
-        }
+            var testcase = await db.Testcases.FindAsync(res.Id);
+            var expectResponse = new TestcaseResponse(testcase);
 
-        [TestMethod]
-        public void NoContentActionResult()
-        {
-            var nocontent = ProjectService.ToActionResult(204, null);
-            Assert.IsTrue(nocontent is NoContentResult);
-        }
-
-        [TestMethod]
-        public void NotFoundActionResult()
-        {
-            var res = "notfound";
-            var notfound = ProjectService.ToActionResult(404, res);
-            Assert.IsTrue(notfound is NotFoundResult);
+            Assert.AreEqual(expectResponse, res);
         }
 
         private async Task AddInitalDataAsync()

@@ -28,7 +28,8 @@ namespace macaron.Models
         /// <summary>
         /// Revision
         /// </summary>
-        public int? Revision { get; set; }
+        [Required]
+        public int Revision { get; set; }
         /// <summary>
         /// Branch name (default: master)
         /// </summary>

@@ -81,11 +81,8 @@ namespace macaron.Controllers
                 return BadRequest(ModelState);
             }
 
-            var project = req.ToProject();
-            db.Projects.Add(project);
-            await db.SaveChangesAsync();
-
-            return Created($"{HttpContext.Request.Path}/{project.Id}", new ProjectResponse(project));
+            var project = await ProjectService.AddProjectAsync(db, req);
+            return Created($"{HttpContext.Request.Path}/{project.Id}", project);
         }
 
         /// <summary>
@@ -163,22 +160,16 @@ namespace macaron.Controllers
                 return BadRequest(ModelState);
             }
 
-            var project = await db.Projects.Where(p => p.Id == projectId)
-                                           .Include(p => p.Testcases)
-                                           .SingleOrDefaultAsync();
-            if (project == null)
-            {
-                return NotFound("Contains the testcase id does not exist.");
-            }
+            var (testcase, error) = await ProjectService.AddTestcaseAsync(db, projectId, req);
             
-            var testcase = req.ToTestcase();
-            project.Testcases.Add(testcase);
-            await db.SaveChangesAsync();
-            // commit case id
-            testcase.AllocateId = testcase.Id;
-            await db.SaveChangesAsync();
-
-            return Created($"/api/{projectId}/testcases/{testcase.Id}", new TestcaseResponse(testcase));
+            if (testcase != null)
+            {
+                return Created($"/api/{projectId}/testcases/{testcase.Id}", testcase);
+            }
+            else
+            {
+                return NotFound(error);
+            }
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
@@ -14,6 +15,8 @@ namespace macaron
         /// </summary>
         public static void Main(string[] args)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             var host = new WebHostBuilder()
                 .UseApplicationInsights()
                 .UseKestrel()

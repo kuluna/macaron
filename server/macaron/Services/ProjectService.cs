@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using macaron.Models.Request;
 
 namespace macaron.Services
 {
@@ -29,31 +30,33 @@ namespace macaron.Services
                                     .ToListAsync();
         }
 
-        /// <summary>
-        /// Convert to ActionResult
-        /// </summary>
-        /// <param name="statusCode">Status code</param>
-        /// <param name="responseBody">Response body(optional)</param>
-        /// <param name="location">Resource access uri(optional)</param>
-        /// <returns>ActionResult</returns>
-        public static IActionResult ToActionResult(int statusCode, object responseBody, string location = null)
+        public static async Task<ProjectResponse> AddProjectAsync(DatabaseContext db,  ProjectCreateRequest req)
         {
-            switch (statusCode)
+            var project = req.ToProject();
+            db.Projects.Add(project);
+            await db.SaveChangesAsync();
+
+            return new ProjectResponse(project);
+        }
+
+        public static async Task<(TestcaseResponse, string)> AddTestcaseAsync(DatabaseContext db, int projectId, TestcaseCreateRequest req)
+        {
+            var project = await db.Projects.Where(p => p.Id == projectId)
+                                           .Include(p => p.Testcases)
+                                           .SingleOrDefaultAsync();
+            if (project == null)
             {
-                case 200:
-                    return new OkObjectResult(responseBody);
-                case 201:
-                    return new CreatedResult(location, responseBody);
-                case 204:
-                    return new NoContentResult();
-
-                case 404:
-                    return new NotFoundResult();
-
-
-                default:
-                    return new StatusCodeResult(statusCode);
+                return (null, "Contains the project id does not exist.");
             }
+
+            var testcase = req.ToTestcase();
+            project.Testcases.Add(testcase);
+            await db.SaveChangesAsync();
+            // commit case id
+            testcase.AllocateId = testcase.Id;
+            await db.SaveChangesAsync();
+
+            return (new TestcaseResponse(testcase), null);
         }
     }
 }
