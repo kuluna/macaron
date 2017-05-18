@@ -65,7 +65,7 @@ namespace macaron.test.pt
             var testcase = await db.Testcases.FindAsync(res.Id);
             var expectResponse = new TestcaseResponse(testcase);
 
-            Assert.AreEqual(expectResponse, res);
+            Assert.AreEqual(expectResponse.Id, res.Id);
         }
 
         private async Task AddInitalDataAsync()

@@ -23,7 +23,7 @@ const routes: Routes = [
         { path: '', component: ProjectTestplansComponent },
         { path: 'new', component: ProjectTestplanNewComponent }
       ] },
-      { path: 'testrun', component: ProjectTestrunComponent }
+      { path: 'testruns', component: ProjectTestrunComponent }
     ]
   }
 ];

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Testcase, TestrunCreateRequest, TestResult } from '../../apiclient.service';
+import { ProjectsClient, Testcase, Testplan, TestrunCreateRequest, TestResult } from '../../apiclient.service';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-projecttestrun',
@@ -11,7 +12,9 @@ import { ProjectsClient, Testcase, TestrunCreateRequest, TestResult } from '../.
 })
 export class ProjectTestrunComponent implements OnInit {
   projectId: number;
-  testcases: Testcase[];
+  testplans: Testplan[];
+
+  selectTestplan: Testplan;
 
   constructor(private activeRoute: ActivatedRoute,
               private snackBar: MdSnackBar,
@@ -20,8 +23,8 @@ export class ProjectTestrunComponent implements OnInit {
   ngOnInit() {
     this.activeRoute.params.map(params => params['projectId'] as number)
                            .do(projectId => this.projectId = projectId)
-                           .switchMap(projectId => this.projectsClient.getTestcases(projectId))
-                           .subscribe(testcases => this.testcases = testcases);
+                           .switchMap(projectId => this.projectsClient.getTestplans(projectId))
+                           .subscribe(testplans => this.testplans = testplans);
   }
 
   sendTestResult(testcase: Testcase, milestoneId: number | null, result: TestResult) {

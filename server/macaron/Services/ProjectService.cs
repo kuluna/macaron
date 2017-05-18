@@ -1,6 +1,5 @@
 ﻿using macaron.Data;
 using macaron.Models.Response;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -30,6 +29,12 @@ namespace macaron.Services
                                     .ToListAsync();
         }
 
+        /// <summary>
+        /// Add the project
+        /// </summary>
+        /// <param name="db">Databasec context</param>
+        /// <param name="req">Request body</param>
+        /// <returns>Response body</returns>
         public static async Task<ProjectResponse> AddProjectAsync(DatabaseContext db,  ProjectCreateRequest req)
         {
             var project = req.ToProject();
@@ -39,6 +44,13 @@ namespace macaron.Services
             return new ProjectResponse(project);
         }
 
+        /// <summary>
+        /// Add the testcase
+        /// </summary>
+        /// <param name="db">Database context</param>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="req">Request body</param>
+        /// <returns>Response body or error</returns>
         public static async Task<(TestcaseResponse, string)> AddTestcaseAsync(DatabaseContext db, int projectId, TestcaseCreateRequest req)
         {
             var project = await db.Projects.Where(p => p.Id == projectId)

@@ -1,24 +1,36 @@
 <nav md-tab-nav-bar color="primary">
   <a md-tab-link [routerLink]="['../']">Overview</a>
   <a md-tab-link [routerLink]="['../testcases']">Testcases</a>
-  <a md-tab-link [routerLink]="['./']" [active]="true">Testrun</a>
+  <a md-tab-link [routerLink]="['./']" [active]="true">Testruns</a>
 </nav>
 
-<app-bodycontent *ngIf="testcases">
-  <md-card>
-    <md-card-content>
-      <md-list>
-        <md-list-item *ngFor="let testcase of testcases; let i = index">
-          <span>{{i + 1}}: </span>
-          <span fxFlex>{{testcase.test}}</span>
-          <span>{{testcase.moreCareful}}</span>
-          <div [ngSwitch]="testcase.lastTestResult">
-            <button *ngSwitchCase="'NotTest'" (click)="sendTestResult(testcase, null, 'Ok')" md-raised-button style="margin-left: 8px">Not test</button>
-            <button *ngSwitchCase="'Ok'" (click)="sendTestResult(testcase, null, 'Ng')" md-raised-button color="accent" style="margin-left: 8px">OK</button>
-            <button *ngSwitchCase="'Ng'" (click)="sendTestResult(testcase, null, 'NotTest')" md-raised-button color="warn" style="margin-left: 8px">NG</button>
-          </div>
-        </md-list-item>
-      </md-list>
-    </md-card-content>
-  </md-card>
+<app-bodycontent *ngIf="testplans">
+  <div fxLayout="column">
+    <h3>Target test plan</h3>
+    <md-select placeholder="Select test plan" [(ngModel)]="selectTestplan">
+      <md-option *ngFor="let testplan of testplans" [value]="testplan">{{testplan.name}}</md-option>
+    </md-select>
+  </div>
+
+  <div *ngIf="selectTestplan">
+    <h3>Tests</h3>
+    <md-card>
+      <md-card-content>
+        <md-list>
+          <md-list-item *ngFor="let testcase of selectTestplan.testcases; let i = index">
+            <span>{{i + 1}}: </span>
+            <span fxFlex>{{testcase.test}}</span>
+            <span>{{testcase.moreCareful}}</span>
+            <!--
+            <div [ngSwitch]="testcase.lastTestResult">
+              <button *ngSwitchCase="'NotTest'" (click)="sendTestResult(testcase, null, 'Ok')" md-raised-button style="margin-left: 8px">Not test</button>
+              <button *ngSwitchCase="'Ok'" (click)="sendTestResult(testcase, null, 'Ng')" md-raised-button color="accent" style="margin-left: 8px">OK</button>
+              <button *ngSwitchCase="'Ng'" (click)="sendTestResult(testcase, null, 'NotTest')" md-raised-button color="warn" style="margin-left: 8px">NG</button>
+            </div>
+            -->
+          </md-list-item>
+        </md-list>
+      </md-card-content>
+    </md-card>
+  </div>
 </app-bodycontent>
