@@ -1,10 +1,8 @@
 ﻿using macaron.Data;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace macaron.Models.Request
 {
@@ -22,14 +20,13 @@ namespace macaron.Models.Request
         /// <summary>
         /// Update to testplan model
         /// </summary>
-        /// <param name="db">Database context</param>
         /// <param name="model">Will updated model</param>
-        /// <param name="projectId">Project ID</param>
-        public async Task UpdateAsync(DatabaseContext db, Testplan model, int projectId)
+        /// <param name="project">Project</param>
+        public void Update(Testplan model, Project project)
         {
             model.Name = Name;
-            model.LeaderId = LeaderId;
-            model.Testcases = await FindTestcaseAsync(db, projectId);
+            model.LeaderName = LeaderName;
+            model.Testcases = FindTestcase(project).ToList();
             model.DueDate = DueDate;
             model.Completed = Completed;
             model.LastUpdateDate = DateTimeOffset.UtcNow;

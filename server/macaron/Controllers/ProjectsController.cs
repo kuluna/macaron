@@ -10,6 +10,8 @@ using macaron.Models;
 using System.Data;
 using System;
 using macaron.Services;
+using Macaron.Models.Response;
+using Microsoft.AspNetCore.Identity;
 
 namespace macaron.Controllers
 {
@@ -20,13 +22,15 @@ namespace macaron.Controllers
     public class ProjectsController : Controller
     {
         private DatabaseContext db;
+        private UserManager<AppUser> userManager;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ProjectsController(DatabaseContext db)
+        public ProjectsController(DatabaseContext db, UserManager<AppUser> um)
         {
             this.db = db;
+            userManager = um;
         }
 
 #region Projects
@@ -262,11 +266,15 @@ namespace macaron.Controllers
         /// <param name="projectId">Project ID</param>
         /// <returns>Test plans</returns>
         [HttpGet("{projectId}/testplans")]
-        public async Task<IList<Testplan>> GetTestplans(int projectId)
+        public async Task<IList<TestplanResponse>> GetTestplans(int projectId)
         {
+            var users = await db.Users.ToListAsync();
+
             return await db.Testplans.Where(t => t.ProjectId == projectId)
                                      .Include(t => t.Testcases)
                                      .Include(t => t.Testruns)
+                                     .AsNoTracking()
+                                     .Select(t => new TestplanResponse(t, users))
                                      .ToListAsync();
         }
 
@@ -285,18 +293,20 @@ namespace macaron.Controllers
             }
 
             var project = await db.Projects.Where(p => p.Id == projectId && !p.Arcived)
+                                           .Include(p => p.Testcases)
                                            .Include(p => p.Testplans)
+                                             .ThenInclude(tp => tp.Testruns)
                                            .SingleOrDefaultAsync();
             if (project == null)
             {
                 return NotFound();
             }
 
-            var testplan = await req.ToTestplanAsync(db, projectId);
+            var testplan = req.ToTestplan(project);
             project.Testplans.Add(testplan);
             await db.SaveChangesAsync();
 
-            return Created("", testplan);
+            return Created("", new TestplanResponse(testplan, await db.Users.ToListAsync()));
         }
 
         /// <summary>
@@ -314,18 +324,22 @@ namespace macaron.Controllers
                 return BadRequest(ModelState);
             }
 
-            var testplan = await db.Testplans.Where(t => t.ProjectId == projectId && t.Id == testplanId)
-                                             .Include(t => t.Testcases)
-                                             .SingleOrDefaultAsync();
+            var project = await db.Projects.Where(p => p.Id == projectId && !p.Arcived)
+                                           .Include(p => p.Testcases)
+                                           .Include(p => p.Testplans)
+                                             .ThenInclude(tp => tp.Testruns)
+                                           .SingleOrDefaultAsync();
+
+            var testplan = project?.Testplans.Where(t => t.Id == testplanId).SingleOrDefault();
             if (testplan == null)
             {
                 return NotFound();
             }
 
-            await req.UpdateAsync(db, testplan, projectId);
+            req.Update(testplan, project);
             await db.SaveChangesAsync();
 
-            return Ok(testplan);
+            return Ok(new TestplanResponse(testplan, await db.Users.ToListAsync()));
         }
 
 #endregion

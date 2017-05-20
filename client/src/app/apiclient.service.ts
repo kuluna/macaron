@@ -73,7 +73,8 @@ export class Testcase {
   precondition: string | null;
   test: string;
   expect: string;
-  createdDate: Date;
+  testResults: Testrun[];
+  lastTestResult: TestResult;
   lastUpdateDate: Date;
 }
 
@@ -82,11 +83,14 @@ export class Testplan {
   projectId: number;
   name: string;
   testcases: Testcase[];
-  testruns: any;
-  leaderId: string;
+  leader: any;
   dueDate: Date | null;
   completed: boolean;
   lastUpdateDate: Date;
+}
+
+export class Testrun {
+
 }
 
 // requests

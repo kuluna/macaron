@@ -36,7 +36,7 @@ namespace macaron.Models
         /// Plan leader
         /// </summary>
         [Required]
-        public Guid LeaderId { get; set; }
+        public string LeaderName { get; set; }
         /// <summary>
         /// Due date
         /// </summary>

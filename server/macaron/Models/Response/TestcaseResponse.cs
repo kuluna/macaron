@@ -59,14 +59,17 @@ namespace macaron.Models.Response
         /// </summary>
         public string Expect { get; set; }
         /// <summary>
-        /// Created date
+        /// Test results
         /// </summary>
-        public DateTimeOffset CreatedDate { get; set; }
+        public IList<Testrun> TestResults { get; set; }
+        /// <summary>
+        /// Last test result
+        /// </summary>
+        public TestResult LastTestResult { get; set; }
         /// <summary>
         /// Last update
         /// </summary>
         public DateTimeOffset LastUpdateDate { get; set; }
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -85,7 +88,22 @@ namespace macaron.Models.Response
             Precondition = model.Precondition;
             Test = model.Test;
             Expect = model.Expect;
+            TestResults = new List<Testrun>();
+            LastTestResult = TestResult.NotTest;
             LastUpdateDate = model.LastUpdateDate;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="model">Testcase model</param>
+        /// <param name="testResults"></param>
+        public TestcaseResponse(Testcase model, IEnumerable<Testrun> testResults) : this(model)
+        {
+            TestResults = TestResults.Where(t => t.TestcaseId == model.AllocateId && t.Revision == model.Revision)
+                                     .OrderByDescending(t => t.LastUpdateDate)
+                                     .ToList();
+            LastTestResult = TestResults.FirstOrDefault()?.Result ?? TestResult.NotTest;
         }
     }
 }

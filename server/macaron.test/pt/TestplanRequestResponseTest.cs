@@ -20,10 +20,10 @@ namespace macaron.test.pt
 
             var identities = new List<TestcaseIdentity>()
             {
-                new TestcaseIdentity() { TestcaseId = 2, Revision = 1 }
+                new TestcaseIdentity(2, 1)
             };
 
-            var result = testcases.Where(t => identities.Contains(new TestcaseIdentity() { TestcaseId = t.Id, Revision = (int) t.Revision }));
+            var result = testcases.Where(t => identities.Contains(new TestcaseIdentity(t.Id, t.Revision)));
 
             Assert.AreEqual(1, result.Count());
         }

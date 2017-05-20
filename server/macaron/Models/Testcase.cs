@@ -124,6 +124,12 @@ namespace macaron.Models
         [Required]
         public int Revision { get; set; }
 
+        public TestcaseIdentity(int testcaseId, int revision)
+        {
+            TestcaseId = testcaseId;
+            Revision = revision;
+        }
+
         /// <summary>
         /// True if the same ID and revision.
         /// </summary>
