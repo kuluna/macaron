@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectsClient, Testcase, Testplan, TestrunCreateRequest, TestResult } from '../../apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
@@ -15,15 +15,32 @@ export class ProjectTestrunComponent implements OnInit {
   testplans: Observable<Testplan[]>;
 
   selectTestplan: Testplan;
+  selectTestcase: Testcase;
 
-  constructor(private activeRoute: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
+              private router: Router,
               private snackBar: MdSnackBar,
               private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.testplans = this.activeRoute.params.map(params => params['projectId'] as number)
-                           .do(projectId => this.projectId = projectId)
-                           .switchMap(projectId => this.projectsClient.getTestplans(projectId));
+    this.testplans = this.route.params.map(params => params['projectId'] as number)
+                                      .do(projectId => this.projectId = projectId)
+                                      .switchMap(projectId => this.projectsClient.getTestplans(projectId));
+
+    /* not test yet
+    this.route.queryParams.filter(query => query['testplanId'])
+                          .map(query => query['testplanId'] as number)
+                          .zip(this.testplans)
+                          .map(([testplanId, testplans]) => testplans.find(testplan => testplan.id === testplanId))
+                          .subscribe(testplan => this.selectTestplan = testplan);
+    */
+  }
+
+  onSelectTestplan(testplan: Testplan) {
+    this.router.navigate(['./'], {
+      queryParams: { testplanId: testplan.id, testcaseId: testplan.testcases[0].id },
+      relativeTo: this.route
+    });
   }
 
   sendTestResult(testcase: Testcase, testplanId: number, result: TestResult) {

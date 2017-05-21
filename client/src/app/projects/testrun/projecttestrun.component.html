@@ -8,8 +8,8 @@
 <app-bodycontent>
   <div fxLayout="column">
     <h3>Target test plan</h3>
-    <md-select placeholder="Select test plan" [(ngModel)]="selectTestplan">
-      <md-option *ngFor="let testplan of testplans | async" [value]="testplan">{{testplan.name}}</md-option>
+    <md-select placeholder="Select test plan" [(ngModel)]="selectTestplan" (change)="onSelectTestplan(selectTestplan)">
+      <md-option *ngFor="let testplan of testplans" [value]="testplan">{{testplan.name}}</md-option>
     </md-select>
   </div>
 
