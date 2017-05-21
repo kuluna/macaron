@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using macaron.Models.Request;
+using Macaron.Models.Response;
 
 namespace macaron.Services
 {
@@ -69,6 +70,25 @@ namespace macaron.Services
             await db.SaveChangesAsync();
 
             return (new TestcaseResponse(testcase), null);
+        }
+
+        public static async Task<(TestplanResponse, string)> AddTestplanAsync(DatabaseContext db, int projectId, TestplanCreateRequest req)
+        {
+            var project = await db.Projects.Where(p => p.Id == projectId && !p.Arcived)
+                                           .Include(p => p.Testcases)
+                                           .Include(p => p.Testplans)
+                                             .ThenInclude(tp => tp.Testruns)
+                                           .SingleOrDefaultAsync();
+            if (project == null)
+            {
+                return (null, "Contains the project id does not exist.");
+            }
+
+            var testplan = req.ToTestplan(project);
+            project.Testplans.Add(testplan);
+            await db.SaveChangesAsync();
+
+            return (new TestplanResponse(testplan, await db.Users.ToListAsync()), null);
         }
     }
 }

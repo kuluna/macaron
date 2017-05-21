@@ -61,7 +61,7 @@ namespace macaron.Models.Response
         /// <summary>
         /// Test results
         /// </summary>
-        public IList<Testrun> TestResults { get; set; }
+        public IList<Testrun> TestRuns { get; set; }
         /// <summary>
         /// Last test result
         /// </summary>
@@ -88,7 +88,7 @@ namespace macaron.Models.Response
             Precondition = model.Precondition;
             Test = model.Test;
             Expect = model.Expect;
-            TestResults = new List<Testrun>();
+            TestRuns = new List<Testrun>();
             LastTestResult = TestResult.NotTest;
             LastUpdateDate = model.LastUpdateDate;
         }
@@ -97,13 +97,13 @@ namespace macaron.Models.Response
         /// Constructor
         /// </summary>
         /// <param name="model">Testcase model</param>
-        /// <param name="testResults"></param>
-        public TestcaseResponse(Testcase model, IEnumerable<Testrun> testResults) : this(model)
+        /// <param name="testRuns">Test runs</param>
+        public TestcaseResponse(Testcase model, IEnumerable<Testrun> testRuns) : this(model)
         {
-            TestResults = TestResults.Where(t => t.TestcaseId == model.AllocateId && t.Revision == model.Revision)
-                                     .OrderByDescending(t => t.LastUpdateDate)
-                                     .ToList();
-            LastTestResult = TestResults.FirstOrDefault()?.Result ?? TestResult.NotTest;
+            TestRuns = testRuns.Where(t => t.TestcaseId == model.AllocateId && t.Revision == model.Revision)
+                                  .OrderByDescending(t => t.LastUpdateDate)
+                                  .ToList();
+            LastTestResult = TestRuns.FirstOrDefault()?.Result ?? TestResult.NotTest;
         }
     }
 }

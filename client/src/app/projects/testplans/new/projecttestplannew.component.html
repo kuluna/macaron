@@ -18,8 +18,8 @@
 
         <h4>Testcase</h4>
         <md-radio-group name="testPattrn" required ngModel="Branch" style="margin-bottom: 16px">
-          <md-radio-button value="Branch" checked="checked">Branch</md-radio-button>
-          <md-radio-button value="Fail">Fail</md-radio-button>
+          <md-radio-button value="Branch" checked="checked">All tests</md-radio-button>
+          <md-radio-button value="Fail">All failed tests</md-radio-button>
           <md-radio-button value="Custom" disabled>Custom</md-radio-button>
         </md-radio-group>
 
@@ -29,7 +29,7 @@
         </md-select>
 
         <md-input-container>
-          <input name="leaderId" required ngModel mdInput placeholder="Leader ID">
+          <input name="leaderName" required ngModel mdInput placeholder="Leader Name">
           <md-error>Required.</md-error>
         </md-input-container>
 

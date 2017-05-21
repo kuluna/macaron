@@ -30,7 +30,7 @@ namespace macaron.Models.Request
         /// Test user ID
         /// </summary>
         [Required]
-        public Guid TestUserId { get; set; }
+        public string TestUsername { get; set; }
 
         /// <summary>
         /// Convert the testrun model
@@ -44,7 +44,7 @@ namespace macaron.Models.Request
                 TestcaseId = TestcaseId,
                 Revision = Revision,
                 Result = Result,
-                TestUserId = TestUserId,
+                TestUsername = TestUsername,
                 CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };

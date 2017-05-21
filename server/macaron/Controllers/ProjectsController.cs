@@ -292,21 +292,16 @@ namespace macaron.Controllers
                 return BadRequest(ModelState);
             }
 
-            var project = await db.Projects.Where(p => p.Id == projectId && !p.Arcived)
-                                           .Include(p => p.Testcases)
-                                           .Include(p => p.Testplans)
-                                             .ThenInclude(tp => tp.Testruns)
-                                           .SingleOrDefaultAsync();
-            if (project == null)
+            var (testplan, error) = await ProjectService.AddTestplanAsync(db, projectId, req);
+
+            if (testplan != null)
             {
-                return NotFound();
+                return Created($"/api/{projectId}/testplans/{testplan.Id}", testplan);
             }
-
-            var testplan = req.ToTestplan(project);
-            project.Testplans.Add(testplan);
-            await db.SaveChangesAsync();
-
-            return Created("", new TestplanResponse(testplan, await db.Users.ToListAsync()));
+            else
+            {
+                return NotFound(error);
+            }
         }
 
         /// <summary>
@@ -360,29 +355,31 @@ namespace macaron.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            if (!await db.Testplans.AnyAsync(testplan => testplan.ProjectId == projectId && testplan.Id == testplanId))
+            
+            var testplan = await db.Testplans.Where(t => t.ProjectId == projectId && t.Id == testplanId)
+                                             .Include(t => t.Testcases)
+                                             .Include(t => t.Testruns)
+                                             .SingleOrDefaultAsync();
+            if (testplan == null)
             {
                 return NotFound();
             }
-            
-            var testcaseIds = await db.Testcases.Where(t => t.ProjectId == projectId && !t.IsOutdated)
-                                                .Select(t => t.Id)
-                                                .ToListAsync();
 
             foreach (var req in requests)
             {
-                if (!testcaseIds.Any(id => id == req.TestcaseId))
+                if (testplan.Testcases.Any(t => t.AllocateId == req.TestcaseId && t.Revision == req.Revision))
+                {
+                    var testrun = req.ToTestrun(testplanId);
+                    testplan.Testruns.Add(testrun);
+                }
+                else
                 {
                     return NotFound();
                 }
-
-                var testrun = req.ToTestrun(testplanId);
-                db.Testruns.Add(testrun);
             }
             await db.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(testplan);
         }
 
 #endregion

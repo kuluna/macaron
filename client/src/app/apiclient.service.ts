@@ -33,8 +33,8 @@ export class ProjectsClient {
     return this.post<Testplan>('api/projects/' + projectId + '/testplans', body);
   }
 
-  postTestrun(projectId: number, body: TestrunCreateRequest[]): Observable<Response> {
-    return this.post<Response>('api/projects/' + projectId + '/testruns', body);
+  postTestrun(projectId: number, testplanId: number, body: TestrunCreateRequest[]): Observable<Testplan> {
+    return this.post<Testplan>('api/projects/' + projectId + '/testplans/' + testplanId + '/testruns', body);
   }
 
   // abstracted http get function
@@ -73,7 +73,7 @@ export class Testcase {
   precondition: string | null;
   test: string;
   expect: string;
-  testResults: Testrun[];
+  testRuns: Testrun[];
   lastTestResult: TestResult;
   lastUpdateDate: Date;
 }
@@ -90,7 +90,14 @@ export class Testplan {
 }
 
 export class Testrun {
-
+  id: number;
+  testplanId: number;
+  testcaseId: number;
+  revision: number;
+  result: TestResult;
+  testUser: any;
+  createDate: Date;
+  lastUpdateDate: Date;
 }
 
 // requests
@@ -109,17 +116,17 @@ export class TestplanCreateRequest {
   name: string;
   testPattern: TestPattern;
   branchName: string | null;
-  TestcaseIds: number[];
-  leaderId: string;
+  TestcaseIds: number[] | null;
+  leaderName: string;
   dueDate: Date | null;
 }
 
 export class TestrunCreateRequest {
   constructor(
     public testcaseId: number,
-    public milestoneId: number | null,
+    public revision: number,
     public result: TestResult,
-    public testUserId: string) { }
+    public testUsername: string) { }
 }
 
 // string enum

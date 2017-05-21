@@ -36,10 +36,10 @@ namespace macaron.Models
         [Required]
         public TestResult Result { get; set; }
         /// <summary>
-        /// Test user ID
+        /// Test username
         /// </summary>
         [Required]
-        public Guid TestUserId { get; set; }
+        public string TestUsername { get; set; }
         /// <summary>
         /// Created
         /// </summary>

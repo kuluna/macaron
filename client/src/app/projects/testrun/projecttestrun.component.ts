@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Rx';
 })
 export class ProjectTestrunComponent implements OnInit {
   projectId: number;
-  testplans: Testplan[];
+  testplans: Observable<Testplan[]>;
 
   selectTestplan: Testplan;
 
@@ -21,15 +21,19 @@ export class ProjectTestrunComponent implements OnInit {
               private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.activeRoute.params.map(params => params['projectId'] as number)
+    this.testplans = this.activeRoute.params.map(params => params['projectId'] as number)
                            .do(projectId => this.projectId = projectId)
-                           .switchMap(projectId => this.projectsClient.getTestplans(projectId))
-                           .subscribe(testplans => this.testplans = testplans);
+                           .switchMap(projectId => this.projectsClient.getTestplans(projectId));
   }
 
-  sendTestResult(testcase: Testcase, milestoneId: number | null, result: TestResult) {
-    const body = [ new TestrunCreateRequest(testcase.id, milestoneId, result, '00850bcb-b437-44fb-b184-a9af70a1abbf') ];
-    this.projectsClient.postTestrun(this.projectId, body)
-                       .subscribe(() => this.ngOnInit(), error => this.snackBar.open('Error. Try again.', null, { duration: 1500 }));
+  sendTestResult(testcase: Testcase, testplanId: number, result: TestResult) {
+    const body = [ new TestrunCreateRequest(testcase.id, testcase.revision, result, 'string') ];
+    this.projectsClient.postTestrun(this.projectId, testplanId, body)
+                       .subscribe((testplan) => {
+                         const update = this.selectTestplan.testcases.find(t => t.id === testcase.id && t.revision === testcase.revision);
+                         update.lastTestResult = result;
+                       }, error => {
+                         this.snackBar.open('Error. Try again.', null, { duration: 1500 });
+                       });
   }
 }
