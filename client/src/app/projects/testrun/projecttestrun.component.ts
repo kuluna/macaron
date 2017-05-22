@@ -14,7 +14,9 @@ export class ProjectTestrunComponent implements OnInit {
   projectId: number;
   testplans: Observable<Testplan[]>;
 
+  selectTestplanId: number;
   selectTestplan: Testplan;
+  selectTestcaseId: number;
   selectTestcase: Testcase;
 
   constructor(private route: ActivatedRoute,
@@ -23,24 +25,40 @@ export class ProjectTestrunComponent implements OnInit {
               private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.testplans = this.route.params.map(params => params['projectId'] as number)
+    this.testplans = this.route.params.map(params => Number(params['projectId']))
                                       .do(projectId => this.projectId = projectId)
                                       .switchMap(projectId => this.projectsClient.getTestplans(projectId));
 
-    /* not test yet
     this.route.queryParams.filter(query => query['testplanId'])
-                          .map(query => query['testplanId'] as number)
+                          .map(query => Number(query['testplanId']))
                           .zip(this.testplans)
-                          .map(([testplanId, testplans]) => testplans.find(testplan => testplan.id === testplanId))
-                          .subscribe(testplan => this.selectTestplan = testplan);
-    */
+                          .map(([testplanId, testplans]) => testplans.find(t => t.id === testplanId))
+                          .subscribe(testplan => {
+                            this.selectTestplan = testplan;
+                            this.selectTestplanId = testplan.id;
+                          });
+
+    this.route.queryParams.filter(query => query['testcaseId'])
+                          .map(query => Number(query['testcaseId']))
+                          .zip(this.testplans)
+                          .map(([testcaseId, testplans]) => testplans.find(t => t.id === this.selectTestplanId).testcases.find(t => t.id === testcaseId))
+                          .subscribe(testcase => {
+                            this.selectTestcaseId = testcase.id;
+                            this.selectTestcase = testcase;
+                          });
   }
 
-  onSelectTestplan(testplan: Testplan) {
-    this.router.navigate(['./'], {
-      queryParams: { testplanId: testplan.id, testcaseId: testplan.testcases[0].id },
-      relativeTo: this.route
-    });
+  onSelectTestplan(testplanId: number) {
+    this.testplans.map(testplans => testplans.find(t => t.id === testplanId))
+                  .subscribe(testplan => {
+                    this.selectTestplanId = testplan.id;
+                    this.selectTestcaseId = testplan.testcases[0].id;
+
+                    this.router.navigate(['./'], {
+                      queryParams: { testplanId: this.selectTestplanId, testcaseId: this.selectTestcaseId },
+                      relativeTo: this.route
+                    });
+                  });
   }
 
   sendTestResult(testcase: Testcase, testplanId: number, result: TestResult) {

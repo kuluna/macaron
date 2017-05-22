@@ -8,10 +8,19 @@
 <app-bodycontent>
   <div fxLayout="column">
     <h3>Target test plan</h3>
-    <md-select placeholder="Select test plan" [(ngModel)]="selectTestplan" (change)="onSelectTestplan(selectTestplan)">
-      <md-option *ngFor="let testplan of testplans" [value]="testplan">{{testplan.name}}</md-option>
+    <md-select placeholder="Select test plan" [(ngModel)]="selectTestplanId" (change)="onSelectTestplan(selectTestplanId)">
+      <md-option *ngFor="let testplan of testplans | async" [value]="testplan.id">{{testplan.name}}</md-option>
     </md-select>
   </div>
+
+  <md-card *ngIf="selectTestplan && selectTestcase" style="margin: 16px 0">
+    <md-card-title>{{selectTestcase.sectionName}}</md-card-title>
+    <md-card-content>
+      <p>{{selectTestcase.precondition}}<p>
+      <p>{{selectTestcase.test}}<p>
+      <p>{{selectTestcase.expect}}<p>
+    </md-card-content>
+  </md-card>
 
   <div *ngIf="selectTestplan">
     <h3>Tests</h3>
@@ -32,4 +41,5 @@
       </md-card-content>
     </md-card>
   </div>
+
 </app-bodycontent>
