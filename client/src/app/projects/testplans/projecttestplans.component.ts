@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectsClient, Testplan } from '../../apiclient.service';
-import { Observable, ConnectableObservable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-projecttestplans',
@@ -11,7 +11,7 @@ import { Observable, ConnectableObservable } from 'rxjs/Rx';
 })
 export class ProjectTestplansComponent implements OnInit {
   showCompletes = false;
-  testplans: ConnectableObservable<Testplan>;
+  testplans: Observable<Testplan>;
 
   activePlans: Testplan[] = [] ;
   completedPlans: Testplan[] = [];
@@ -20,13 +20,11 @@ export class ProjectTestplansComponent implements OnInit {
 
   ngOnInit() {
     this.testplans = this.activeRoute.params.map(params => params['projectId'] as number)
-                           .switchMap(id => this.projectsClient.getTestplans(id))
+                           .switchMap(id => this.projectsClient.getTestplans(id, false))
                            .switchMap(testplans => Observable.from(testplans))
-                           .publish();
+                           .publish().refCount();
 
     this.testplans.filter(testplan => !testplan.completed).subscribe(testplan => this.activePlans.push(testplan));
     this.testplans.filter(testplan => testplan.completed).subscribe(testplan => this.completedPlans.push(testplan));
-    // start stream
-    this.testplans.connect();
   }
 }

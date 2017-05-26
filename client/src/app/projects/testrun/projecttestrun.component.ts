@@ -12,12 +12,13 @@ import { Observable } from 'rxjs/Rx';
 })
 export class ProjectTestrunComponent implements OnInit {
   projectId: number;
-  testplans: Observable<Testplan[]>;
+  testplans: Testplan[] = [];
 
   selectTestplanId: number;
   selectTestplan: Testplan;
   selectTestcaseId: number;
   selectTestcase: Testcase;
+  testcasesRow = 0;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -25,14 +26,15 @@ export class ProjectTestrunComponent implements OnInit {
               private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.testplans = this.route.params.map(params => Number(params['projectId']))
-                                      .do(projectId => this.projectId = projectId)
-                                      .switchMap(projectId => this.projectsClient.getTestplans(projectId));
+    this.route.params.map(params => Number(params['projectId']))
+                     .do(projectId => this.projectId = projectId)
+                     .switchMap(projectId => this.projectsClient.getTestplans(projectId, true))
+                     .subscribe(testplans => this.testplans = testplans);
 
     this.route.queryParams.filter(query => query['testplanId'])
                           .map(query => Number(query['testplanId']))
-                          .zip(this.testplans)
-                          .map(([testplanId, testplans]) => testplans.find(t => t.id === testplanId))
+                          .filter(f => this.testplans.length > 0)
+                          .map((testplanId) => this.testplans.find(t => t.id === testplanId))
                           .subscribe(testplan => {
                             this.selectTestplan = testplan;
                             this.selectTestplanId = testplan.id;
@@ -40,25 +42,37 @@ export class ProjectTestrunComponent implements OnInit {
 
     this.route.queryParams.filter(query => query['testcaseId'])
                           .map(query => Number(query['testcaseId']))
-                          .zip(this.testplans)
-                          .map(([testcaseId, testplans]) => testplans.find(t => t.id === this.selectTestplanId).testcases.find(t => t.id === testcaseId))
+                          .filter(f => this.testplans.length > 0)
+                          .map(testcaseId => {
+                            return this.testplans.find(t => t.id === this.selectTestplanId).testcases.find(t => t.id === testcaseId);
+                          })
                           .subscribe(testcase => {
                             this.selectTestcaseId = testcase.id;
                             this.selectTestcase = testcase;
                           });
+    this.route.queryParams.subscribe(params => console.log('update queries.'));
   }
 
   onSelectTestplan(testplanId: number) {
-    this.testplans.map(testplans => testplans.find(t => t.id === testplanId))
-                  .subscribe(testplan => {
-                    this.selectTestplanId = testplan.id;
-                    this.selectTestcaseId = testplan.testcases[0].id;
+    const testplan = this.testplans.find(t => t.id === testplanId);
+    this.selectTestplanId = testplan.id;
+    if (testplan.testcases.length > 0) {
+      this.selectTestcaseId = testplan.testcases[0].id;
+    }
 
-                    this.router.navigate(['./'], {
-                      queryParams: { testplanId: this.selectTestplanId, testcaseId: this.selectTestcaseId },
-                      relativeTo: this.route
-                    });
-                  });
+    this.router.navigate(['./'], {
+      queryParams: { testplanId: this.selectTestplanId, testcaseId: this.selectTestcaseId },
+      relativeTo: this.route
+    });
+  }
+
+  onSelectTestcase(row: number) {
+    const newTestcaseId = this.selectTestplan.testcases[row].id;
+    this.router.navigate(['./'], {
+      queryParams: { testplanId: this.selectTestplanId, testcaseId: newTestcaseId },
+      relativeTo: this.route
+    });
+    this.testcasesRow = row;
   }
 
   sendTestResult(testcase: Testcase, testplanId: number, result: TestResult) {
@@ -67,6 +81,9 @@ export class ProjectTestrunComponent implements OnInit {
                        .subscribe((testplan) => {
                          const update = this.selectTestplan.testcases.find(t => t.id === testcase.id && t.revision === testcase.revision);
                          update.lastTestResult = result;
+                         if (update.id === this.selectTestcaseId) {
+                           this.selectTestcase = update;
+                         }
                        }, error => {
                          this.snackBar.open('Error. Try again.', null, { duration: 1500 });
                        });

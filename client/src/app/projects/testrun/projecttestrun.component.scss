@@ -1,0 +1,9 @@
+@import "../../../styles.scss";
+
+.test-warn {
+  height: 48px;
+  background-color: mat-color($warn);
+  color: white;
+  padding-inline-start: 8px;
+  display: flex;
+}

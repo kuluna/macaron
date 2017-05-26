@@ -14,9 +14,6 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit() {
     this.projectsClient.getProjects()
-        .subscribe(projects => {
-          this.projects = projects;
-          console.log(JSON.stringify(projects));
-        });
+        .subscribe(projects => this.projects = projects);
   }
 }

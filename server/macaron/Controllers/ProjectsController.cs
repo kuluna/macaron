@@ -264,9 +264,10 @@ namespace macaron.Controllers
         /// Get all test plans
         /// </summary>
         /// <param name="projectId">Project ID</param>
+        /// <param name="testable">Filtering only testable plan</param>
         /// <returns>Test plans</returns>
         [HttpGet("{projectId}/testplans")]
-        public async Task<IList<TestplanResponse>> GetTestplans(int projectId)
+        public async Task<IList<TestplanResponse>> GetTestplans(int projectId, [FromQuery] bool testable = false)
         {
             var users = await db.Users.ToListAsync();
 
@@ -274,6 +275,7 @@ namespace macaron.Controllers
                                      .Include(t => t.Testcases)
                                      .Include(t => t.Testruns)
                                      .AsNoTracking()
+                                     .Where(t => t.Testcases.Count > 0 || !testable)
                                      .Select(t => new TestplanResponse(t, users))
                                      .ToListAsync();
         }

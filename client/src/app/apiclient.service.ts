@@ -25,8 +25,8 @@ export class ProjectsClient {
     return this.post<Testcase>('api/projects/' + projectId + '/testcases', body);
   }
 
-  getTestplans(projectId: number): Observable<Testplan[]> {
-    return this.get<Testplan[]>('api/projects/' + projectId + '/testplans');
+  getTestplans(projectId: number, testable: boolean): Observable<Testplan[]> {
+    return this.get<Testplan[]>('api/projects/' + projectId + '/testplans?testable=' + testable);
   }
 
   postTestplan(projectId: number, body: TestplanCreateRequest): Observable<Testplan> {
@@ -39,11 +39,13 @@ export class ProjectsClient {
 
   // abstracted http get function
   private get<T>(path: string): Observable<T> {
+    console.log('run http get: ' + path);
     return this.http.get(env.apiBaseAddress + path).map(res => res.json() as T);
   }
 
   // abstracted http post function
   private post<T>(path: string, body: any): Observable<T> {
+    console.log('run http post: ' + path);
     return this.http.post(env.apiBaseAddress + path, body).map(res => res.json() as T);
   }
 }

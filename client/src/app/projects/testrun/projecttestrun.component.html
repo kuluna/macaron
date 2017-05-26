@@ -6,21 +6,39 @@
 </nav>
 
 <app-bodycontent>
-  <div fxLayout="column">
-    <h3>Target test plan</h3>
+  <div fxLayout="column" style="max-width: 375px">
+    <h3>Target testplan</h3>
     <md-select placeholder="Select test plan" [(ngModel)]="selectTestplanId" (change)="onSelectTestplan(selectTestplanId)">
-      <md-option *ngFor="let testplan of testplans | async" [value]="testplan.id">{{testplan.name}}</md-option>
+      <md-option *ngFor="let testplan of testplans" [value]="testplan.id">{{testplan.name}}</md-option>
     </md-select>
   </div>
 
-  <md-card *ngIf="selectTestplan && selectTestcase" style="margin: 16px 0">
+  <md-card *ngIf="selectTestplan && selectTestcase" style="margin: 32px 0">
+    <md-card-actions fxLayout="row" fxLayoutAlign=" center">
+      <button md-button color="accent" (click)="onSelectTestcase(testcasesRow - 1)">Prev</button>
+      <button md-button color="accent" (click)="onSelectTestcase(testcasesRow + 1)">Next</button>
+      <span fxFlex></span>
+      <md-button-toggle-group [(ngModel)]="selectTestcase.lastTestResult">
+        <md-button-toggle value="Ok" (click)="sendTestResult(selectTestcase, selectTestplanId, 'Ok')">OK</md-button-toggle>
+        <md-button-toggle value="Ng" (click)="sendTestResult(selectTestcase, selectTestplanId, 'Ng')">NG</md-button-toggle>
+        <md-button-toggle value="NotTest" (click)="sendTestResult(selectTestcase, selectTestplanId, 'NotTest')">Not test</md-button-toggle>
+      </md-button-toggle-group>
+    </md-card-actions>
+    
+    <md-card-header class="test-warn" *ngIf="selectTestcase.moreCareful" fxLayoutAlign=" center">Please test carefully.</md-card-header>
     <md-card-title>{{selectTestcase.sectionName}}</md-card-title>
     <md-card-content>
-      <p>{{selectTestcase.precondition}}<p>
-      <p>{{selectTestcase.test}}<p>
-      <p>{{selectTestcase.expect}}<p>
+      <h3>Precondition</h3>
+      <p *ngIf="selectTestcase.precondition; else nopre;">{{selectTestcase.precondition}}</p>
+      <ng-template #nopre><p>Nothing.</p></ng-template>
+      <h3>Test</h3>
+      <p>{{selectTestcase.test}}</p>
+      <h3>Expect</h3>
+      <p>{{selectTestcase.expect}}</p>
     </md-card-content>
   </md-card>
+
+  <h3>Completed tests</h3>
 
   <div *ngIf="selectTestplan">
     <h3>Tests</h3>
@@ -30,12 +48,15 @@
           <md-list-item *ngFor="let testcase of selectTestplan.testcases; let i = index">
             <span>{{i + 1}}: </span>
             <span fxFlex>{{testcase.test}}</span>
-            <span>{{testcase.moreCareful}}</span>
-            <div [ngSwitch]="testcase.lastTestResult">
-              <button *ngSwitchCase="'NotTest'" (click)="sendTestResult(testcase, selectTestplan.id, 'Ok')" md-raised-button style="margin-left: 8px">Not test</button>
-              <button *ngSwitchCase="'Ok'" (click)="sendTestResult(testcase, selectTestplan.id, 'Ng')" md-raised-button color="accent" style="margin-left: 8px">OK</button>
-              <button *ngSwitchCase="'Ng'" (click)="sendTestResult(testcase, selectTestplan.id, 'NotTest')" md-raised-button color="warn" style="margin-left: 8px">NG</button>
-            </div>
+            <md-chip-list *ngIf="testcase.moreCareful" style="margin: 0 8px;">
+              <md-chip color="warn" selected="true">More careful</md-chip>
+            </md-chip-list>
+
+            <md-select [(ngModel)]="testcase.lastTestResult" (change)="sendTestResult(testcase, selectTestplan.id, testcase.lastTestResult)">
+              <md-option [value]="'Ok'" color="primary">OK</md-option>
+              <md-option [value]="'Ng'">NG</md-option>
+              <md-option [value]="'NotTest'">NotTest</md-option>
+            </md-select>
           </md-list-item>
         </md-list>
       </md-card-content>
