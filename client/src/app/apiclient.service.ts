@@ -17,6 +17,10 @@ export class ProjectsClient {
     return this.get<Project>('api/projects/' + projectId + '?detail=' + detail);
   }
 
+  addProject(body: ProjectCreateRequest): Observable<Response> {
+    return this.post<Response>('api/projects', body);
+  }
+
   getTestcases(projectId: number): Observable<Testcase[]> {
     return this.get<Testcase[]>('api/projects/' + projectId + '/testcases');
   }
@@ -103,6 +107,11 @@ export class Testrun {
 }
 
 // requests
+
+export class ProjectCreateRequest {
+  name: string;
+  description: string | null;
+}
 
 export class TestcaseCreateRequest {
   sectionName: string | null;

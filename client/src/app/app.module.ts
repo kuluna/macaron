@@ -14,11 +14,15 @@ import { ProjectNavComponent } from './projectnav.component';
 import { SigninComponent } from './user/signin/signin.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
+import { ProjectNewComponent } from './projects/new/projectnew.component';
+
 import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases.component';
 import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
-import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
+
 import { ProjectTestplansComponent } from './projects/testplans/projecttestplans.component';
 import { ProjectTestplanNewComponent } from './projects/testplans/new/projecttestplannew.component';
+
+import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +32,7 @@ import { ProjectTestplanNewComponent } from './projects/testplans/new/projecttes
     SigninComponent,
     ProjectsComponent,
     ProjectDetailComponent,
+    ProjectNewComponent,
     ProjectTestcasesComponent,
     ProjectTestcaseNewComponent,
     ProjectTestrunComponent,

@@ -1,0 +1,22 @@
+<app-bodycontent>
+    <h2>New Testcase</h2>
+
+  <md-card>
+    <form #projectForm="ngForm" (ngSubmit)="onSubmit(projectForm)">
+      <md-card-content fxLayout="column">
+        <md-input-container>
+          <input name="name" required ngModel mdInput placeholder="Name">
+        </md-input-container>
+        <md-input-container>
+          <textarea rows="4" name="description" ngModel mdInput placeholder="Description"></textarea>
+        </md-input-container>
+      </md-card-content>
+
+      <md-card-actions fxLayoutAlign="end center">
+        <div [hidden]="!submitting"><md-spinner color="accent" style="width:24px;height: 24px"></md-spinner></div>
+        <md-checkbox [(ngModel)]="moreCreate" [ngModelOptions]="{standalone: true}" style="margin-right: 16px">More</md-checkbox>
+        <button type="submit" [disabled]="!projectForm.form.valid || submitting" md-raised-button color="primary">CREATE</button>
+      </md-card-actions>
+    </form>
+  </md-card>
+</app-bodycontent>
