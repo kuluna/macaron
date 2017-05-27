@@ -10,7 +10,7 @@ build:
         name: Client build
         cwd: client/
         code: |
-          npm run lint
+          npm run lint -- --type-check
           npm run build --prod
     # Server
     - script:
