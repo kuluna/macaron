@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-projectnav',
   template:
     `
-    <nav md-tab-nav-bar color="primary">
+    <nav md-tab-nav-bar color="primary" *ngIf="projectId">
       <a md-tab-link [routerLink]="['/projects', projectId]" [active]="activeTabName == 'overview'">Overview</a>
       <a md-tab-link [routerLink]="['/projects', projectId, 'testcases']" [active]="activeTabName == 'testcases'">Testcases</a>
       <a md-tab-link [routerLink]="['/projects', projectId, 'testplans']" [active]="activeTabName == 'testplans'">Testplans</a>

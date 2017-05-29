@@ -1,9 +1,4 @@
-<nav md-tab-nav-bar color="primary">
-  <a md-tab-link [routerLink]="['../../../']">Overview</a>
-  <a md-tab-link [routerLink]="['./']" [active]="true">Testcases</a>
-  <a md-tab-link [routerLink]="['../../../testplans']">Testplans</a>
-  <a md-tab-link [routerLink]="['../../../testruns']">Testruns</a>
-</nav>
+<app-projectnav [projectId]="projectId | async" [activeTabName]="'testcases'"></app-projectnav>
 
 <app-bodycontent *ngIf="testcases">
   <div fxLayout="row" fxLayoutAlign=" center" style="margin-bottom: 16px">
