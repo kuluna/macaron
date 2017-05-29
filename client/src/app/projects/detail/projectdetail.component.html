@@ -1,4 +1,4 @@
-<app-projectnav></app-projectnav>
+<app-projectnav [projectId]="project?.id" [activeTabName]="'overview'"></app-projectnav>
 
 <app-bodycontent *ngIf="project">
   <div fxLayout="row" fxLayoutAlign=" center">
