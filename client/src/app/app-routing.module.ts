@@ -11,6 +11,7 @@ import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases
 import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
 
 import { ProjectTestplansComponent } from './projects/testplans/projecttestplans.component';
+import { ProjectTestplanDetailComponent } from './projects/testplans/detail/projecttestplandetail.component';
 import { ProjectTestplanNewComponent } from './projects/testplans/new/projecttestplannew.component';
 
 import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
@@ -29,6 +30,7 @@ const routes: Routes = [
       ]},
       { path: 'testplans', children: [
         { path: '', component: ProjectTestplansComponent },
+        { path: ':testplanId', component: ProjectTestplanDetailComponent },
         { path: 'new', component: ProjectTestplanNewComponent }
       ] },
       { path: 'testruns', component: ProjectTestrunComponent }
