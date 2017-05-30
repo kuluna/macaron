@@ -16,8 +16,7 @@ export class ProjectTestcasesComponent implements OnInit {
   constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.projectId = this.activeRoute.params.map(params => params['projectId'] as number)
-                                            .shareReplay();
+    this.projectId = this.activeRoute.params.map(params => params['projectId'] as number).shareReplay();
 
     this.projectId.switchMap(projectId => this.projectsClient.getTestcases(projectId))
                   .subscribe(testcases => {

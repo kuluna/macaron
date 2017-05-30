@@ -33,6 +33,10 @@ export class ProjectsClient {
     return this.get<Testplan[]>('api/projects/' + projectId + '/testplans?testable=' + testable);
   }
 
+  getTestplan(projectId: number, testplanId: number): Observable<Testplan> {
+    return this.get<Testplan>('api/projects/' + projectId + '/testplans/' + testplanId);
+  }
+
   postTestplan(projectId: number, body: TestplanCreateRequest): Observable<Testplan> {
     return this.post<Testplan>('api/projects/' + projectId + '/testplans', body);
   }
