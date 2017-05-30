@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Rx';
 })
 export class ProjectTestcasesComponent implements OnInit {
   projectId: Observable<number>;
-  testcases: Testcase[];
+  groupd: Map<string, Testcase[]> = new Map();
 
   constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }
 
@@ -20,6 +20,16 @@ export class ProjectTestcasesComponent implements OnInit {
                                             .shareReplay();
 
     this.projectId.switchMap(projectId => this.projectsClient.getTestcases(projectId))
-                  .subscribe(testcases => this.testcases = testcases);
+                  .subscribe(testcases => {
+                    testcases.forEach(testcase => {
+                      if (!this.groupd.has(testcase.sectionName)) {
+                        this.groupd.set(testcase.sectionName, []);
+                      }
+
+                      const ts = this.groupd.get(testcase.sectionName);
+                      ts.push(testcase);
+                      this.groupd.set(testcase.sectionName, ts);
+                    });
+                  });
   }
 }
