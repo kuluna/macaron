@@ -18,35 +18,37 @@ namespace macaron.Models
         /// <summary>
         /// Parent project ID
         /// </summary>
-        [Required]
+        [Required, Range(0, int.MaxValue)]
         public int ProjectId { get; set; }
         /// <summary>
         /// Allocated ID
         /// </summary>
-        [Required]
+        [Required, Range(0, int.MaxValue)]
         public int AllocateId { get; set; }
         /// <summary>
         /// Revision
         /// </summary>
-        [Required]
+        [Required, Range(0, int.MaxValue)]
         public int Revision { get; set; }
         /// <summary>
         /// Branch name (default: master)
         /// </summary>
-        [Required]
+        [Required, MinLength(1)]
         public string BranchName { get; set; }
         /// <summary>
         /// Commit mode
         /// </summary>
+        [Required]
         public CommitMode CommitMode { get; set; }
         /// <summary>
         /// Order(ASC)
         /// </summary>
-        [Required]
+        [Required, Range(0, int.MaxValue)]
         public int Order { get; set; }
         /// <summary>
         /// Section
         /// </summary>
+        [Required, MinLength(1)]
         public string SectionName { get; set; }
         /// <summary>
         /// Want you to test carefully
@@ -56,7 +58,7 @@ namespace macaron.Models
         /// <summary>
         /// Estimates (hour)
         /// </summary>
-        [Required]
+        [Required, Range(0, double.MaxValue)]
         public double Estimates { get; set; }
         /// <summary>
         /// Test precondition (markdown format)
@@ -124,6 +126,11 @@ namespace macaron.Models
         [Required]
         public int Revision { get; set; }
 
+        /// <summary>
+        /// Identity of testcase
+        /// </summary>
+        /// <param name="testcaseId">Testcase ID</param>
+        /// <param name="revision">Revision</param>
         public TestcaseIdentity(int testcaseId, int revision)
         {
             TestcaseId = testcaseId;
