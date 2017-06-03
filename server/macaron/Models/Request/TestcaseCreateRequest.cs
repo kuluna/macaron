@@ -51,8 +51,8 @@ namespace macaron.Models.Request
             {
                 AllocateId = int.MaxValue, // Temporary
                 Revision = 0,
-                SectionName = SectionName,
-                BranchName = BranchName ?? "master",
+                SectionName = string.IsNullOrWhiteSpace(SectionName) ? "Test" : SectionName,
+                BranchName = string.IsNullOrWhiteSpace(BranchName) ? "master" : BranchName,
                 CommitMode = (BranchName != null) ? CommitMode.Add : CommitMode.Commited,
                 Order = int.MaxValue,
                 MoreCareful = MoreCareful,

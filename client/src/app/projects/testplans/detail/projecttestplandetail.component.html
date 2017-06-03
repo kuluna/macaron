@@ -1,3 +1,5 @@
-<p>
-  projecttestplandetail works!
-</p>
+<app-projectnav [projectId]="projectId | async" [activeTabName]="'testplans'"></app-projectnav>
+
+<app-bodycontent *ngIf="testplan">
+  {{testplan | json}}
+</app-bodycontent>

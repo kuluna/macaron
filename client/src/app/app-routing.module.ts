@@ -30,8 +30,8 @@ const routes: Routes = [
       ]},
       { path: 'testplans', children: [
         { path: '', component: ProjectTestplansComponent },
-        { path: ':testplanId', component: ProjectTestplanDetailComponent },
-        { path: 'new', component: ProjectTestplanNewComponent }
+        { path: 'new', component: ProjectTestplanNewComponent },
+        { path: ':testplanId', component: ProjectTestplanDetailComponent }
       ] },
       { path: 'testruns', component: ProjectTestrunComponent }
     ]
