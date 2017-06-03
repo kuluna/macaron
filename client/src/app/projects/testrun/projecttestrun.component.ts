@@ -50,7 +50,6 @@ export class ProjectTestrunComponent implements OnInit {
                             this.selectTestcaseId = testcase.id;
                             this.selectTestcase = testcase;
                           });
-    this.route.queryParams.subscribe(params => console.log('update queries.'));
   }
 
   onSelectTestplan(testplanId: number) {

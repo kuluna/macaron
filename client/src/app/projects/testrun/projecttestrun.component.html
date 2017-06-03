@@ -24,6 +24,7 @@
         <md-button-toggle value="NotTest" (click)="sendTestResult(selectTestcase, selectTestplanId, 'NotTest')">Not test</md-button-toggle>
       </md-button-toggle-group>
     </md-card-actions>
+    <hr />
     
     <md-card-header class="test-warn" *ngIf="selectTestcase.moreCareful" fxLayoutAlign=" center">Please test carefully.</md-card-header>
     <md-card-title>{{selectTestcase.sectionName}}</md-card-title>
