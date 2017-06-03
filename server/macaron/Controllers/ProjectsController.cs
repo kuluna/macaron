@@ -281,6 +281,26 @@ namespace macaron.Controllers
         }
 
         /// <summary>
+        /// Get the testplan
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="testplanId">Testplan ID</param>
+        /// <returns>Testplan</returns>
+        [HttpGet("{projectId}/testplans/{testplanId}")]
+        public async Task<IActionResult> GetTestplan(int projectId, int testplanId)
+        {
+            var testplan = await ProjectService.GetTestplanAsync(db, projectId, testplanId);
+            if (testplan == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(testplan);
+            }
+        }
+
+        /// <summary>
         /// Add the test plan
         /// </summary>
         /// <param name="projectId">Project ID</param>

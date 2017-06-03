@@ -1,5 +1,26 @@
 <app-projectnav [projectId]="projectId | async" [activeTabName]="'testplans'"></app-projectnav>
 
 <app-bodycontent *ngIf="testplan">
-  {{testplan | json}}
+  <div fxLayout="row" fxLayoutAlign=" center">
+    <h2 fxFlex>{{testplan.name}}</h2>
+    <button md-button color="warn">DELETE</button>
+  </div>
+
+  <h3>Branches</h3>
+
+  <md-card *ngFor="let group of grouped.entries()">
+    <md-card-title fxLayout="row" fxLayoutAlign=" center">
+      <span fxFlex>{{group[0]}}</span>
+      <button *ngIf="group[0] != 'master'" md-raised-button color="accent">MERGE</button>
+    </md-card-title>
+    <md-card-content>
+      <md-list>
+        <md-list-item *ngFor="let testcase of group[1]">
+          ({{testcase.id}}, {{testcase.revision}}): 
+          <span fxFlex>{{testcase.test}}</span>      
+        </md-list-item>
+      </md-list>
+    </md-card-content>
+  </md-card>
+
 </app-bodycontent>

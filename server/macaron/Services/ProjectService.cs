@@ -72,6 +72,13 @@ namespace macaron.Services
             return (new TestcaseResponse(testcase), null);
         }
 
+        /// <summary>
+        /// Add new testplan
+        /// </summary>
+        /// <param name="db">Database context</param>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="req">Request body</param>
+        /// <returns>Response body or error</returns>
         public static async Task<(TestplanResponse, string)> AddTestplanAsync(DatabaseContext db, int projectId, TestplanCreateRequest req)
         {
             var project = await db.Projects.Where(p => p.Id == projectId && !p.Arcived)
@@ -89,6 +96,24 @@ namespace macaron.Services
             await db.SaveChangesAsync();
 
             return (new TestplanResponse(testplan, await db.Users.ToListAsync()), null);
+        }
+
+        /// <summary>
+        /// Get the testplan
+        /// </summary>
+        /// <param name="db">Database context</param>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="testplanId">Testplan ID</param>
+        /// <returns>Testplan or null(nothing)</returns>
+        public static async Task<TestplanResponse> GetTestplanAsync(DatabaseContext db, int projectId, int testplanId)
+        {
+            var users = await db.Users.ToListAsync();
+            return await db.Testplans.Where(t => t.ProjectId == projectId && t.Id == testplanId)
+                                     .Include(t => t.Testcases)
+                                     .Include(t => t.Testruns)
+                                     .AsNoTracking()
+                                     .Select(t => new TestplanResponse(t, users))
+                                     .SingleOrDefaultAsync();
         }
     }
 }
