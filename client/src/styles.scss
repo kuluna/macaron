@@ -21,8 +21,7 @@ $theme: mat-light-theme($primary, $accent, $warn);
     @include angular-material-theme($dark-theme);
 }
 
-
-// Body margin zero
+/* Other */
 body {
     margin: 0;
 }

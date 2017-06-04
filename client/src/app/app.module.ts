@@ -5,8 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AppRoutingModule } from './app-routing.module';
+import { MarkdownModule } from 'angular2-markdown';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BodyContentComponent } from './bodycontent.component';
 import { ProjectNavComponent } from './projectnav.component';
@@ -48,6 +49,7 @@ import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.compo
     FormsModule,
     HttpModule,
     MaterialModule,
+    MarkdownModule,
     FlexLayoutModule,
     AppRoutingModule
   ],
