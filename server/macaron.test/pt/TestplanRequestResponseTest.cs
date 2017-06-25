@@ -18,12 +18,12 @@ namespace macaron.test.pt
                 new Case() { Id = 3, Revision = 2 }
             };
 
-            var identities = new List<TestcaseIdentity>()
+            var identities = new List<CaseIdentity>()
             {
-                new TestcaseIdentity(2, 1)
+                new CaseIdentity(2, 1)
             };
 
-            var result = testcases.Where(t => identities.Contains(new TestcaseIdentity(t.Id, t.Revision)));
+            var result = testcases.Where(t => identities.Contains(new CaseIdentity(t.Id, t.Revision)));
 
             Assert.AreEqual(1, result.Count());
         }

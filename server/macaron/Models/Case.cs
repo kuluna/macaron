@@ -81,15 +81,15 @@ namespace macaron.Models
     }
 
     /// <summary>
-    /// Identity the testcase
+    /// Identity the case
     /// </summary>
-    public class TestcaseIdentity
+    public class CaseIdentity
     {
         /// <summary>
-        /// Testcase ID
+        /// Case ID
         /// </summary>
         [Required]
-        public int TestcaseId { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// Revision
         /// </summary>
@@ -101,9 +101,9 @@ namespace macaron.Models
         /// </summary>
         /// <param name="testcaseId">Testcase ID</param>
         /// <param name="revision">Revision</param>
-        public TestcaseIdentity(int testcaseId, int revision)
+        public CaseIdentity(int testcaseId, int revision)
         {
-            TestcaseId = testcaseId;
+            Id = testcaseId;
             Revision = revision;
         }
 
@@ -114,13 +114,13 @@ namespace macaron.Models
         /// <returns>Result</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is TestcaseIdentity))
+            if (obj == null || !(obj is CaseIdentity))
             {
                 return false;
             }
 
-            var compare = obj as TestcaseIdentity;
-            return (TestcaseId == compare.TestcaseId && Revision == compare.Revision);
+            var compare = obj as CaseIdentity;
+            return (Id == compare.Id && Revision == compare.Revision);
         }
 
         /// <summary>

@@ -29,7 +29,7 @@ namespace macaron.Models.Request
         /// <summary>
         /// Custom testcases
         /// </summary>
-        public IList<TestcaseIdentity> TestcaseIds { get; set; }
+        public IList<CaseIdentity> CaseIds { get; set; }
         /// <summary>
         /// Plan leader
         /// </summary>
@@ -59,15 +59,15 @@ namespace macaron.Models.Request
 
                 case PlanPattern.Ng:
                     var failIds = project.Plans.SelectMany(
-                        p => p.Runs.Where(r => r.Result == TestResult.Ng).Select(r => new TestcaseIdentity(r.CaseId, r.CaseRevision)));
-                    return project.Cases.Where(c => failIds.Contains(new TestcaseIdentity(c.AllocateId, c.Revision)));
+                        p => p.Runs.Where(r => r.Result == TestResult.Ng).Select(r => new CaseIdentity(r.CaseId, r.CaseRevision)));
+                    return project.Cases.Where(c => failIds.Contains(new CaseIdentity(c.AllocateId, c.Revision)));
 
                 case PlanPattern.Custom:
-                    if (TestcaseIds == null || TestcaseIds.Count() == 0)
+                    if (CaseIds == null || CaseIds.Count() == 0)
                     {
                         throw new ArgumentException("Set TestcaseIds when select Custom pattern.");
                     }
-                    return project.Cases.Where(t => TestcaseIds.Contains(new TestcaseIdentity(t.Id, t.Revision)));
+                    return project.Cases.Where(t => CaseIds.Contains(new CaseIdentity(t.Id, t.Revision)));
 
                 default:
                     throw new NotImplementedException("This method is not enough other TestPattern's case.");
