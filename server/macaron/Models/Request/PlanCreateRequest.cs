@@ -88,6 +88,7 @@ namespace macaron.Models.Request
                 Cases = FindCase(project).ToList(),
                 DueDate = DueDate,
                 Completed = false,
+                Runs = new List<Run>(),
                 CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
