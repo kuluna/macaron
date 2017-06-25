@@ -1,7 +1,5 @@
-﻿using macaron.Data;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using System.Linq;
 
 namespace macaron.Models.Request
@@ -9,7 +7,7 @@ namespace macaron.Models.Request
     /// <summary>
     /// Request body(update testplan model)
     /// </summary>
-    public class TestplanUpdateRequest : TestplanCreateRequest
+    public class PlanUpdateRequest : PlanCreateRequest
     {
         /// <summary>
         /// Mark the complete this plan
@@ -22,11 +20,14 @@ namespace macaron.Models.Request
         /// </summary>
         /// <param name="model">Will updated model</param>
         /// <param name="project">Project</param>
-        public void Update(Testplan model, Project project)
+        public void Update(Plan model, Project project)
         {
             model.Name = Name;
             model.LeaderName = LeaderName;
-            model.Testcases = FindTestcase(project).ToList();
+            if (!Completed)
+            {
+                model.Cases = FindCase(project).ToList();
+            }
             model.DueDate = DueDate;
             model.Completed = Completed;
             model.LastUpdateDate = DateTimeOffset.UtcNow;

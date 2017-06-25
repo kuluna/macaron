@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace macaron.Models.Response
 {
     /// <summary>
-    /// Response body(Testcase)
+    /// Response body(case)
     /// </summary>
-    public class TestcaseResponse
+    public class CaseResponse
     {
         /// <summary>
         /// Identity Id
@@ -23,14 +22,6 @@ namespace macaron.Models.Response
         /// </summary>
         public int Revision { get; set; }
         /// <summary>
-        /// Branch name (default: master)
-        /// </summary>
-        public string BranchName { get; set; }
-        /// <summary>
-        /// Commit mode
-        /// </summary>
-        public CommitMode CommitMode { get; set; }
-        /// <summary>
         /// Order
         /// </summary>
         public int Order { get; set; }
@@ -41,7 +32,7 @@ namespace macaron.Models.Response
         /// <summary>
         /// Want you to test carefully
         /// </summary>
-        public bool MoreCareful { get; set; }
+        public bool IsCarefully { get; set; }
         /// <summary>
         /// Estimates (hour)
         /// </summary>
@@ -53,19 +44,19 @@ namespace macaron.Models.Response
         /// <summary>
         /// Test step (markdown format)
         /// </summary>
-        public string Test { get; set; }
+        public string Step { get; set; }
         /// <summary>
         /// Expect test result (markdown format)
         /// </summary>
-        public string Expect { get; set; }
+        public string Expectation { get; set; }
         /// <summary>
-        /// Test results
+        /// Run logs
         /// </summary>
-        public IList<Testrun> TestRuns { get; set; }
+        public IList<Run> Runs { get; set; }
         /// <summary>
-        /// Last test result
+        /// Last result
         /// </summary>
-        public TestResult LastTestResult { get; set; }
+        public TestResult LastResult { get; set; }
         /// <summary>
         /// Last update
         /// </summary>
@@ -74,22 +65,20 @@ namespace macaron.Models.Response
         /// Constructor
         /// </summary>
         /// <param name="model">Testcase model</param>
-        public TestcaseResponse(Testcase model)
+        public CaseResponse(Case model)
         {
-            Id = (int) model.AllocateId;
+            Id = model.AllocateId;
             ProjectId = model.ProjectId;
-            Revision = (int) model.Revision;
-            BranchName = model.BranchName;
-            CommitMode = model.CommitMode;
+            Revision = model.Revision;
             Order = model.Order;
             SectionName = model.SectionName;
-            MoreCareful = model.MoreCareful;
+            IsCarefully = model.IsCarefully;
             Estimates = model.Estimates;
             Precondition = model.Precondition;
-            Test = model.Test;
-            Expect = model.Expect;
-            TestRuns = new List<Testrun>();
-            LastTestResult = TestResult.NotTest;
+            Step = model.Step;
+            Expectation = model.Expectation;
+            Runs = new List<Run>();
+            LastResult = TestResult.NotTest;
             LastUpdateDate = model.LastUpdateDate;
         }
 
@@ -97,13 +86,48 @@ namespace macaron.Models.Response
         /// Constructor
         /// </summary>
         /// <param name="model">Testcase model</param>
-        /// <param name="testRuns">Test runs</param>
-        public TestcaseResponse(Testcase model, IEnumerable<Testrun> testRuns) : this(model)
+        /// <param name="runs">Test runs</param>
+        public CaseResponse(Case model, IEnumerable<Run> runs) : this(model)
         {
-            TestRuns = testRuns.Where(t => t.TestcaseId == model.AllocateId && t.Revision == model.Revision)
+            Runs = runs.Where(t => t.CaseId == model.AllocateId && t.CaseRevision == model.Revision)
                                   .OrderByDescending(t => t.LastUpdateDate)
                                   .ToList();
-            LastTestResult = TestRuns.FirstOrDefault()?.Result ?? TestResult.NotTest;
+            LastResult = Runs.FirstOrDefault()?.Result ?? TestResult.NotTest;
+        }
+    }
+
+    /// <summary>
+    /// Response body(grouped case)
+    /// </summary>
+    public class GroupedCaseResponse
+    {
+        /// <summary>
+        /// Section name
+        /// </summary>
+        public string SectionName { get; set; }
+        /// <summary>
+        /// Grouped cases
+        /// </summary>
+        public IList<CaseResponse> Cases { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="section"></param>
+        public GroupedCaseResponse(IGrouping<string, CaseResponse> section)
+        {
+            SectionName = section.Key;
+            Cases = section.ToList();
+        }
+
+        /// <summary>
+        /// Convert to grouped case model
+        /// </summary>
+        /// <param name="cases">Cases</param>
+        /// <returns>Response body</returns>
+        public static IEnumerable<GroupedCaseResponse> ToGroupedCaseResponse(IEnumerable<CaseResponse> cases)
+        {
+            return cases.GroupBy(k => k.SectionName).Select(g => new GroupedCaseResponse(g));
         }
     }
 }

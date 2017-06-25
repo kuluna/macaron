@@ -4,63 +4,57 @@ using System.ComponentModel.DataAnnotations;
 namespace macaron.Models.Request
 {
     /// <summary>
-    /// Request body(Testcase create)
+    /// Request body(case create)
     /// </summary>
-    public class TestcaseCreateRequest
+    public class CaseCreateRequest
     {
         /// <summary>
         /// Section
         /// </summary>
         public string SectionName { get; set; }
         /// <summary>
-        /// Branch name (if null, automatically "master")
-        /// </summary>
-        public string BranchName { get; set; }
-        /// <summary>
-        /// Want you to test carefully
+        /// Want to more carefully
         /// </summary>
         [Required]
-        public bool MoreCareful { get; set; }
+        public bool IsCarefully { get; set; }
         /// <summary>
-        /// Estimates
+        /// Estimates (min)
         /// </summary>
-        [Required]
+        [Required, Range(0, double.MaxValue)]
         public double Estimates { get; set; }
         /// <summary>
-        /// Test precondition
+        /// precondition (markdown)
         /// </summary>
         public string Precondition { get; set; }
         /// <summary>
-        /// Test step
+        /// step (markdown)
         /// </summary>
         [Required, MinLength(1)]
-        public string Test { get; set; }
+        public string Step { get; set; }
         /// <summary>
-        /// Expect test result
+        /// Expect result (markdown)
         /// </summary>
-        [Required, MinLength(1)]
-        public string Expect { get; set; }
+        public string Expectation { get; set; }
 
         /// <summary>
         /// Convert to model
         /// </summary>
         /// <returns>Test case</returns>
-        public Testcase ToTestcase()
+        public Case ToTestcase()
         {
-            return new Testcase()
+            return new Case()
             {
                 AllocateId = int.MaxValue, // Temporary
                 Revision = 0,
                 SectionName = string.IsNullOrWhiteSpace(SectionName) ? "Test" : SectionName,
-                BranchName = string.IsNullOrWhiteSpace(BranchName) ? "master" : BranchName,
-                CommitMode = (BranchName != null) ? CommitMode.Add : CommitMode.Commited,
-                Order = int.MaxValue,
-                MoreCareful = MoreCareful,
+                Order = 0,
+                IsCarefully = IsCarefully,
                 Estimates = Estimates,
                 Precondition = Precondition,
-                Test = Test,
-                Expect = Expect,
+                Step = Step,
+                Expectation = Expectation,
                 IsOutdated = false,
+                CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };
         }

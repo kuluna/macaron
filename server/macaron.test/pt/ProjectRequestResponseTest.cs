@@ -63,7 +63,7 @@ namespace macaron.test.pt
 
             Assert.AreEqual(req.Name, project.Name);
             Assert.AreEqual(req.Description, req.Description);
-            Assert.IsFalse(project.Arcived);
+            Assert.IsFalse(project.IsArcived);
             Assert.IsNotNull(project.CreatedDate);
             Assert.IsNotNull(project.LastUpdateDate);
         }
@@ -113,13 +113,13 @@ namespace macaron.test.pt
             {
                  Name = "updated",
                  Description = "after",
-                 Arcived = true
+                 IsArcived = true
             };
             req.Update(project);
 
             Assert.AreEqual(req.Name, project.Name);
             Assert.AreEqual(req.Description, project.Description);
-            Assert.AreEqual(req.Arcived, project.Arcived);
+            Assert.AreEqual(req.IsArcived, project.IsArcived);
         }
 
         [TestMethod]
@@ -140,7 +140,7 @@ namespace macaron.test.pt
 
             Assert.AreEqual(req.Name, project.Name);
             Assert.AreEqual("before", project.Description);
-            Assert.AreEqual(false, project.Arcived);
+            Assert.AreEqual(false, project.IsArcived);
         }
 
 #endregion
@@ -153,15 +153,15 @@ namespace macaron.test.pt
                 Id = 1,
                 Name = "res",
                 Description = "desc",
-                Arcived = true,
-                Testcases = new List<Testcase>()
+                IsArcived = true,
+                Cases = new List<Case>()
                 {
-                    new Testcase()
+                    new Case()
                     {
                         Id = 1,
                         ProjectId = 1,
-                        Test = "testing",
-                        Expect = "all ok"
+                        Step = "testing",
+                        Expectation = "all ok"
                     }
                 },
                 CreatedDate = DateTimeOffset.UtcNow,
@@ -172,7 +172,7 @@ namespace macaron.test.pt
             Assert.AreEqual(project.Id, res.Id);
             Assert.AreEqual(project.Name, res.Name);
             Assert.AreEqual(project.Description, res.Description);
-            Assert.AreEqual(project.Arcived, res.Arcived);
+            Assert.AreEqual(project.IsArcived, res.IsArcived);
             Assert.AreEqual(project.CreatedDate, res.CreatedDate);
             Assert.AreEqual(project.LastUpdateDate, res.LastUpdateDate);
         }
@@ -185,23 +185,23 @@ namespace macaron.test.pt
                 Id = 1,
                 Name = "res",
                 Description = "desc",
-                Arcived = true,
-                Testcases = new List<Testcase>()
+                IsArcived = true,
+                Cases = new List<Case>()
                 {
-                    new Testcase()
+                    new Case()
                     {
                         Id = 1,
                         ProjectId = 1,
-                        Test = "testing",
-                        Expect = "all ok"
+                        Step = "testing",
+                        Expectation = "all ok"
                     }
                 },
                 CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow.AddDays(1)
             };
 
-            var res = new ProjectDetailResponse(project, project.Testcases);
-            Assert.AreEqual(project.Testcases, res.Testcases);
+            var res = new ProjectDetailResponse(project, project.Cases);
+            Assert.AreEqual(project.Cases, res.Cases);
         }
 
         private (bool, List<ValidationResult>) ValidateModelState<TModel>(TModel model, bool validateAllProperties = true)

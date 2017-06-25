@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 namespace macaron.Models
 {
     /// <summary>
-    /// Test planning
+    /// Plan
     /// </summary>
-    public class Testplan
+    public class Plan
     {
         /// <summary>
         /// ID
@@ -25,13 +25,13 @@ namespace macaron.Models
         [Required, MinLength(1)]
         public string Name { get; set; }
         /// <summary>
-        /// Target testcases
+        /// Target cases
         /// </summary>
-        public virtual IList<Testcase> Testcases { get; set; }
+        public virtual IList<Case> Cases { get; set; }
         /// <summary>
-        /// Run test logs
+        /// Run logs
         /// </summary>
-        public virtual IList<Testrun> Testruns { get; set; }
+        public virtual IList<Run> Runs { get; set; }
         /// <summary>
         /// Plan leader
         /// </summary>
@@ -47,7 +47,12 @@ namespace macaron.Models
         [Required]
         public bool Completed { get; set; }
         /// <summary>
-        /// Last update
+        /// Created date
+        /// </summary>
+        [Required]
+        public DateTimeOffset CreatedDate { get; set; }
+        /// <summary>
+        /// Last update date
         /// </summary>
         [Required]
         public DateTimeOffset LastUpdateDate { get; set; }

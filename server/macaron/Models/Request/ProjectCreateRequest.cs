@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace macaron.Models.Request
@@ -29,7 +28,7 @@ namespace macaron.Models.Request
             {
                 Name = Name,
                 Description = Description,
-                Arcived = false,
+                IsArcived = false,
                 CreatedDate = DateTimeOffset.UtcNow,
                 LastUpdateDate = DateTimeOffset.UtcNow
             };

@@ -24,7 +24,7 @@ namespace macaron.Services
         /// <returns>Projects</returns>
         public static async Task<IList<ProjectResponse>> GetProjectsAsync(DatabaseContext db)
         {
-            return await db.Projects.Where(p => !p.Arcived)
+            return await db.Projects.Where(p => !p.IsArcived)
                                     .AsNoTracking()
                                     .Select(p => new ProjectResponse(p))
                                     .ToListAsync();
@@ -52,10 +52,10 @@ namespace macaron.Services
         /// <param name="projectId">Project ID</param>
         /// <param name="req">Request body</param>
         /// <returns>Response body or error</returns>
-        public static async Task<(TestcaseResponse, string)> AddTestcaseAsync(DatabaseContext db, int projectId, TestcaseCreateRequest req)
+        public static async Task<(CaseResponse, string)> AddCaseAsync(DatabaseContext db, int projectId, CaseCreateRequest req)
         {
             var project = await db.Projects.Where(p => p.Id == projectId)
-                                           .Include(p => p.Testcases)
+                                           .Include(p => p.Cases)
                                            .SingleOrDefaultAsync();
             if (project == null)
             {
@@ -63,13 +63,13 @@ namespace macaron.Services
             }
 
             var testcase = req.ToTestcase();
-            project.Testcases.Add(testcase);
+            project.Cases.Add(testcase);
             await db.SaveChangesAsync();
             // commit case id
             testcase.AllocateId = testcase.Id;
             await db.SaveChangesAsync();
 
-            return (new TestcaseResponse(testcase), null);
+            return (new CaseResponse(testcase), null);
         }
 
         /// <summary>
@@ -79,23 +79,23 @@ namespace macaron.Services
         /// <param name="projectId">Project ID</param>
         /// <param name="req">Request body</param>
         /// <returns>Response body or error</returns>
-        public static async Task<(TestplanResponse, string)> AddTestplanAsync(DatabaseContext db, int projectId, TestplanCreateRequest req)
+        public static async Task<(PlanResponse, string)> AddPlanAsync(DatabaseContext db, int projectId, PlanCreateRequest req)
         {
-            var project = await db.Projects.Where(p => p.Id == projectId && !p.Arcived)
-                                           .Include(p => p.Testcases)
-                                           .Include(p => p.Testplans)
-                                             .ThenInclude(tp => tp.Testruns)
+            var project = await db.Projects.Where(p => p.Id == projectId && !p.IsArcived)
+                                           .Include(p => p.Cases)
+                                           .Include(p => p.Plans)
+                                             .ThenInclude(tp => tp.Runs)
                                            .SingleOrDefaultAsync();
             if (project == null)
             {
                 return (null, "Contains the project id does not exist.");
             }
 
-            var testplan = req.ToTestplan(project);
-            project.Testplans.Add(testplan);
+            var testplan = req.ToPlan(project);
+            project.Plans.Add(testplan);
             await db.SaveChangesAsync();
 
-            return (new TestplanResponse(testplan, await db.Users.ToListAsync()), null);
+            return (new PlanResponse(testplan, await db.Users.ToListAsync()), null);
         }
 
         /// <summary>
@@ -103,16 +103,16 @@ namespace macaron.Services
         /// </summary>
         /// <param name="db">Database context</param>
         /// <param name="projectId">Project ID</param>
-        /// <param name="testplanId">Testplan ID</param>
+        /// <param name="planId">Testplan ID</param>
         /// <returns>Testplan or null(nothing)</returns>
-        public static async Task<TestplanResponse> GetTestplanAsync(DatabaseContext db, int projectId, int testplanId)
+        public static async Task<PlanResponse> GetPlanAsync(DatabaseContext db, int projectId, int planId)
         {
             var users = await db.Users.ToListAsync();
-            return await db.Testplans.Where(t => t.ProjectId == projectId && t.Id == testplanId)
-                                     .Include(t => t.Testcases)
-                                     .Include(t => t.Testruns)
+            return await db.Plans.Where(p => p.ProjectId == projectId && p.Id == planId)
+                                     .Include(p => p.Cases)
+                                     .Include(p => p.Runs)
                                      .AsNoTracking()
-                                     .Select(t => new TestplanResponse(t, users))
+                                     .Select(t => new PlanResponse(t, users))
                                      .SingleOrDefaultAsync();
         }
     }

@@ -62,8 +62,8 @@ namespace macaron.Controllers
 
             if (detail)
             {
-                var testcases = await db.Testcases.Where(m => m.ProjectId == projectId)
-                                                  .OrderByDescending(m => m.Id).ToListAsync();
+                var testcases = await db.Cases.Where(m => m.ProjectId == projectId)
+                                              .OrderByDescending(m => m.Id).ToListAsync();
                 return Ok(new ProjectDetailResponse(project, testcases));
             }
             else
@@ -134,41 +134,50 @@ namespace macaron.Controllers
 
         #endregion
         
-#region Testcases
+#region Cases
 
         /// <summary>
-        /// Get all testcases
+        /// Get all cases
         /// </summary>
         /// <param name="projectId">Project ID</param>
+        /// <param name="groupBySection">Group by SectionName</param>
         /// <returns>Testcases</returns>
         [HttpGet("{projectId}/testcases")]
-        public async Task<ICollection<TestcaseResponse>> GetTestcases(int projectId)
+        public async Task<IActionResult> GetCases(int projectId, [FromQuery] bool groupBySection = false)
         {
-            return await db.Testcases.Where(t => t.ProjectId == projectId && !t.IsOutdated)
-                                     .AsNoTracking()
-                                     .Select(t => new TestcaseResponse(t))
-                                     .ToListAsync();
+            var cases = await db.Cases.Where(t => t.ProjectId == projectId && !t.IsOutdated)
+                                      .AsNoTracking()
+                                      .Select(t => new CaseResponse(t))
+                                      .ToListAsync();
+            if(groupBySection)
+            {
+                return Ok(GroupedCaseResponse.ToGroupedCaseResponse(cases));
+            }
+            else
+            {
+                return Ok(cases);
+            }
         }
 
         /// <summary>
-        /// Add test case
+        /// Add case
         /// </summary>
         /// <param name="projectId">Project ID</param>
         /// <param name="req">Request body</param>
         /// <returns>Milestone</returns>
         [HttpPost("{projectId}/testcases")]
-        public async Task<IActionResult> AddTestcase(int projectId, [FromBody] TestcaseCreateRequest req)
+        public async Task<IActionResult> AddCase(int projectId, [FromBody] CaseCreateRequest req)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var (testcase, error) = await ProjectService.AddTestcaseAsync(db, projectId, req);
+            var (c, error) = await ProjectService.AddCaseAsync(db, projectId, req);
             
-            if (testcase != null)
+            if (c != null)
             {
-                return Created($"/api/{projectId}/testcases/{testcase.Id}", testcase);
+                return Created($"/api/{projectId}/testcases/{c.Id}", c);
             }
             else
             {
@@ -177,61 +186,48 @@ namespace macaron.Controllers
         }
 
         /// <summary>
-        /// Update test case
+        /// Update case
         /// </summary>
         /// <param name="projectId">Project ID</param>
-        /// <param name="testcaseId">Testcase ID</param>
+        /// <param name="caseId">Testcase ID</param>
         /// <param name="req">Request body</param>
         /// <returns>Testcase</returns>
-        [HttpPut("{projectId}/testcases/{testcaseId}")]
-        public async Task<IActionResult> PutTestcase(int projectId, int testcaseId, [FromBody] TestcaseUpdateRequest req)
+        [HttpPut("{projectId}/testcases/{caseId}")]
+        public async Task<IActionResult> PutTestcase(int projectId, int caseId, [FromBody] CaseUpdateRequest req)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (req.CommitMode != CommitMode.Commited &&
-                (string.IsNullOrWhiteSpace(req.BranchName) || req.BranchName.Equals("master")))
-            {
-                return BadRequest("Master allow only 'Commited' mode.");
-            }
-
 
             // Serialize transaction because read, up revision, and insert process should be consistently
             using (var tran = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable))
             {
                 try
                 {
-                    var project = await db.Projects.Where(p => p.Id == projectId)
-                                                   .Include(p => p.Testcases)
+                    var project = await db.Projects.Where(p => p.Id == projectId && !p.IsArcived)
+                                                   .Include(p => p.Cases)
                                                    .SingleOrDefaultAsync();
-                    var revisions = project?.Testcases.Where(t => t.AllocateId == testcaseId).ToList();
-                    var targetTestcase = revisions?.Where(t => t.Revision == req.TargetRevision).SingleOrDefault();
-                    if (targetTestcase == null)
+
+                    var targetCases = project?.Cases.Where(c => c.AllocateId == caseId).ToList();
+                    if (targetCases == null || targetCases.Count == 0)
                     {
                         return NotFound();
                     }
-                    
 
-                    // If merge to master
-                    if (string.IsNullOrWhiteSpace(req.BranchName) || !req.BranchName.Equals(targetTestcase.BranchName))
+
+                    // mark old revision
+                    foreach (var t in targetCases)
                     {
-                        foreach (var t in revisions)
-                        {
-                            t.IsOutdated = true;
-                        }
-                    }
-                    else
-                    {
-                        targetTestcase.IsOutdated = true;
+                        t.IsOutdated = true;
                     }
 
-                    var newTestcase = req.ToTestcase(revisions, targetTestcase);
-                    project.Testcases.Add(newTestcase);
+                    var newCase = req.ToCase(targetCases, caseId);
+                    project.Cases.Add(newCase);
                     await db.SaveChangesAsync();
 
                     tran.Commit();
-                    return Ok(new TestcaseResponse(newTestcase));
+                    return Ok(new CaseResponse(newCase));
                 }
                 catch (Exception e)
                 {
@@ -242,15 +238,15 @@ namespace macaron.Controllers
         }
 
         /// <summary>
-        /// Delete testcase(all revision)
+        /// Delete case(all revision)
         /// </summary>
         /// <param name="projectId">Project ID</param>
         /// <param name="testcaseId">Testcase ID</param>
         [HttpDelete("{projectId}/testcases/{testcaseId}")]
         public async Task<IActionResult> DeleteTestcase(int projectId, int testcaseId)
         {
-            await db.Testcases.Where(t => t.ProjectId == projectId && t.AllocateId == testcaseId)
-                              .ForEachAsync(testcase => testcase.IsOutdated = true);
+            await db.Cases.Where(t => t.ProjectId == projectId && t.AllocateId == testcaseId)
+                          .ForEachAsync(testcase => testcase.IsOutdated = true);
             await db.SaveChangesAsync();
 
             return NoContent();
@@ -264,19 +260,19 @@ namespace macaron.Controllers
         /// Get all test plans
         /// </summary>
         /// <param name="projectId">Project ID</param>
-        /// <param name="testable">Filtering only testable plan</param>
+        /// <param name="runnable">Filtering only testable plan</param>
         /// <returns>Test plans</returns>
         [HttpGet("{projectId}/testplans")]
-        public async Task<IList<TestplanResponse>> GetTestplans(int projectId, [FromQuery] bool testable = false)
+        public async Task<IList<PlanResponse>> GetPlans(int projectId, [FromQuery] bool runnable = false)
         {
             var users = await db.Users.ToListAsync();
 
-            return await db.Testplans.Where(t => t.ProjectId == projectId)
-                                     .Include(t => t.Testcases)
-                                     .Include(t => t.Testruns)
+            return await db.Plans.Where(p => p.ProjectId == projectId)
+                                     .Include(p => p.Cases)
+                                     .Include(p => p.Runs)
+                                     .Where(p => p.Cases.Count > 0 || !runnable)
                                      .AsNoTracking()
-                                     .Where(t => t.Testcases.Count > 0 || !testable)
-                                     .Select(t => new TestplanResponse(t, users))
+                                     .Select(t => new PlanResponse(t, users))
                                      .ToListAsync();
         }
 
@@ -284,12 +280,12 @@ namespace macaron.Controllers
         /// Get the testplan
         /// </summary>
         /// <param name="projectId">Project ID</param>
-        /// <param name="testplanId">Testplan ID</param>
+        /// <param name="planId">Testplan ID</param>
         /// <returns>Testplan</returns>
-        [HttpGet("{projectId}/testplans/{testplanId}")]
-        public async Task<IActionResult> GetTestplan(int projectId, int testplanId)
+        [HttpGet("{projectId}/testplans/{planId}")]
+        public async Task<IActionResult> GetTestplan(int projectId, int planId)
         {
-            var testplan = await ProjectService.GetTestplanAsync(db, projectId, testplanId);
+            var testplan = await ProjectService.GetPlanAsync(db, projectId, planId);
             if (testplan == null)
             {
                 return NotFound();
@@ -307,14 +303,14 @@ namespace macaron.Controllers
         /// <param name="req">Request body</param>
         /// <returns>Test plan</returns>
         [HttpPost("{projectId}/testplans")]
-        public async Task<IActionResult> PostTestplans(int projectId, [FromBody] TestplanCreateRequest req)
+        public async Task<IActionResult> PostTestplans(int projectId, [FromBody] PlanCreateRequest req)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var (testplan, error) = await ProjectService.AddTestplanAsync(db, projectId, req);
+            var (testplan, error) = await ProjectService.AddPlanAsync(db, projectId, req);
 
             if (testplan != null)
             {
@@ -330,69 +326,69 @@ namespace macaron.Controllers
         /// Update the test plan
         /// </summary>
         /// <param name="projectId">Project ID</param>
-        /// <param name="testplanId">Test plan ID</param>
+        /// <param name="planId">Test plan ID</param>
         /// <param name="req">Request body</param>
         /// <returns>Test plan</returns>
-        [HttpPut("{projectId}/testplans/{testplanId}")]
-        public async Task<IActionResult> PutTestplan(int projectId, int testplanId, [FromBody] TestplanUpdateRequest req)
+        [HttpPut("{projectId}/testplans/{planId}")]
+        public async Task<IActionResult> PutTestplan(int projectId, int planId, [FromBody] PlanUpdateRequest req)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var project = await db.Projects.Where(p => p.Id == projectId && !p.Arcived)
-                                           .Include(p => p.Testcases)
-                                           .Include(p => p.Testplans)
-                                             .ThenInclude(tp => tp.Testruns)
+            var project = await db.Projects.Where(p => p.Id == projectId && !p.IsArcived)
+                                           .Include(p => p.Cases)
+                                           .Include(p => p.Plans)
+                                             .ThenInclude(tp => tp.Runs)
                                            .SingleOrDefaultAsync();
 
-            var testplan = project?.Testplans.Where(t => t.Id == testplanId).SingleOrDefault();
-            if (testplan == null)
+            var targetPlan = project?.Plans.Where(p => p.Id == planId).SingleOrDefault();
+            if (targetPlan == null)
             {
                 return NotFound();
             }
 
-            req.Update(testplan, project);
+            req.Update(targetPlan, project);
             await db.SaveChangesAsync();
 
-            return Ok(new TestplanResponse(testplan, await db.Users.ToListAsync()));
+            return Ok(new PlanResponse(targetPlan, await db.Users.ToListAsync()));
         }
 
 #endregion
 
-#region Testruns
+#region Runs
         
         /// <summary>
         /// Add testrun results
         /// </summary>
         /// <param name="projectId">Project ID</param>
-        /// <param name="testplanId">Test plan ID</param>
+        /// <param name="planId">Test plan ID</param>
         /// <param name="requests">Request body</param>
         /// <returns></returns>
-        [HttpPost("{projectId}/testplans/{testplanId}/testruns")]
-        public async Task<IActionResult> PostTestruns(int projectId, int testplanId, [FromBody] IEnumerable<TestrunCreateRequest> requests)
+        [HttpPost("{projectId}/testplans/{planId}/testruns")]
+        public async Task<IActionResult> PostTestruns(int projectId, int planId, [FromBody] IEnumerable<RunCreateRequest> requests)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             
-            var testplan = await db.Testplans.Where(t => t.ProjectId == projectId && t.Id == testplanId)
-                                             .Include(t => t.Testcases)
-                                             .Include(t => t.Testruns)
+            var targetPlan = await db.Plans.Where(p => p.ProjectId == projectId && p.Id == planId)
+                                             .Include(t => t.Cases)
+                                             .Include(t => t.Runs)
                                              .SingleOrDefaultAsync();
-            if (testplan == null)
+            if (targetPlan == null)
             {
                 return NotFound();
             }
 
             foreach (var req in requests)
             {
-                if (testplan.Testcases.Any(t => t.AllocateId == req.TestcaseId && t.Revision == req.Revision))
+                if (targetPlan.Cases.Any(t => t.AllocateId == req.CaseId && t.Revision == req.CaseRevision))
                 {
-                    var testrun = req.ToTestrun(testplanId);
-                    testplan.Testruns.Add(testrun);
+                    var run = req.ToRun(planId);
+                    targetPlan.Runs.Add(run);
                 }
                 else
                 {
@@ -401,7 +397,7 @@ namespace macaron.Controllers
             }
             await db.SaveChangesAsync();
 
-            return Ok(testplan);
+            return Ok(targetPlan);
         }
 
 #endregion

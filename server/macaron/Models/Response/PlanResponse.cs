@@ -10,7 +10,7 @@ namespace Macaron.Models.Response
     /// <summary>
     /// Response body
     /// </summary>
-    public class TestplanResponse
+    public class PlanResponse
     {
         /// <summary>
         /// ID
@@ -27,7 +27,7 @@ namespace Macaron.Models.Response
         /// <summary>
         /// Target testcases
         /// </summary>
-        public IList<TestcaseResponse> Testcases { get; }
+        public IList<CaseResponse> Testcases { get; }
         /// <summary>
         /// Leader
         /// </summary>
@@ -50,13 +50,13 @@ namespace Macaron.Models.Response
         /// </summary>
         /// <param name="model">Testplan model</param>
         /// <param name="users">Users</param>
-        public TestplanResponse(Testplan model, IEnumerable<AppUser> users)
+        public PlanResponse(Plan model, IEnumerable<AppUser> users)
         {
             Id = model.Id;
             ProjectId = model.ProjectId;
             Name = model.Name;
-            Testcases = model.Testcases.Where(t => !t.IsOutdated)
-                                       .Select(t => new TestcaseResponse(t, model.Testruns))
+            Testcases = model.Cases.Where(t => !t.IsOutdated)
+                                       .Select(t => new CaseResponse(t, model.Runs))
                                        .ToList();
             Leader = users.Where(u => u.UserName.Equals(model.LeaderName)).FirstOrDefault();
             DueDate = model.DueDate;

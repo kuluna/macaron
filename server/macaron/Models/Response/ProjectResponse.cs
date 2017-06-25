@@ -23,7 +23,7 @@ namespace macaron.Models.Response
         /// <summary>
         /// Arcive
         /// </summary>
-        public bool Arcived { get; }
+        public bool IsArcived { get; }
         /// <summary>
         /// Created datetime
         /// </summary>
@@ -42,7 +42,7 @@ namespace macaron.Models.Response
             Id = project.Id;
             Name = project.Name;
             Description = project.Description;
-            Arcived = project.Arcived;
+            IsArcived = project.IsArcived;
             CreatedDate = project.CreatedDate;
             LastUpdateDate = project.LastUpdateDate;
         }
@@ -56,16 +56,16 @@ namespace macaron.Models.Response
         /// <summary>
         /// Milestones
         /// </summary>
-        public ICollection<Testcase> Testcases { get; }
+        public IList<Case> Cases { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="project">Project model</param>
-        /// <param name="testcases">Testcase model</param>
-        public ProjectDetailResponse(Project project, ICollection<Testcase> testcases) : base(project)
+        /// <param name="cases">Case models</param>
+        public ProjectDetailResponse(Project project, IList<Case> cases) : base(project)
         {
-            Testcases = testcases;
+            Cases = cases;
         }
     }
 }

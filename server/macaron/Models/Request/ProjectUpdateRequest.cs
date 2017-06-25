@@ -23,7 +23,7 @@ namespace macaron.Models.Request
         /// <summary>
         /// Arcive
         /// </summary>
-        public bool? Arcived { get; set; }
+        public bool? IsArcived { get; set; }
 
         /// <summary>
         /// Update data
@@ -33,7 +33,7 @@ namespace macaron.Models.Request
         {
             project.Name = Name;
             project.Description = Description ?? project.Description;
-            project.Arcived = Arcived ?? project.Arcived;
+            project.IsArcived = IsArcived ?? project.IsArcived;
             project.LastUpdateDate = DateTimeOffset.UtcNow;
         }
     }

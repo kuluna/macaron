@@ -9,37 +9,33 @@ namespace macaron.test.pt
         [TestMethod]
         public void TestcaseCreateIfNameEmpty()
         {
-            var model = new TestcaseCreateRequest()
+            var model = new CaseCreateRequest()
             {
                 SectionName = "",
-                BranchName = "",
-                MoreCareful = false,
+                IsCarefully = false,
                 Estimates = 0,
                 Precondition = "",
-                Test = "OKOK",
-                Expect = "All Ok"
+                Step = "OKOK",
+                Expectation = "All Ok"
             }.ToTestcase();
 
             Assert.AreEqual("Test", model.SectionName);
-            Assert.AreEqual("master", model.BranchName);
         }
 
         [TestMethod]
         public void TestcaseCreate()
         {
-            var model = new TestcaseCreateRequest()
+            var model = new CaseCreateRequest()
             {
                 SectionName = "TestName",
-                BranchName = "Testbranch",
-                MoreCareful = false,
+                IsCarefully = false,
                 Estimates = 0,
                 Precondition = "ABC",
-                Test = "OKOK",
-                Expect = "All Ok"
+                Step = "OKOK",
+                Expectation = "All Ok"
             }.ToTestcase();
 
             Assert.AreEqual("TestName", model.SectionName);
-            Assert.AreEqual("Testbranch", model.BranchName);
         }
     }
 }

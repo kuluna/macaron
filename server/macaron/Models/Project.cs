@@ -27,22 +27,22 @@ namespace macaron.Models
         /// Arcive
         /// </summary>
         [Required]
-        public bool Arcived { get; set; }
+        public bool IsArcived { get; set; }
         /// <summary>
-        /// Testcases
+        /// Cases
         /// </summary>
-        public virtual IList<Testcase> Testcases { get; set; }
+        public virtual IList<Case> Cases { get; set; }
         /// <summary>
-        /// Test plans
+        /// Plans
         /// </summary>
-        public virtual IList<Testplan> Testplans { get; set; }
+        public virtual IList<Plan> Plans { get; set; }
         /// <summary>
-        /// Created datetime
+        /// Created date
         /// </summary>
         [Required]
         public DateTimeOffset CreatedDate { get; set; }
         /// <summary>
-        /// Last update datetime
+        /// Last update date
         /// </summary>
         [Required]
         public DateTimeOffset LastUpdateDate { get; set; }

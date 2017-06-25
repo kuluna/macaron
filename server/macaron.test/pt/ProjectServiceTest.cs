@@ -54,16 +54,16 @@ namespace macaron.test.pt
             await AddInitalDataAsync();
             var projectId = (await db.Projects.FirstAsync()).Id;
 
-            var req = new TestcaseCreateRequest()
+            var req = new CaseCreateRequest()
             {
-                Test = "test",
-                Expect = "is All OK"
+                Step = "test",
+                Expectation = "is All OK"
             };
-            var (res, error) = await ProjectService.AddTestcaseAsync(db, projectId, req);
+            var (res, error) = await ProjectService.AddCaseAsync(db, projectId, req);
             Assert.IsNull(error, error);
 
-            var testcase = await db.Testcases.FindAsync(res.Id);
-            var expectResponse = new TestcaseResponse(testcase);
+            var testcase = await db.Cases.FindAsync(res.Id);
+            var expectResponse = new CaseResponse(testcase);
 
             Assert.AreEqual(expectResponse.Id, res.Id);
         }
@@ -76,7 +76,7 @@ namespace macaron.test.pt
                 {
                     Name = "test",
                     Description = null,
-                    Arcived = false,
+                    IsArcived = false,
                     CreatedDate = DateTimeOffset.UtcNow.AddDays(1),
                     LastUpdateDate = DateTimeOffset.UtcNow.AddDays(2)
                 },
@@ -84,14 +84,14 @@ namespace macaron.test.pt
                 {
                     Name = "あいうえお",
                     Description = "かきくけこ",
-                    Arcived = false,
+                    IsArcived = false,
                     CreatedDate = DateTimeOffset.UtcNow,
                     LastUpdateDate = DateTimeOffset.UtcNow
                 },
                 new Project()
                 {
                     Name = "Arcived",
-                    Arcived = true,
+                    IsArcived = true,
                     CreatedDate = DateTimeOffset.UtcNow,
                     LastUpdateDate = DateTimeOffset.UtcNow
                 },
@@ -99,7 +99,7 @@ namespace macaron.test.pt
                 {
                     Name = "Long name. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.",
                     Description = "Long description. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.",
-                    Arcived = false,
+                    IsArcived = false,
                     CreatedDate = DateTimeOffset.UtcNow,
                     LastUpdateDate = DateTimeOffset.UtcNow
                 }

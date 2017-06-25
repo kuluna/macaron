@@ -11,11 +11,11 @@ namespace macaron.test.pt
         [TestMethod]
         public void TestcaseIdentityEquals()
         {
-            var testcases = new List<Testcase>()
+            var testcases = new List<Case>()
             {
-                new Testcase() { Id = 1, Revision = 0 },
-                new Testcase() { Id = 2, Revision = 1 },
-                new Testcase() { Id = 3, Revision = 2 }
+                new Case() { Id = 1, Revision = 0 },
+                new Case() { Id = 2, Revision = 1 },
+                new Case() { Id = 3, Revision = 2 }
             };
 
             var identities = new List<TestcaseIdentity>()

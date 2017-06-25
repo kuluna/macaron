@@ -21,14 +21,14 @@ namespace macaron.Data
         /// <summary>
         /// Testcases
         /// </summary>
-        public DbSet<Testcase> Testcases { get; set; }
+        public DbSet<Case> Cases { get; set; }
         /// <summary>
         /// Test plans
         /// </summary>
-        public DbSet<Testplan> Testplans { get; set; }
+        public DbSet<Plan> Plans { get; set; }
         /// <summary>
         /// Run test logs
         /// </summary>
-        public DbSet<Testrun> Testruns { get; set; }
+        public DbSet<Run> Runs { get; set; }
     }
 }

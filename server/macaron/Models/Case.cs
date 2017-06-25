@@ -1,17 +1,16 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace macaron.Models
 {
     /// <summary>
-    /// Testcase
+    /// Case
     /// </summary>
-    public class Testcase
+    public class Case
     {
         /// <summary>
-        /// Identity Id
+        /// Identity ID
         /// </summary>
         [Key]
         public int Id { get; set; }
@@ -31,83 +30,54 @@ namespace macaron.Models
         [Required, Range(0, int.MaxValue)]
         public int Revision { get; set; }
         /// <summary>
-        /// Branch name (default: master)
-        /// </summary>
-        [Required, MinLength(1)]
-        public string BranchName { get; set; }
-        /// <summary>
-        /// Commit mode
-        /// </summary>
-        [Required]
-        public CommitMode CommitMode { get; set; }
-        /// <summary>
         /// Order(ASC)
         /// </summary>
         [Required, Range(0, int.MaxValue)]
         public int Order { get; set; }
         /// <summary>
-        /// Section
+        /// Section name (default: Tests)
         /// </summary>
         [Required, MinLength(1)]
         public string SectionName { get; set; }
         /// <summary>
-        /// Want you to test carefully
+        /// Want to test more carefully
         /// </summary>
         [Required]
-        public bool MoreCareful { get; set; }
+        public bool IsCarefully { get; set; }
         /// <summary>
-        /// Estimates (hour)
+        /// Estimates (min)
         /// </summary>
         [Required, Range(0, double.MaxValue)]
         public double Estimates { get; set; }
         /// <summary>
-        /// Test precondition (markdown format)
+        /// Precondition (markdown format)
         /// </summary>
         public string Precondition { get; set; }
         /// <summary>
-        /// Test step (markdown format)
+        /// step (markdown format)
         /// </summary>
         [Required, MinLength(1)]
-        public string Test { get; set; }
+        public string Step { get; set; }
         /// <summary>
-        /// Expect test result (markdown format)
+        /// Expect result (markdown format)
         /// </summary>
-        [Required, MinLength(1)]
-        public string Expect { get; set; }
+        [MinLength(1)]
+        public string Expectation { get; set; }
         /// <summary>
-        /// Delete this testcase
+        /// Delete this case
         /// </summary>
         [Required]
         public bool IsOutdated { get; set; }
         /// <summary>
-        /// Last update
+        /// Created date
+        /// </summary>
+        [Required]
+        public DateTimeOffset CreatedDate { get; set; }
+        /// <summary>
+        /// Last update date
         /// </summary>
         [Required]
         public DateTimeOffset LastUpdateDate { get; set; }
-    }
-
-    /// <summary>
-    /// Commit mode
-    /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum CommitMode
-    {
-        /// <summary>
-        /// Master commited
-        /// </summary>
-        Commited,
-        /// <summary>
-        /// Add
-        /// </summary>
-        Add,
-        /// <summary>
-        /// Modify change
-        /// </summary>
-        Modify,
-        /// <summary>
-        /// Delete testcase
-        /// </summary>
-        Delete
     }
 
     /// <summary>
@@ -144,7 +114,6 @@ namespace macaron.Models
         /// <returns>Result</returns>
         public override bool Equals(object obj)
         {
-            // block rule
             if (obj == null || !(obj is TestcaseIdentity))
             {
                 return false;

@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 namespace macaron.Models
 {
     /// <summary>
-    /// Run test log
+    /// Run log
     /// </summary>
-    public class Testrun
+    public class Run
     {
         /// <summary>
         /// ID
@@ -16,37 +16,42 @@ namespace macaron.Models
         [Key]
         public int Id { get; set; }
         /// <summary>
-        /// Parent testplain ID
+        /// Parent project ID
         /// </summary>
         [Required]
-        public int TestplanId { get; set; }
+        public int ProjectId { get; set; }
         /// <summary>
-        /// To record test ID
+        /// Parent plan ID
         /// </summary>
         [Required]
-        public int TestcaseId { get; set; }
+        public int PlanId { get; set; }
         /// <summary>
-        /// Testcase revision
+        /// To record case ID
         /// </summary>
         [Required]
-        public int Revision { get; set; }
+        public int CaseId { get; set; }
         /// <summary>
-        /// Test result
+        /// Case revision
+        /// </summary>
+        [Required]
+        public int CaseRevision { get; set; }
+        /// <summary>
+        /// Result
         /// </summary>
         [Required]
         public TestResult Result { get; set; }
         /// <summary>
-        /// Test username
+        /// Username
         /// </summary>
-        [Required]
-        public string TestUsername { get; set; }
+        [Required, AppUserName]
+        public string Username { get; set; }
         /// <summary>
         /// Created
         /// </summary>
         [Required]
         public DateTimeOffset CreatedDate { get; set; }
         /// <summary>
-        /// Last update
+        /// Last update date
         /// </summary>
         [Required]
         public DateTimeOffset LastUpdateDate { get; set; }
