@@ -21,37 +21,41 @@ export class ProjectsClient {
     return this.post<Response>('api/projects', body);
   }
 
-  getTestcases(projectId: number): Observable<Testcase[]> {
-    return this.get<Testcase[]>('api/projects/' + projectId + '/testcases');
+  getCases(projectId: number): Observable<Case[]> {
+    return this.get<Case[]>('api/projects/' + projectId + '/cases');
   }
 
-  postTestcase(projectId: number, body: TestcaseCreateRequest): Observable<Testcase> {
-    return this.post<Testcase>('api/projects/' + projectId + '/testcases', body);
+  getGroupedCases(projectId: number): Observable<GroupedCase[]> {
+    return this.get<GroupedCase[]>('api/projects/' + projectId + '/cases?groupBySection=true');
   }
 
-  getTestplans(projectId: number, testable: boolean): Observable<Testplan[]> {
-    return this.get<Testplan[]>('api/projects/' + projectId + '/testplans?testable=' + testable);
+  postCase(projectId: number, body: CaseCreateRequest): Observable<Case> {
+    return this.post<Case>('api/projects/' + projectId + '/cases', body);
   }
 
-  getTestplan(projectId: number, testplanId: number): Observable<Testplan> {
-    return this.get<Testplan>('api/projects/' + projectId + '/testplans/' + testplanId);
+  getPlans(projectId: number, runnable: boolean): Observable<Plan[]> {
+    return this.get<Plan[]>('api/projects/' + projectId + '/plans?runnable=' + runnable);
   }
 
-  postTestplan(projectId: number, body: TestplanCreateRequest): Observable<Testplan> {
-    return this.post<Testplan>('api/projects/' + projectId + '/testplans', body);
+  getPlan(projectId: number, planId: number): Observable<Plan> {
+    return this.get<Plan>('api/projects/' + projectId + '/plans/' + planId);
   }
 
-  postTestrun(projectId: number, testplanId: number, body: TestrunCreateRequest[]): Observable<Testplan> {
-    return this.post<Testplan>('api/projects/' + projectId + '/testplans/' + testplanId + '/testruns', body);
+  postPlan(projectId: number, body: PlanCreateRequest): Observable<Plan> {
+    return this.post<Plan>('api/projects/' + projectId + '/plans', body);
   }
 
-  // abstracted http get function
+  postRun(projectId: number, planId: number, body: RunCreateRequest[]): Observable<Plan> {
+    return this.post<Plan>('api/projects/' + projectId + '/plans/' + planId + '/runs', body);
+  }
+
+  // generic http get function
   private get<T>(path: string): Observable<T> {
     console.log('run http get: ' + path);
     return this.http.get(env.apiBaseAddress + path).map(res => res.json() as T);
   }
 
-  // abstracted http post function
+  // generic http post function
   private post<T>(path: string, body: any): Observable<T> {
     console.log('run http post: ' + path);
     return this.http.post(env.apiBaseAddress + path, body).map(res => res.json() as T);
@@ -64,50 +68,61 @@ export class Project {
   id: number;
   name: string;
   description: string | null;
-  arcived: boolean;
-  testcases: Testcase[];
+  isArcived: boolean;
+  cases: Case[];
   createDate: Date;
   lastUpdateDate: Date;
 }
 
-export class Testcase {
+export class Case {
   id: number;
   projectId: number;
   revision: number;
-  sectionName: string | null;
-  branchName: string;
-  commitMode: CommitMode;
   order: number;
-  moreCareful: boolean;
+  sectionName: string | null;
+  isCarefully: boolean;
   estimates: number;
   precondition: string | null;
-  test: string;
-  expect: string;
-  testRuns: Testrun[];
-  lastTestResult: TestResult;
+  step: string;
+  Expectation: string | null;
+  runs: Run[];
+  lastResult: TestResult;
   lastUpdateDate: Date;
 }
 
-export class Testplan {
+export class GroupedCase {
+  sectionName: string;
+  cases: Case[];
+}
+
+export class Plan {
   id: number;
   projectId: number;
   name: string;
-  testcases: Testcase[];
-  leader: any;
+  cases: Case[];
+  runs: Run[];
+  leaderName: string;
   dueDate: Date | null;
   completed: boolean;
+  createdDate: Date;
   lastUpdateDate: Date;
 }
 
-export class Testrun {
+export class Run {
   id: number;
-  testplanId: number;
-  testcaseId: number;
-  revision: number;
+  projectId: number;
+  planId: number;
+  caseId: number;
+  caseRevision: number;
   result: TestResult;
-  testUser: any;
+  userName: string;
   createDate: Date;
   lastUpdateDate: Date;
+}
+
+export class CaseIdentity {
+  id: number;
+  revision: number;
 }
 
 // requests
@@ -117,37 +132,34 @@ export class ProjectCreateRequest {
   description: string | null;
 }
 
-export class TestcaseCreateRequest {
+export class CaseCreateRequest {
   sectionName: string | null;
-  branchName: string;
-  moreCareful: boolean;
+  isCarefully: boolean;
   estimates: number;
   precondition: string | null;
-  test: string;
-  expect: string;
+  step: string;
+  expectation: string | null;
 }
 
-export class TestplanCreateRequest {
+export class PlanCreateRequest {
   name: string;
   testPattern: TestPattern;
-  branchName: string | null;
-  TestcaseIds: number[] | null;
+  sections: string[] | null;
+  CaseIds: CaseIdentity[] | null;
   leaderName: string;
   dueDate: Date | null;
 }
 
-export class TestrunCreateRequest {
+export class RunCreateRequest {
   constructor(
-    public testcaseId: number,
-    public revision: number,
+    public caseId: number,
+    public caseRevision: number,
     public result: TestResult,
-    public testUsername: string) { }
+    public userName: string) { }
 }
 
 // string enum
 
-export type CommitMode = 'Commited' | 'Add' | 'Modify' | 'Delete';
-
 export type TestResult = 'NotTest' | 'Ok' | 'Ng';
 
-export type TestPattern = 'Branch' | 'Ng' | 'Custom';
+export type TestPattern = 'Section' | 'Ng' | 'Custom';

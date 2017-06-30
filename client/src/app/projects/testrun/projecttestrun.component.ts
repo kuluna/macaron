@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProjectsClient, Testcase, Testplan, TestrunCreateRequest, TestResult } from '../../apiclient.service';
+import { ProjectsClient, Case, Plan, RunCreateRequest, TestResult } from '../../apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
@@ -12,12 +12,12 @@ import { Observable } from 'rxjs/Rx';
 })
 export class ProjectTestrunComponent implements OnInit {
   projectId: number;
-  testplans: Testplan[] = [];
+  testplans: Plan[] = [];
 
   selectTestplanId: number;
-  selectTestplan: Testplan;
+  selectTestplan: Plan;
   selectTestcaseId: number;
-  selectTestcase: Testcase;
+  selectTestcase: Case;
   testcasesRow = 0;
 
   constructor(private route: ActivatedRoute,
@@ -28,7 +28,7 @@ export class ProjectTestrunComponent implements OnInit {
   ngOnInit() {
     this.route.params.map(params => Number(params['projectId']))
                      .do(projectId => this.projectId = projectId)
-                     .switchMap(projectId => this.projectsClient.getTestplans(projectId, true))
+                     .switchMap(projectId => this.projectsClient.getPlans(projectId, true))
                      .subscribe(testplans => this.testplans = testplans);
 
     this.route.queryParams.filter(query => query['testplanId'])
@@ -44,7 +44,7 @@ export class ProjectTestrunComponent implements OnInit {
                           .map(query => Number(query['testcaseId']))
                           .filter(f => this.testplans.length > 0)
                           .map(testcaseId => {
-                            return this.testplans.find(t => t.id === this.selectTestplanId).testcases.find(t => t.id === testcaseId);
+                            return this.testplans.find(t => t.id === this.selectTestplanId).cases.find(t => t.id === testcaseId);
                           })
                           .subscribe(testcase => {
                             this.selectTestcaseId = testcase.id;
@@ -55,8 +55,8 @@ export class ProjectTestrunComponent implements OnInit {
   onSelectTestplan(testplanId: number) {
     const testplan = this.testplans.find(t => t.id === testplanId);
     this.selectTestplanId = testplan.id;
-    if (testplan.testcases.length > 0) {
-      this.selectTestcaseId = testplan.testcases[0].id;
+    if (testplan.cases.length > 0) {
+      this.selectTestcaseId = testplan.cases[0].id;
     }
 
     this.router.navigate(['./'], {
@@ -66,7 +66,7 @@ export class ProjectTestrunComponent implements OnInit {
   }
 
   onSelectTestcase(row: number) {
-    const newTestcaseId = this.selectTestplan.testcases[row].id;
+    const newTestcaseId = this.selectTestplan.cases[row].id;
     this.router.navigate(['./'], {
       queryParams: { testplanId: this.selectTestplanId, testcaseId: newTestcaseId },
       relativeTo: this.route
@@ -74,12 +74,12 @@ export class ProjectTestrunComponent implements OnInit {
     this.testcasesRow = row;
   }
 
-  sendTestResult(testcase: Testcase, testplanId: number, result: TestResult) {
-    const body = [ new TestrunCreateRequest(testcase.id, testcase.revision, result, 'string') ];
-    this.projectsClient.postTestrun(this.projectId, testplanId, body)
+  sendTestResult(testcase: Case, testplanId: number, result: TestResult) {
+    const body = [ new RunCreateRequest(testcase.id, testcase.revision, result, 'string') ];
+    this.projectsClient.postRun(this.projectId, testplanId, body)
                        .subscribe((testplan) => {
-                         const update = this.selectTestplan.testcases.find(t => t.id === testcase.id && t.revision === testcase.revision);
-                         update.lastTestResult = result;
+                         const update = this.selectTestplan.cases.find(t => t.id === testcase.id && t.revision === testcase.revision);
+                         update.lastResult = result;
                          if (update.id === this.selectTestcaseId) {
                            this.selectTestcase = update;
                          }

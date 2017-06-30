@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Testcase, Testplan } from '../../../apiclient.service';
+import { ProjectsClient, Case, Plan } from '../../../apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
@@ -11,8 +11,8 @@ import { Observable } from 'rxjs/Rx';
 })
 export class ProjectTestplanDetailComponent implements OnInit {
   projectId: Observable<number>;
-  testplan: Testplan;
-  grouped: Map<string, Testcase[]> = new Map();
+  testplan: Plan;
+  grouped: Map<string, Case[]> = new Map();
 
 
   constructor(private route: ActivatedRoute,
@@ -25,17 +25,17 @@ export class ProjectTestplanDetailComponent implements OnInit {
 
     this.projectId = ids.map(i => i.projectId);
 
-    ids.switchMap(i => this.api.getTestplan(i.projectId, i.testplanId))
+    ids.switchMap(i => this.api.getPlan(i.projectId, i.testplanId))
        .subscribe(testplan => {
          this.testplan = testplan;
-         testplan.testcases.forEach(testcase => {
-           if (!this.grouped.has(testcase.branchName)) {
-             this.grouped.set(testcase.branchName, []);
+         testplan.cases.forEach(testcase => {
+           if (!this.grouped.has(testcase.sectionName)) {
+             this.grouped.set(testcase.sectionName, []);
            }
 
-           const ts = this.grouped.get(testcase.branchName);
+           const ts = this.grouped.get(testcase.sectionName);
            ts.push(testcase);
-           this.grouped.set(testcase.branchName, ts);
+           this.grouped.set(testcase.sectionName, ts);
          });
        });
   }

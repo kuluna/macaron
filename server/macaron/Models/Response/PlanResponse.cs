@@ -25,9 +25,9 @@ namespace Macaron.Models.Response
         /// </summary>
         public string Name { get; }
         /// <summary>
-        /// Target testcases
+        /// Target cases
         /// </summary>
-        public IList<CaseResponse> Testcases { get; }
+        public IList<CaseResponse> Cases { get; }
         /// <summary>
         /// Leader
         /// </summary>
@@ -55,9 +55,9 @@ namespace Macaron.Models.Response
             Id = model.Id;
             ProjectId = model.ProjectId;
             Name = model.Name;
-            Testcases = model.Cases.Where(c => !c.IsOutdated)
-                                   .Select(c => new CaseResponse(c, model.Runs))
-                                   .ToList();
+            Cases = model.Cases.Where(c => !c.IsOutdated)
+                               .Select(c => new CaseResponse(c, model.Runs))
+                               .ToList();
             Leader = users.Where(u => u.UserName.Equals(model.LeaderName)).FirstOrDefault();
             DueDate = model.DueDate;
             Completed = model.Completed;

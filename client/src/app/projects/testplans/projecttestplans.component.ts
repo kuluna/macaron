@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Testplan } from '../../apiclient.service';
+import { ProjectsClient, Plan } from '../../apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
@@ -11,16 +11,16 @@ import { Observable } from 'rxjs/Rx';
 })
 export class ProjectTestplansComponent implements OnInit {
   showCompletes = false;
-  testplans: Observable<Testplan>;
+  testplans: Observable<Plan>;
 
-  activePlans: Testplan[] = [] ;
-  completedPlans: Testplan[] = [];
+  activePlans: Plan[] = [] ;
+  completedPlans: Plan[] = [];
 
   constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
     this.testplans = this.activeRoute.params.map(params => params['projectId'] as number)
-                           .switchMap(id => this.projectsClient.getTestplans(id, false))
+                           .switchMap(id => this.projectsClient.getPlans(id, false))
                            .switchMap(testplans => Observable.from(testplans))
                            .publish().refCount();
 

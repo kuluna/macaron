@@ -6,21 +6,23 @@
     <button md-button color="warn">DELETE</button>
   </div>
 
-  <h3>Branches</h3>
+  <h3>Sections</h3>
+  {{grouped | json}}
 
+  <!--
   <md-card *ngFor="let group of grouped.entries()">
     <md-card-title fxLayout="row" fxLayoutAlign=" center">
       <span fxFlex>{{group[0]}}</span>
-      <button *ngIf="group[0] != 'master'" md-raised-button color="accent">MERGE</button>
     </md-card-title>
     <md-card-content>
       <md-list>
         <md-list-item *ngFor="let testcase of group[1]">
           ({{testcase.id}}, {{testcase.revision}}): 
-          <span fxFlex>{{testcase.test}}</span>      
+          <span fxFlex>{{testcase.step}}</span>      
         </md-list-item>
       </md-list>
     </md-card-content>
   </md-card>
+  -->
 
 </app-bodycontent>

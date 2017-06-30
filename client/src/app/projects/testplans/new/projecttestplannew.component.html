@@ -16,17 +16,19 @@
           <md-error>Required.</md-error>
         </md-input-container>
 
-        <h4>Testcase</h4>
-        <md-radio-group name="testPattrn" required ngModel="Branch" style="margin-bottom: 16px">
-          <md-radio-button value="Branch" checked="checked">All tests</md-radio-button>
+        <h4>Case</h4>
+        <md-radio-group name="testPattern" required ngModel="Section" style="margin-bottom: 16px">
+          <md-radio-button value="Section" checked="checked">Sections</md-radio-button>
           <md-radio-button value="Fail">All failed tests</md-radio-button>
           <md-radio-button value="Custom" disabled>Custom</md-radio-button>
         </md-radio-group>
 
-        <md-select name="branchName" placeholder="Branch name" required ngModel="master">
-          <md-option *ngFor="let branch of branchNames" [value]="branch">{{branch}}</md-option>
-          <md-error>Required.</md-error>
-        </md-select>
+        <div *ngIf="testplanForm.form.value.testPattern == 'Section'">
+          <h4>Select sections.</h4>
+          <div *ngFor="let section of sectionNames | async">
+            <md-checkbox name="sections[]" value="{{section}}" (change)="onChangeSelect($event)">{{section}}</md-checkbox>
+          </div>
+        </div>
 
         <md-input-container>
           <input name="leaderName" required ngModel mdInput placeholder="Leader Name">
@@ -42,7 +44,7 @@
       <md-card-actions fxLayoutAlign="end center">
         <div [hidden]="!submitting"><md-spinner color="accent" style="width:24px;height: 24px"></md-spinner></div>
         <md-checkbox [(ngModel)]="moreCreate" [ngModelOptions]="{standalone: true}" style="margin-right: 16px">More</md-checkbox>
-        <button type="submit" [disabled]="!testplanForm.form.valid || submitting" md-raised-button color="primary">CREATE</button>
+        <button type="submit" [disabled]="testplanForm.form.invalid || submitting" md-raised-button color="primary">CREATE</button>
       </md-card-actions>
     </form>
   </md-card>

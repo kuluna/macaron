@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { MdSnackBar } from '@angular/material';
+import { MdSnackBar, MdCheckboxChange } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import { ProjectsClient, Testcase, Testplan, TestplanCreateRequest } from '../../../apiclient.service';
+import { ProjectsClient, Case, Plan, PlanCreateRequest } from '../../../apiclient.service';
 
 @Component({
   selector: 'app-projecttestplannew',
@@ -14,29 +14,40 @@ import { ProjectsClient, Testcase, Testplan, TestplanCreateRequest } from '../..
 export class ProjectTestplanNewComponent implements OnInit {
   submitting = false;
   moreCreate = false;
+  selectedSections: string[] = [];
 
-  branchNames: string[] = [];
+  sectionNames: Observable<string[]>;
 
   constructor(private router: Router,
-              private activeRoute: ActivatedRoute,
+              private route: ActivatedRoute,
               private snackBar: MdSnackBar,
               private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.activeRoute.params.map(params => params['projectId'] as number)
-                    .switchMap(projectId => this.projectsClient.getTestcases(projectId))
-                    .switchMap(testcases => Observable.from(testcases))
-                    .distinct(testcase => testcase.branchName)
-                    .map(testcase => testcase.branchName)
-                    .subscribe(branchName => this.branchNames.push(branchName));
+    this.sectionNames = this.route.params.map(params => Number(params['projectId']))
+                                         .switchMap(id => this.projectsClient.getGroupedCases(id))
+                                         .map(cases => cases.map(group => group.sectionName));
+  }
+
+  onChangeSelect(e: MdCheckboxChange) {
+    if (e.checked) {
+      if (this.selectedSections.indexOf(e.source.value) === -1) {
+        this.selectedSections.push(e.source.value);
+      }
+    } else {
+      const index = this.selectedSections.indexOf(e.source.value);
+      this.selectedSections.splice(index, 1);
+    }
+    console.log(this.selectedSections);
   }
 
   onSubmit(form: NgForm) {
-    const value = form.value as TestplanCreateRequest;
+    const value = form.value as PlanCreateRequest;
+    value.sections = this.selectedSections;
     this.submitting = true;
 
-    this.activeRoute.params.map(params => params['projectId'] as number)
-                    .switchMap(projectId => this.projectsClient.postTestplan(projectId, value))
+    this.route.params.map(params => params['projectId'] as number)
+                    .switchMap(projectId => this.projectsClient.postPlan(projectId, value))
                     .subscribe(testplan => {
                       this.snackBar.open('Created.', null, { duration: 1500 });
                       if (this.moreCreate) {
@@ -44,7 +55,7 @@ export class ProjectTestplanNewComponent implements OnInit {
                         form.resetForm();
                         this.submitting = false;
                       } else {
-                        this.router.navigate(['../'], { relativeTo: this.activeRoute });
+                        this.router.navigate(['../'], { relativeTo: this.route });
                       }
                     }, error => {
                       this.submitting = false;

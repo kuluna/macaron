@@ -1,20 +1,20 @@
 <app-projectnav [projectId]="projectId | async" [activeTabName]="'testcases'"></app-projectnav>
 
-<app-bodycontent *ngIf="groupd">
+<app-bodycontent *ngIf="cases">
   <div fxLayout="row" fxLayoutAlign=" center" style="margin-bottom: 16px">
     <h2 fxFlex>Testcases</h2>
     <a md-raised-button color="primary" [routerLink]="['new']">NEW</a>
   </div>
 
-  <div *ngFor="let group of groupd.entries()">
-    <h3>{{group[0]}}</h3>
+  <div *ngFor="let group of cases">
+    <h3>{{group.sectionName}}</h3>
     <md-card>
       <md-card-content>
         <md-list>
-            <md-list-item *ngFor="let testcase of group[1]; let i = index">
+            <md-list-item *ngFor="let case of group.cases; let i = index">
               <span>{{i + 1}}: </span>
-              <span fxFlex>{{testcase.test}}</span>
-              <span>{{testcase.moreCareful}}</span>
+              <span fxFlex>{{case.step}}</span>
+              <span>{{case.isCarefully}}</span>
             </md-list-item>
         </md-list>
       </md-card-content>

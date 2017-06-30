@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Testcase, TestcaseCreateRequest } from '../../../apiclient.service';
+import { ProjectsClient, Case, CaseCreateRequest } from '../../../apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
@@ -27,13 +27,13 @@ export class ProjectTestcaseNewComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    const value = form.value as TestcaseCreateRequest;
+    const value = form.value as CaseCreateRequest;
     // fix md-slide-toggle has no default value
-    value.moreCareful = value.moreCareful ? value.moreCareful : false;
+    value.isCarefully = value.isCarefully ? value.isCarefully : false;
 
     this.submitting = true;
-    this.projectId.switchMap(projectId => this.projectsClient.postTestcase(projectId, value))
-                  .subscribe(testcase => {
+    this.projectId.switchMap(projectId => this.projectsClient.postCase(projectId, value))
+                  .subscribe(_ => {
                     this.snackBar.open('Created.', null, { duration: 1500 });
                     if (this.moreCreate) {
                       form.reset();
