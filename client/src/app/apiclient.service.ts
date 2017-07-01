@@ -99,7 +99,7 @@ export class Plan {
   id: number;
   projectId: number;
   name: string;
-  cases: Case[];
+  cases: GroupedCase[];
   runs: Run[];
   leaderName: string;
   dueDate: Date | null;

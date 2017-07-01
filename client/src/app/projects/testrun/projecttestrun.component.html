@@ -12,13 +12,13 @@
       <md-option *ngFor="let testplan of testplans" [value]="testplan.id">{{testplan.name}}</md-option>
     </md-select>
   </div>
-
+<!--
   <md-card *ngIf="selectTestplan && selectTestcase" style="margin: 32px 0">
     <md-card-actions fxLayout="row" fxLayoutAlign=" center">
       <button md-button color="accent" (click)="onSelectTestcase(testcasesRow - 1)">Prev</button>
       <button md-button color="accent" (click)="onSelectTestcase(testcasesRow + 1)">Next</button>
       <span fxFlex></span>
-      <md-button-toggle-group [(ngModel)]="selectTestcase.lastTestResult">
+      <md-button-toggle-group [(ngModel)]="selectTestcase.lastResult">
         <md-button-toggle value="Ok" (click)="sendTestResult(selectTestcase, selectTestplanId, 'Ok')">OK</md-button-toggle>
         <md-button-toggle value="Ng" (click)="sendTestResult(selectTestcase, selectTestplanId, 'Ng')">NG</md-button-toggle>
         <md-button-toggle value="NotTest" (click)="sendTestResult(selectTestcase, selectTestplanId, 'NotTest')">Not test</md-button-toggle>
@@ -63,5 +63,6 @@
       </md-card-content>
     </md-card>
   </div>
+  -->
 
 </app-bodycontent>

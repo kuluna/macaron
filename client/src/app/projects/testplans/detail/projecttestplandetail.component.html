@@ -1,13 +1,24 @@
 <app-projectnav [projectId]="projectId | async" [activeTabName]="'testplans'"></app-projectnav>
 
-<app-bodycontent *ngIf="testplan">
+<app-bodycontent *ngIf="plan">
   <div fxLayout="row" fxLayoutAlign=" center">
-    <h2 fxFlex>{{testplan.name}}</h2>
+    <div fxFlex>
+      <h2>{{plan.name}}</h2>
+      Due date:
+      <span *ngIf="plan.dueDate; else tbd">{{plan.dueDate}}</span>
+      <ng-template #tbd>TBD</ng-template>
+    </div>
+    <button md-button>EDIT</button>
     <button md-button color="warn">DELETE</button>
   </div>
 
-  <h3>Sections</h3>
-  {{grouped | json}}
+  <h3>Cases</h3>
+  <div *ngFor="let case of plan.cases">
+    <md-card>
+      
+      {{case | json}}
+    </md-card>
+  </div>
 
   <!--
   <md-card *ngFor="let group of grouped.entries()">

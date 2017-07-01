@@ -113,11 +113,21 @@ namespace macaron.Models.Response
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="section"></param>
+        /// <param name="section">Grouped sections</param>
         public GroupedCaseResponse(IGrouping<string, CaseResponse> section)
         {
             SectionName = section.Key;
             Cases = section.ToList();
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="section">Grouped sections</param>
+        /// <param name="runs">Run logs</param>
+        public GroupedCaseResponse(IGrouping<string, CaseResponse> section, IList<Run> runs): this(section)
+        {
+            
         }
 
         /// <summary>

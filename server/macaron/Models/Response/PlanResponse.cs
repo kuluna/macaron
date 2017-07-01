@@ -27,7 +27,7 @@ namespace Macaron.Models.Response
         /// <summary>
         /// Target cases
         /// </summary>
-        public IList<CaseResponse> Cases { get; }
+        public IList<GroupedCaseResponse> Cases { get; }
         /// <summary>
         /// Leader
         /// </summary>
@@ -40,6 +40,10 @@ namespace Macaron.Models.Response
         /// Testplan completed
         /// </summary>
         public bool Completed { get; set; }
+        /// <summary>
+        /// Created date
+        /// </summary>
+        public DateTimeOffset CreatedDate { get; set; }
         /// <summary>
         /// Last update
         /// </summary>
@@ -55,12 +59,13 @@ namespace Macaron.Models.Response
             Id = model.Id;
             ProjectId = model.ProjectId;
             Name = model.Name;
-            Cases = model.Cases.Where(c => !c.IsOutdated)
-                               .Select(c => new CaseResponse(c, model.Runs))
-                               .ToList();
+            var cases = model.Cases.Where(c => !c.IsOutdated)
+                             .Select(c => new CaseResponse(c, model.Runs));
+            Cases = GroupedCaseResponse.ToGroupedCaseResponse(cases).ToList();
             Leader = users.Where(u => u.UserName.Equals(model.LeaderName)).FirstOrDefault();
             DueDate = model.DueDate;
             Completed = model.Completed;
+            CreatedDate = model.CreatedDate;
             LastUpdateDate = model.LastUpdateDate;
         }
     }

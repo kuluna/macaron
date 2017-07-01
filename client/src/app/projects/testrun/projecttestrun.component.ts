@@ -30,7 +30,7 @@ export class ProjectTestrunComponent implements OnInit {
                      .do(projectId => this.projectId = projectId)
                      .switchMap(projectId => this.projectsClient.getPlans(projectId, true))
                      .subscribe(testplans => this.testplans = testplans);
-
+/*
     this.route.queryParams.filter(query => query['testplanId'])
                           .map(query => Number(query['testplanId']))
                           .filter(f => this.testplans.length > 0)
@@ -50,13 +50,14 @@ export class ProjectTestrunComponent implements OnInit {
                             this.selectTestcaseId = testcase.id;
                             this.selectTestcase = testcase;
                           });
+*/
   }
-
+/*
   onSelectTestplan(testplanId: number) {
     const testplan = this.testplans.find(t => t.id === testplanId);
     this.selectTestplanId = testplan.id;
     if (testplan.cases.length > 0) {
-      this.selectTestcaseId = testplan.cases[0].id;
+      // this.selectTestcaseId = testplan.cases[0].id;
     }
 
     this.router.navigate(['./'], {
@@ -87,4 +88,5 @@ export class ProjectTestrunComponent implements OnInit {
                          this.snackBar.open('Error. Try again.', null, { duration: 1500 });
                        });
   }
+*/
 }
