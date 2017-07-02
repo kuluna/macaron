@@ -109,6 +109,18 @@ namespace macaron.Models.Response
         /// Grouped cases
         /// </summary>
         public IList<CaseResponse> Cases { get; set; }
+        /// <summary>
+        /// Total OK count
+        /// </summary>
+        public int OkCount { get; set; }
+        /// <summary>
+        /// Total NG count
+        /// </summary>
+        public int NgCount { get; set; }
+        /// <summary>
+        /// Total nottest count
+        /// </summary>
+        public int NotTestCount { get; set; }
 
         /// <summary>
         /// Constructor
@@ -118,16 +130,8 @@ namespace macaron.Models.Response
         {
             SectionName = section.Key;
             Cases = section.ToList();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="section">Grouped sections</param>
-        /// <param name="runs">Run logs</param>
-        public GroupedCaseResponse(IGrouping<string, CaseResponse> section, IList<Run> runs): this(section)
-        {
-            
+            OkCount = Cases.Count(c => c.Runs.OrderByDescending(r => r.Id).FirstOrDefault()?.Result == TestResult.Ok);
+            NotTestCount = Cases.Count(c => c.Runs.OrderByDescending(r => r.Id).FirstOrDefault()?.Result == TestResult.NotTest);
         }
 
         /// <summary>
