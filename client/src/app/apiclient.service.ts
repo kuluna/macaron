@@ -93,6 +93,9 @@ export class Case {
 export class GroupedCase {
   sectionName: string;
   cases: Case[];
+  okCount: number;
+  ngCount: number;
+  notTestCount: number;
 }
 
 export class Plan {
