@@ -11,25 +11,23 @@ import { Observable } from 'rxjs/Rx';
   providers: [ProjectsClient]
 })
 export class ProjectTestrunComponent implements OnInit {
-  projectId: number;
-  testplans: Plan[] = [];
+  projectId: Observable<number>;
+  plans: Plan[] = [];
 
-  selectTestplanId: number;
-  selectTestplan: Plan;
-  selectTestcaseId: number;
-  selectTestcase: Case;
-  testcasesRow = 0;
+  selectPlanId: number;
+  selectPlan: Plan;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private snackBar: MdSnackBar,
-              private projectsClient: ProjectsClient) { }
+              private api: ProjectsClient) { }
 
   ngOnInit() {
-    this.route.params.map(params => Number(params['projectId']))
-                     .do(projectId => this.projectId = projectId)
-                     .switchMap(projectId => this.projectsClient.getPlans(projectId, true))
-                     .subscribe(testplans => this.testplans = testplans);
+    this.projectId = this.route.params.map(params => Number(params['projectId']))
+                                      .shareReplay();
+
+    this.projectId.switchMap(projectId => this.api.getPlans(projectId, true))
+                  .subscribe(plans => this.plans = plans);
 /*
     this.route.queryParams.filter(query => query['testplanId'])
                           .map(query => Number(query['testplanId']))
@@ -51,6 +49,10 @@ export class ProjectTestrunComponent implements OnInit {
                             this.selectTestcase = testcase;
                           });
 */
+  }
+
+  onSelectPlan(planid: number) {
+    this.selectPlan = this.plans.filter(p => p.id === planid)[0];
   }
 /*
   onSelectTestplan(testplanId: number) {

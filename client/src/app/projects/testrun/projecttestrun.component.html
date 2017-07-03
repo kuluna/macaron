@@ -1,16 +1,18 @@
-<nav md-tab-nav-bar color="primary">
-  <a md-tab-link [routerLink]="['../']">Overview</a>
-  <a md-tab-link [routerLink]="['../testcases']">Testcases</a>
-  <a md-tab-link [routerLink]="['../testplans']">Testplans</a>
-  <a md-tab-link [routerLink]="['./']" [active]="true">Testruns</a>
-</nav>
+<app-projectnav [projectId]="projectId | async" [activeTabName]="'testruns'"></app-projectnav>
 
 <app-bodycontent>
   <div fxLayout="column" style="max-width: 375px">
-    <h3>Target testplan</h3>
-    <md-select placeholder="Select test plan" [(ngModel)]="selectTestplanId" (change)="onSelectTestplan(selectTestplanId)">
-      <md-option *ngFor="let testplan of testplans" [value]="testplan.id">{{testplan.name}}</md-option>
+    <h3>Target plan</h3>
+    <md-select placeholder="Select plan" [(ngModel)]="selectPlanId" (change)="onSelectPlan(selectPlanId)">
+      <md-option *ngFor="let plan of plans" [value]="plan.id">{{plan.name}}</md-option>
     </md-select>
+  </div>
+
+  <div *ngIf="selectPlanId && selectPlan" style="margin: 32px 0">
+    <md-card *ngFor="let case of selectPlan.cases" style="margin: 16px 0">
+      {{case | json}}
+    </md-card>
+    {{selectPlan | json}}
   </div>
 <!--
   <md-card *ngIf="selectTestplan && selectTestcase" style="margin: 32px 0">
