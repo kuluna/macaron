@@ -92,7 +92,7 @@ namespace macaron.Models.Response
             Runs = runs.Where(t => t.CaseId == model.AllocateId && t.CaseRevision == model.Revision)
                                   .OrderByDescending(t => t.LastUpdateDate)
                                   .ToList();
-            LastResult = Runs.FirstOrDefault()?.Result ?? TestResult.NotTest;
+            LastResult = Runs.OrderByDescending(r => r.Id).FirstOrDefault()?.Result ?? TestResult.NotTest;
         }
     }
 
@@ -130,8 +130,9 @@ namespace macaron.Models.Response
         {
             SectionName = section.Key;
             Cases = section.ToList();
-            OkCount = Cases.Count(c => c.Runs.OrderByDescending(r => r.Id).FirstOrDefault()?.Result == TestResult.Ok);
-            NotTestCount = Cases.Count(c => c.Runs.OrderByDescending(r => r.Id).FirstOrDefault()?.Result == TestResult.NotTest);
+            OkCount = Cases.Count(c => c.LastResult == TestResult.Ok);
+            NgCount = Cases.Count(c => c.LastResult == TestResult.Ng);
+            NotTestCount = Cases.Count(c => c.LastResult == TestResult.NotTest);
         }
 
         /// <summary>

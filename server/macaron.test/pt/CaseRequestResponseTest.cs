@@ -70,10 +70,11 @@ namespace macaron.test.pt
             var res = GroupedCaseResponse.ToGroupedCaseResponse(cases.Select(c => new CaseResponse(c)))
                                          .ToList();
 
-            Assert.AreEqual(3, res.Count);
-            Assert.AreEqual(0, res.First().OkCount);
-            Assert.AreEqual(0, res.First().NgCount);
-            Assert.AreEqual(0, res.First().NotTestCount);
+            Assert.AreEqual(1, res.Count);
+            var first = res.First();
+            Assert.AreEqual(0, first.OkCount);
+            Assert.AreEqual(0, first.NgCount);
+            Assert.AreEqual(2, first.NotTestCount);
         }
 
         [TestMethod]
