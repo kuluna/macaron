@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, GroupedCase, Plan } from '../../../apiclient.service';
+import { ProjectsClient, GroupedCase, GroupedPlan } from '../../../apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Rx';
 })
 export class ProjectTestplanDetailComponent implements OnInit {
   projectId: Observable<number>;
-  plan: Plan;
+  plan: GroupedPlan;
 
   constructor(private route: ActivatedRoute,
               private api: ProjectsClient) {}
@@ -23,7 +23,7 @@ export class ProjectTestplanDetailComponent implements OnInit {
 
     this.projectId = ids.map(i => i.projectId);
 
-    ids.switchMap(i => this.api.getPlan(i.projectId, i.testplanId))
+    ids.switchMap(i => this.api.getGroupedPlan(i.projectId, i.testplanId))
        .subscribe(plan => {
          this.plan = plan;
        });

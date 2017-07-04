@@ -281,18 +281,25 @@ namespace macaron.Controllers
         /// </summary>
         /// <param name="projectId">Project ID</param>
         /// <param name="planId">Plan ID</param>
+        /// <param name="groupBySection">Cases group by SectionName</param>
         /// <returns>Plan</returns>
         [HttpGet("{projectId}/plans/{planId}")]
-        public async Task<IActionResult> GetPlan(int projectId, int planId)
+        public async Task<IActionResult> GetPlan(int projectId, int planId, [FromQuery] bool groupBySection = false)
         {
-            var plan = await ProjectService.GetPlanAsync(db, projectId, planId);
+            var plan = await ProjectService.GetPlanAsync(db, projectId, planId, groupBySection);
             if (plan == null)
             {
                 return NotFound();
             }
+
+            var users = await db.Users.ToListAsync();
+            if (groupBySection)
+            {
+                return Ok(new GroupedPlanResponse(plan, users));
+            }
             else
             {
-                return Ok(plan);
+                return Ok(new PlanResponse(plan, users));
             }
         }
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using macaron.Models.Request;
 using Macaron.Models.Response;
+using macaron.Models;
 
 namespace macaron.Services
 {
@@ -104,15 +105,14 @@ namespace macaron.Services
         /// <param name="db">Database context</param>
         /// <param name="projectId">Project ID</param>
         /// <param name="planId">Testplan ID</param>
-        /// <returns>Testplan or null(nothing)</returns>
-        public static async Task<PlanResponse> GetPlanAsync(DatabaseContext db, int projectId, int planId)
+        /// <param name="groupBySection">Cases group by SectionName</param>
+        /// <returns>Plan or null(nothing)</returns>
+        public static async Task<Plan> GetPlanAsync(DatabaseContext db, int projectId, int planId, bool groupBySection)
         {
-            var users = await db.Users.ToListAsync();
             return await db.Plans.Where(p => p.ProjectId == projectId && p.Id == planId)
                                      .Include(p => p.Cases)
                                      .Include(p => p.Runs)
                                      .AsNoTracking()
-                                     .Select(t => new PlanResponse(t, users))
                                      .SingleOrDefaultAsync();
         }
     }

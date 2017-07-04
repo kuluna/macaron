@@ -10,11 +10,40 @@ namespace Macaron.Models.Response
     /// <summary>
     /// Response body
     /// </summary>
-    public class PlanResponse
+    public class PlanResponse: BasePlanResponse
     {
         /// <summary>
-        /// ID
+        /// Target cases
         /// </summary>
+        public IList<CaseResponse> Cases { get; }
+
+        public PlanResponse(Plan model, IEnumerable<AppUser> users): base(model, users)
+        {
+            Cases = model.Cases.Where(c => !c.IsOutdated)
+                               .Select(c => new CaseResponse(c, model.Runs))
+                               .ToList();
+        }
+    }
+
+    public class GroupedPlanResponse : BasePlanResponse
+    {
+        /// <summary>
+        /// Target cases
+        /// </summary>
+        public IList<GroupedCaseResponse> Cases { get; }
+
+        public GroupedPlanResponse(Plan model, IEnumerable<AppUser> users): base(model, users)
+        {
+            var cases = model.Cases.Where(c => !c.IsOutdated)
+                             .Select(c => new CaseResponse(c, model.Runs));
+            Cases = GroupedCaseResponse.ToGroupedCaseResponse(cases).ToList();
+        }
+    }
+
+    public class BasePlanResponse
+    {        /// <summary>
+             /// ID
+             /// </summary>
         public int Id { get; }
         /// <summary>
         /// Parent project ID
@@ -24,10 +53,6 @@ namespace Macaron.Models.Response
         /// Name
         /// </summary>
         public string Name { get; }
-        /// <summary>
-        /// Target cases
-        /// </summary>
-        public IList<GroupedCaseResponse> Cases { get; }
         /// <summary>
         /// Leader
         /// </summary>
@@ -54,19 +79,17 @@ namespace Macaron.Models.Response
         /// </summary>
         /// <param name="model">Testplan model</param>
         /// <param name="users">Users</param>
-        public PlanResponse(Plan model, IEnumerable<AppUser> users)
+        public BasePlanResponse(Plan model, IEnumerable<AppUser> users)
         {
             Id = model.Id;
             ProjectId = model.ProjectId;
             Name = model.Name;
-            var cases = model.Cases.Where(c => !c.IsOutdated)
-                             .Select(c => new CaseResponse(c, model.Runs));
-            Cases = GroupedCaseResponse.ToGroupedCaseResponse(cases).ToList();
             Leader = users.Where(u => u.UserName.Equals(model.LeaderName)).FirstOrDefault();
             DueDate = model.DueDate;
             Completed = model.Completed;
             CreatedDate = model.CreatedDate;
             LastUpdateDate = model.LastUpdateDate;
         }
+
     }
 }

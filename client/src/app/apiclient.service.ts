@@ -41,6 +41,10 @@ export class ProjectsClient {
     return this.get<Plan>('api/projects/' + projectId + '/plans/' + planId);
   }
 
+  getGroupedPlan(projectId: number, planId): Observable<GroupedPlan> {
+    return this.get<GroupedPlan>('api/projects/' + projectId + '/plans/' + planId + '?groupBySection=true');
+  }
+
   postPlan(projectId: number, body: PlanCreateRequest): Observable<Plan> {
     return this.post<Plan>('api/projects/' + projectId + '/plans', body);
   }
@@ -98,7 +102,20 @@ export class GroupedCase {
   notTestCount: number;
 }
 
-export class Plan {
+export class Plan implements BasePlan {
+  id: number;
+  projectId: number;
+  name: string;
+  cases: Case[];
+  runs: Run[];
+  leaderName: string;
+  dueDate: Date | null;
+  completed: boolean;
+  createdDate: Date;
+  lastUpdateDate: Date;
+}
+
+export class GroupedPlan implements BasePlan {
   id: number;
   projectId: number;
   name: string;
@@ -126,6 +143,18 @@ export class Run {
 export class CaseIdentity {
   id: number;
   revision: number;
+}
+
+interface BasePlan {
+  id: number;
+  projectId: number;
+  name: string;
+  runs: Run[];
+  leaderName: string;
+  dueDate: Date | null;
+  completed: boolean;
+  createdDate: Date;
+  lastUpdateDate: Date;
 }
 
 // requests
