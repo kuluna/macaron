@@ -67,6 +67,17 @@ export class ProjectsClient {
 }
 
 // models
+interface BasePlan {
+  id: number;
+  projectId: number;
+  name: string;
+  runs: Run[];
+  leaderName: string;
+  dueDate: Date | null;
+  completed: boolean;
+  createdDate: Date;
+  lastUpdateDate: Date;
+}
 
 export class Project {
   id: number;
@@ -143,18 +154,6 @@ export class Run {
 export class CaseIdentity {
   id: number;
   revision: number;
-}
-
-interface BasePlan {
-  id: number;
-  projectId: number;
-  name: string;
-  runs: Run[];
-  leaderName: string;
-  dueDate: Date | null;
-  completed: boolean;
-  createdDate: Date;
-  lastUpdateDate: Date;
 }
 
 // requests
