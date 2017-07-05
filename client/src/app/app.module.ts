@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MarkdownModule } from 'angular2-markdown';
+import { NgPipesModule } from 'ngx-pipes';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -48,6 +49,7 @@ import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.compo
     BrowserModule,
     FormsModule,
     HttpModule,
+    NgPipesModule,
     MaterialModule,
     MarkdownModule,
     FlexLayoutModule,
