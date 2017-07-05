@@ -1,7 +1,7 @@
 <app-projectnav [projectId]="projectId | async" [activeTabName]="'testcases'"></app-projectnav>
 
 <app-bodycontent>
-    <h2>New Testcase</h2>
+    <h2>New Case</h2>
 
     <md-card>
       <form #testcaseForm="ngForm" (ngSubmit)="onSubmit(testcaseForm)">
@@ -10,22 +10,49 @@
             <md-input-container fxFlex>
               <input name="sectionName" ngModel mdInput placeholder="Section name(default: Test)">
             </md-input-container>
-            <md-slide-toggle name="isCarefully" ngModel color="primary" style="margin-left: 16px">Is carefully</md-slide-toggle>
+            <md-slide-toggle name="isCarefully" ngModel color="primary" style="margin-left: 16px">Carefully</md-slide-toggle>
           </div>
           <md-input-container>
             <input type="number" step="1" min="0" required name="estimates" ngModel="0" mdInput placeholder="Estimates (min)">
             <md-error>Required.</md-error>
           </md-input-container>
-          <md-input-container>
-            <textarea rows="4" name="precondition" ngModel mdInput placeholder="Precondition"></textarea>
-          </md-input-container>
-          <md-input-container>
-            <textarea required rows="4" name="step" ngModel mdInput placeholder="Step"></textarea>
-            <md-error>Required.</md-error>
-          </md-input-container>
-          <md-input-container>
-            <textarea rows="4" name="expectation" ngModel mdInput placeholder="Expectation"></textarea>
-          </md-input-container>
+
+          <h3>Precondition</h3>
+          <md-tab-group>
+            <md-tab label="Markdown">
+              <md-input-container style="width:100%">
+                <textarea rows="4" name="precondition" ngModel mdInput placeholder="Precondition" style="resize:vertical"></textarea>
+              </md-input-container>
+            </md-tab>
+            <md-tab label="Preview">
+              <markdown *ngIf="testcaseForm.form.value.precondition" [data]="testcaseForm.form.value.precondition"></markdown>
+            </md-tab>
+          </md-tab-group>
+
+          <h3>Step</h3>
+          <md-tab-group>
+            <md-tab label="Markdown">
+              <md-input-container style="width:100%">
+                <textarea required rows="4" name="step" ngModel mdInput placeholder="Step" style="resize:vertical"></textarea>
+                <md-error>Required.</md-error>
+              </md-input-container>
+            </md-tab>
+            <md-tab label="Preview">
+              <markdown *ngIf="testcaseForm.form.value.step" [data]="testcaseForm.form.value.step"></markdown>
+            </md-tab>
+          </md-tab-group>
+          
+          <h3>Expectation</h3>
+          <md-tab-group>
+            <md-tab label="Markdown">
+              <md-input-container style="width:100%">
+                <textarea rows="4" name="expectation" ngModel mdInput placeholder="Expectation" style="resize:vertical"></textarea>
+              </md-input-container>
+            </md-tab>
+            <md-tab label="Preview">
+              <markdown *ngIf="testcaseForm.form.value.expectation" [data]="testcaseForm.form.value.expectation"></markdown>
+            </md-tab>
+          </md-tab-group>
         </md-card-content>
 
         <md-card-actions fxLayoutAlign="end center">
