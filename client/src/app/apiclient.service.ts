@@ -99,7 +99,7 @@ export class Case {
   estimates: number;
   precondition: string | null;
   step: string;
-  Expectation: string | null;
+  expectation: string | null;
   runs: Run[];
   lastResult: TestResult;
   lastUpdateDate: Date;
@@ -186,7 +186,7 @@ export class RunCreateRequest {
     public caseId: number,
     public caseRevision: number,
     public result: TestResult,
-    public userName: string) { }
+    public username: string) { }
 }
 
 // string enum

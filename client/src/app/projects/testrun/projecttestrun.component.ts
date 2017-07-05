@@ -16,6 +16,8 @@ export class ProjectTestrunComponent implements OnInit {
 
   selectPlanId: number;
   selectPlan: Plan;
+  selectCaseIndex = 0;
+  selectCase: Case;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -53,42 +55,21 @@ export class ProjectTestrunComponent implements OnInit {
 
   onSelectPlan(planid: number) {
     this.selectPlan = this.plans.filter(p => p.id === planid)[0];
-  }
-/*
-  onSelectTestplan(testplanId: number) {
-    const testplan = this.testplans.find(t => t.id === testplanId);
-    this.selectTestplanId = testplan.id;
-    if (testplan.cases.length > 0) {
-      // this.selectTestcaseId = testplan.cases[0].id;
-    }
-
-    this.router.navigate(['./'], {
-      queryParams: { testplanId: this.selectTestplanId, testcaseId: this.selectTestcaseId },
-      relativeTo: this.route
-    });
+    this.selectCase = this.selectPlan.cases[0];
   }
 
-  onSelectTestcase(row: number) {
-    const newTestcaseId = this.selectTestplan.cases[row].id;
-    this.router.navigate(['./'], {
-      queryParams: { testplanId: this.selectTestplanId, testcaseId: newTestcaseId },
-      relativeTo: this.route
-    });
-    this.testcasesRow = row;
+  onSelectCase(row: number) {
+    this.selectCaseIndex = row;
+    this.selectCase = this.selectPlan.cases[row];
   }
 
-  sendTestResult(testcase: Case, testplanId: number, result: TestResult) {
-    const body = [ new RunCreateRequest(testcase.id, testcase.revision, result, 'string') ];
-    this.projectsClient.postRun(this.projectId, testplanId, body)
-                       .subscribe((testplan) => {
-                         const update = this.selectTestplan.cases.find(t => t.id === testcase.id && t.revision === testcase.revision);
-                         update.lastResult = result;
-                         if (update.id === this.selectTestcaseId) {
-                           this.selectTestcase = update;
-                         }
-                       }, error => {
-                         this.snackBar.open('Error. Try again.', null, { duration: 1500 });
-                       });
+  sendResult(targetCase: Case, planId: number, result: TestResult) {
+    const body = [ new RunCreateRequest(targetCase.id, targetCase.revision, result, 'string') ];
+
+    this.projectId.switchMap(pId => this.api.postRun(pId, planId, body))
+                  .subscribe((plan) => {
+                  }, error => {
+                    this.snackBar.open('Error. Try again.', null, { duration: 1500 });
+                  });
   }
-*/
 }
