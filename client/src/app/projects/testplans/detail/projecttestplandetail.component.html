@@ -3,12 +3,12 @@
 <app-bodycontent *ngIf="plan">
   <div fxLayout="row" fxLayoutAlign=" center">
     <div fxFlex>
-      <h2>{{plan.name}}</h2>
+      <h2>{{plan.name}} <span *ngIf="plan.completed">(Completed)</span></h2>
       Due date:
       <span *ngIf="plan.dueDate; else tbd">{{plan.dueDate}}</span>
       <ng-template #tbd>TBD</ng-template>
     </div>
-    <button md-button color="accent">ARCIVE</button>
+    <button md-button color="accent" (click)="toggleComplete()">COMPLETE</button>
     <button md-button>EDIT</button>
     <button md-button color="warn">DELETE</button>
   </div>
@@ -17,7 +17,11 @@
   <md-card *ngFor="let case of plan.cases" style="margin:8px;">
     <md-card-title>{{case.sectionName}}</md-card-title>
     <md-card-content>
-      <md-progress-bar [value]="(case.okCount + case.ngCount) * 100 / case.cases.length"></md-progress-bar>
+      <md-progress-bar
+        [mode]="'buffer'"
+        [value]="case.okCount * 100 / case.cases.length"
+        [bufferValue]="(case.okCount + case.ngCount) * 100 / case.cases.length">
+      </md-progress-bar>
 
       OK: {{case.okCount}}<br />
       NG: {{case.ngCount}}<br />

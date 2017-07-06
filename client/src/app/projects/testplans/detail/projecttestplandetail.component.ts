@@ -28,4 +28,8 @@ export class ProjectTestplanDetailComponent implements OnInit {
          this.plan = plan;
        });
   }
+
+  toggleComplete() {
+
+  }
 }
