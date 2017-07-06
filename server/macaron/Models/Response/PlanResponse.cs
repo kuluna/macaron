@@ -8,7 +8,7 @@ using System.Linq;
 namespace Macaron.Models.Response
 {
     /// <summary>
-    /// Response body
+    /// Response body(plan)
     /// </summary>
     public class PlanResponse: BasePlanResponse
     {
@@ -17,6 +17,11 @@ namespace Macaron.Models.Response
         /// </summary>
         public IList<CaseResponse> Cases { get; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="model">Plan model</param>
+        /// <param name="users">Users</param>
         public PlanResponse(Plan model, IEnumerable<AppUser> users): base(model, users)
         {
             Cases = model.Cases.Where(c => !c.IsOutdated)
@@ -25,6 +30,9 @@ namespace Macaron.Models.Response
         }
     }
 
+    /// <summary>
+    /// Response body(grouped plan)
+    /// </summary>
     public class GroupedPlanResponse : BasePlanResponse
     {
         /// <summary>
@@ -32,6 +40,11 @@ namespace Macaron.Models.Response
         /// </summary>
         public IList<GroupedCaseResponse> Cases { get; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="model">Plan model</param>
+        /// <param name="users">Users</param>
         public GroupedPlanResponse(Plan model, IEnumerable<AppUser> users): base(model, users)
         {
             var cases = model.Cases.Where(c => !c.IsOutdated)
@@ -40,7 +53,10 @@ namespace Macaron.Models.Response
         }
     }
 
-    public class BasePlanResponse
+    /// <summary>
+    /// Base model
+    /// </summary>
+    public abstract class BasePlanResponse
     {        /// <summary>
              /// ID
              /// </summary>
@@ -77,7 +93,7 @@ namespace Macaron.Models.Response
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="model">Testplan model</param>
+        /// <param name="model">Plan model</param>
         /// <param name="users">Users</param>
         public BasePlanResponse(Plan model, IEnumerable<AppUser> users)
         {
