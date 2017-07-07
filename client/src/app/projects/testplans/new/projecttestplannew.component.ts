@@ -12,6 +12,7 @@ import { ProjectsClient, Case, Plan, PlanCreateRequest } from '../../../apiclien
   providers: [ProjectsClient]
 })
 export class ProjectTestplanNewComponent implements OnInit {
+  projectId: Observable<number>;
   submitting = false;
   moreCreate = false;
   selectedSections: string[] = [];
@@ -24,9 +25,10 @@ export class ProjectTestplanNewComponent implements OnInit {
               private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.sectionNames = this.route.params.map(params => Number(params['projectId']))
-                                         .switchMap(id => this.projectsClient.getGroupedCases(id))
-                                         .map(cases => cases.map(group => group.sectionName));
+    this.projectId = this.route.params.map(params => Number(params['projectId']))
+                                      .shareReplay();
+    this.sectionNames = this.projectId.switchMap(id => this.projectsClient.getGroupedCases(id))
+                                      .map(cases => cases.map(group => group.sectionName));
   }
 
   onChangeSelect(e: MdCheckboxChange) {

@@ -24,16 +24,16 @@ const routes: Routes = [
   ]},
   { path: 'projects/:projectId', children: [
       { path: '', component: ProjectDetailComponent },
-      { path: 'testcases', children: [
+      { path: 'cases', children: [
         { path: '', component: ProjectTestcasesComponent },
         { path: 'new', component: ProjectTestcaseNewComponent }
       ]},
-      { path: 'testplans', children: [
+      { path: 'plans', children: [
         { path: '', component: ProjectTestplansComponent },
         { path: 'new', component: ProjectTestplanNewComponent },
-        { path: ':testplanId', component: ProjectTestplanDetailComponent }
+        { path: ':planId', component: ProjectTestplanDetailComponent }
       ] },
-      { path: 'testruns', component: ProjectTestrunComponent }
+      { path: 'runs', component: ProjectTestrunComponent }
     ]
   }
 ];

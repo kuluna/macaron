@@ -1,13 +1,8 @@
-<nav md-tab-nav-bar color="primary">
-  <a md-tab-link [routerLink]="['../../../']">Overview</a>
-  <a md-tab-link [routerLink]="['../../../testcases']">Testcases</a>
-  <a md-tab-link [routerLink]="['./']" [active]="true">Testplans</a>
-  <a md-tab-link [routerLink]="['../../../testruns']">Testruns</a>
-</nav>
+<app-projectnav [projectId]="projectId | async" [activeTabName]="'plans'"></app-projectnav>
 
 <app-bodycontent>
   <div fxLayout="row" fxLayoutAlign=" center">
-    <h2 fxFlex>Testplans</h2>
+    <h2 fxFlex>Plans</h2>
     <a [routerLink]="['new']" md-raised-button color="primary">NEW</a>
   </div>
 

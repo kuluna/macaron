@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Rx';
   providers: [ProjectsClient]
 })
 export class ProjectTestplansComponent implements OnInit {
+  projectId: Observable<number>;
   showCompletes = false;
   testplans: Observable<Plan>;
 
@@ -19,10 +20,11 @@ export class ProjectTestplansComponent implements OnInit {
   constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }
 
   ngOnInit() {
-    this.testplans = this.activeRoute.params.map(params => params['projectId'] as number)
-                           .switchMap(id => this.projectsClient.getPlans(id, false))
-                           .switchMap(testplans => Observable.from(testplans))
-                           .publish().refCount();
+    this.projectId = this.activeRoute.params.map(params => Number(params['projectId']))
+                                            .shareReplay();
+    this.testplans = this.projectId.switchMap(id => this.projectsClient.getPlans(id, false))
+                                   .switchMap(testplans => Observable.from(testplans))
+                                   .publish().refCount();
 
     this.testplans.filter(testplan => !testplan.completed).subscribe(testplan => this.activePlans.push(testplan));
     this.testplans.filter(testplan => testplan.completed).subscribe(testplan => this.completedPlans.push(testplan));

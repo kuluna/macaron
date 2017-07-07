@@ -20,12 +20,12 @@ export class ProjectTestplanDetailComponent implements OnInit {
 
   ngOnInit() {
     const ids = this.route.params.map(params => {
-      return { projectId: Number(params['projectId']), testplanId : Number(params['testplanId']) };
+      return { projectId: Number(params['projectId']), planId : Number(params['planId']) };
     }).shareReplay();
 
     this.projectId = ids.map(i => i.projectId);
 
-    ids.switchMap(i => this.api.getGroupedPlan(i.projectId, i.testplanId))
+    ids.switchMap(i => this.api.getGroupedPlan(i.projectId, i.planId))
        .subscribe(plan => {
          this.plan = plan;
        });

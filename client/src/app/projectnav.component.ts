@@ -6,9 +6,9 @@ import { Component, Input } from '@angular/core';
     `
     <nav md-tab-nav-bar color="primary" *ngIf="projectId">
       <a md-tab-link [routerLink]="['/projects', projectId]" [active]="activeTabName == 'overview'">Overview</a>
-      <a md-tab-link [routerLink]="['/projects', projectId, 'testcases']" [active]="activeTabName == 'testcases'">Testcases</a>
-      <a md-tab-link [routerLink]="['/projects', projectId, 'testplans']" [active]="activeTabName == 'testplans'">Testplans</a>
-      <a md-tab-link [routerLink]="['/projects', projectId, 'testruns']" [active]="activeTabName == 'testruns'">Testruns</a>
+      <a md-tab-link [routerLink]="['/projects', projectId, 'cases']" [active]="activeTabName == 'cases'">Cases</a>
+      <a md-tab-link [routerLink]="['/projects', projectId, 'plans']" [active]="activeTabName == 'plans'">Plans</a>
+      <a md-tab-link [routerLink]="['/projects', projectId, 'runs']" [active]="activeTabName == 'runs'">Runs</a>
     </nav>
     `
 })

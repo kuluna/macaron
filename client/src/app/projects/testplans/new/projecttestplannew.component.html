@@ -1,9 +1,4 @@
-<nav md-tab-nav-bar color="primary">
-  <a md-tab-link [routerLink]="['../../']">Overview</a>
-  <a md-tab-link [routerLink]="['../../testcases']">Testcases</a>
-  <a md-tab-link [routerLink]="['./../']" [active]="true">Testplans</a>
-  <a md-tab-link [routerLink]="['../../testruns']">Testruns</a>
-</nav>
+<app-projectnav [projectId]="projectId | async" [activeTabName]="'plans'"></app-projectnav>
 
 <app-bodycontent>
   <h2>New Testplan</h2>
