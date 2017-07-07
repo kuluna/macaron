@@ -2,7 +2,7 @@
 
 <app-bodycontent>
   <div fxLayout="column" style="max-width: 375px">
-    <h3>Target plan</h3>
+    <h2>Target plan</h2>
     <md-select placeholder="Select plan" [(ngModel)]="selectPlanId" (change)="onSelectPlan(selectPlanId)">
       <md-option *ngFor="let plan of plans" [value]="plan.id">{{plan.name}}</md-option>
     </md-select>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, GroupedCase, GroupedPlan } from '../../../apiclient.service';
+import { ProjectsClient, GroupedCase, GroupedPlan, PlanUpdateRequest } from '../../../apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
@@ -33,5 +33,10 @@ export class ProjectTestplanDetailComponent implements OnInit {
 
   toggleComplete() {
     this.submitting = true;
+    const body = new PlanUpdateRequest(this.plan, true);
+    console.log(body);
+
+    this.api.putPlan(this.plan.projectId, this.plan.id, body)
+            .subscribe(plan => { this.plan.completed = true });
   }
 }

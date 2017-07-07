@@ -270,7 +270,7 @@ namespace macaron.Controllers
             return await db.Plans.Where(p => p.ProjectId == projectId)
                                  .Include(p => p.Cases)
                                  .Include(p => p.Runs)
-                                 .Where(p => p.Cases.Count > 0 || !runnable)
+                                 .Where(p => (p.Cases.Count > 0 && !p.Completed) || !runnable)
                                  .AsNoTracking()
                                  .Select(t => new PlanResponse(t, users))
                                  .ToListAsync();

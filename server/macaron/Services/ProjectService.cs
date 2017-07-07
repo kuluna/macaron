@@ -126,7 +126,6 @@ namespace macaron.Services
             return await db.Plans.Where(p => p.ProjectId == projectId && p.Id == planId)
                                  .Include(p => p.Cases)
                                  .Include(p => p.Runs)
-                                 .AsNoTracking()
                                  .SingleOrDefaultAsync();
         }
     }

@@ -183,7 +183,7 @@ export class CaseCreateRequest {
 
 export class PlanCreateRequest {
   name: string;
-  testPattern: TestPattern;
+  pattern: TestPattern;
   sections: string[] | null;
   CaseIds: CaseIdentity[] | null;
   leaderName: string;
@@ -192,6 +192,17 @@ export class PlanCreateRequest {
 
 export class PlanUpdateRequest extends PlanCreateRequest {
   completed: boolean;
+
+  constructor(plan?: BasePlan, completed: boolean = false) {
+    super();
+    if (plan) {
+      this.name = plan.name;
+      this.pattern = 'Custom';
+      this.leaderName = 'Admin';
+    }
+
+    this.completed = completed;
+  }
 }
 
 export class RunCreateRequest {
