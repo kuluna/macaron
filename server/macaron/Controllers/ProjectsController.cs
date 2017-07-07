@@ -343,23 +343,18 @@ namespace macaron.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var project = await db.Projects.Where(p => p.Id == projectId && !p.IsArcived)
-                                           .Include(p => p.Cases)
-                                           .Include(p => p.Plans)
-                                             .ThenInclude(tp => tp.Runs)
-                                           .SingleOrDefaultAsync();
-
-            var targetPlan = project?.Plans.Where(p => p.Id == planId).SingleOrDefault();
-            if (targetPlan == null)
+            
+            var plan = await ProjectService.GetPlanAsync(db, projectId, planId, false);
+            if (plan == null)
             {
                 return NotFound();
             }
 
-            req.Update(targetPlan, project);
+            var project = await db.Projects.FindAsync(projectId);
+            req.Update(plan, project);
             await db.SaveChangesAsync();
 
-            return Ok(new PlanResponse(targetPlan, await db.Users.ToListAsync()));
+            return Ok(new PlanResponse(plan, await db.Users.ToListAsync()));
         }
 
 #endregion

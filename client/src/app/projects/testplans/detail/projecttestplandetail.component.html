@@ -8,7 +8,7 @@
       <span *ngIf="plan.dueDate; else tbd">{{plan.dueDate}}</span>
       <ng-template #tbd>TBD</ng-template>
     </div>
-    <button md-button color="accent" (click)="toggleComplete()">COMPLETE</button>
+    <button md-button color="accent" (click)="toggleComplete()" [disabled]="submitting">COMPLETE</button>
     <button md-button>EDIT</button>
     <button md-button color="warn">DELETE</button>
   </div>

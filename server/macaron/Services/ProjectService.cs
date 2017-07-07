@@ -32,6 +32,20 @@ namespace macaron.Services
         }
 
         /// <summary>
+        /// Get the project
+        /// </summary>
+        /// <param name="db">Database context</param>
+        /// <param name="projectId">Project ID</param>
+        /// <returns>Project</returns>
+        public static async Task<ProjectResponse> GetProjectAsync(DatabaseContext db, int projectId)
+        {
+            return await db.Projects.Where(p => !p.IsArcived && p.Id == projectId)
+                                    .AsNoTracking()
+                                    .Select(p => new ProjectResponse(p))
+                                    .SingleOrDefaultAsync();
+        }
+
+        /// <summary>
         /// Add the project
         /// </summary>
         /// <param name="db">Databasec context</param>
@@ -110,10 +124,10 @@ namespace macaron.Services
         public static async Task<Plan> GetPlanAsync(DatabaseContext db, int projectId, int planId, bool groupBySection)
         {
             return await db.Plans.Where(p => p.ProjectId == projectId && p.Id == planId)
-                                     .Include(p => p.Cases)
-                                     .Include(p => p.Runs)
-                                     .AsNoTracking()
-                                     .SingleOrDefaultAsync();
+                                 .Include(p => p.Cases)
+                                 .Include(p => p.Runs)
+                                 .AsNoTracking()
+                                 .SingleOrDefaultAsync();
         }
     }
 }

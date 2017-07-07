@@ -49,6 +49,10 @@ export class ProjectsClient {
     return this.post<Plan>('api/projects/' + projectId + '/plans', body);
   }
 
+  putPlan(projectId: number, planId: number, body: PlanUpdateRequest): Observable<Plan> {
+    return this.put<Plan>('api/projects/' + projectId + '/plans/' + planId, body);
+  }
+
   postRun(projectId: number, planId: number, body: RunCreateRequest[]): Observable<Plan> {
     return this.post<Plan>('api/projects/' + projectId + '/plans/' + planId + '/runs', body);
   }
@@ -63,6 +67,11 @@ export class ProjectsClient {
   private post<T>(path: string, body: any): Observable<T> {
     console.log('run http post: ' + path);
     return this.http.post(env.apiBaseAddress + path, body).map(res => res.json() as T);
+  }
+
+  private put<T>(path: string, body: any): Observable<T> {
+    console.log('run http put: ' + path);
+    return this.http.put(env.apiBaseAddress + path, body).map(res => res.json() as T);
   }
 }
 
@@ -179,6 +188,10 @@ export class PlanCreateRequest {
   CaseIds: CaseIdentity[] | null;
   leaderName: string;
   dueDate: Date | null;
+}
+
+export class PlanUpdateRequest extends PlanCreateRequest {
+  completed: boolean;
 }
 
 export class RunCreateRequest {

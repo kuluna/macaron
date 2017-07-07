@@ -36,8 +36,6 @@ export class ProjectTestcaseNewComponent implements OnInit {
                   .subscribe(_ => {
                     this.snackBar.open('Created.', null, { duration: 1500 });
                     if (this.moreCreate) {
-                      form.reset();
-                      form.resetForm();
                       this.submitting = false;
                     } else {
                       this.router.navigate(['../'], { relativeTo: this.route });

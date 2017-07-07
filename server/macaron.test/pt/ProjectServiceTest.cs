@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json;
-using macaron.Data;
+﻿using macaron.Data;
 using macaron.Models;
 using macaron.Models.Request;
 using macaron.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -37,6 +35,33 @@ namespace macaron.test.pt
         {
             var projects = await ProjectService.GetProjectsAsync(db);
             Assert.AreEqual(0, projects.Count);
+        }
+
+        [TestMethod]
+        public async Task GetProject()
+        {
+            await AddInitalDataAsync();
+
+            var project = await ProjectService.GetProjectAsync(db, 1);
+            Assert.IsNotNull(project);
+        }
+
+        [TestMethod]
+        public async Task GetProjectIfNotFound()
+        {
+            await AddInitalDataAsync();
+
+            var project = await ProjectService.GetProjectAsync(db, int.MaxValue);
+            Assert.IsNull(project);
+        }
+
+        [TestMethod]
+        public async Task GetProjectIfArcived()
+        {
+            await AddInitalDataAsync();
+
+            var project = await ProjectService.GetProjectAsync(db, 3);
+            Assert.IsNull(project);
         }
 
         [TestMethod]

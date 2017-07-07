@@ -11,6 +11,10 @@ namespace macaron.test.pt
         {
             var validator = new AppUserNameAttribute();
 
+            // These are verify using different validators.
+            Assert.IsTrue(validator.IsValid(null));
+            Assert.IsTrue(validator.IsValid(""));
+            // Should be validate.
             Assert.IsTrue(validator.IsValid("username"));
             Assert.IsTrue(validator.IsValid("123ABC"));
             Assert.IsTrue(validator.IsValid("ABC123def"));

@@ -13,6 +13,8 @@ export class ProjectTestplanDetailComponent implements OnInit {
   projectId: Observable<number>;
   plan: GroupedPlan;
 
+  submitting = false;
+
   constructor(private route: ActivatedRoute,
               private api: ProjectsClient) {}
 
@@ -30,6 +32,6 @@ export class ProjectTestplanDetailComponent implements OnInit {
   }
 
   toggleComplete() {
-
+    this.submitting = true;
   }
 }

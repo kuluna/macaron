@@ -22,13 +22,14 @@ namespace macaron.Models.Request
         /// <param name="project">Project</param>
         public void Update(Plan model, Project project)
         {
-            model.Name = Name;
-            model.LeaderName = LeaderName;
             if (!Completed)
             {
+                model.Name = Name;
+                model.LeaderName = LeaderName;
                 model.Cases = FindCase(project).ToList();
+                model.DueDate = DueDate;
             }
-            model.DueDate = DueDate;
+            
             model.Completed = Completed;
             model.LastUpdateDate = DateTimeOffset.UtcNow;
         }

@@ -34,9 +34,13 @@ namespace macaron.Models
         /// <returns>True is username.</returns>
         public override bool IsValid(object value)
         {
-            if (value is string)
+            if (value == null)
             {
-                return Regex.IsMatch(value as string, "^[a-zA-Z0-9]+$");
+                return true;
+            }
+            else if (value is string)
+            {
+                return Regex.IsMatch(value as string, "^[a-zA-Z0-9]*$");
             }
             else
             {

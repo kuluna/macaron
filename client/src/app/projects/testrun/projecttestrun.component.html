@@ -37,9 +37,9 @@
     <h3>Not tests</h3>
     <md-card style="margin: 16px 0">
       <md-list>
-        <md-list-item *ngFor="let case of selectPlan.cases | filterBy: ['lastResult']: 'NotTest'; let i = index">
+        <div *ngFor="let case of selectPlan.cases | filterBy: ['lastResult']: 'NotTest'; let i = index" fxLayout="row" fxLayoutAlign=" center">
           <span>{{i + 1}}: </span>
-          <span fxFlex>{{case.step}}</span>
+          <div fxFlex>{{case.step}}</div>
           <md-chip-list *ngIf="case.isCarefully" style="margin: 0 8px;">
             <md-chip color="warn" selected="true">Careful</md-chip>
           </md-chip-list>
@@ -49,7 +49,7 @@
             <md-option [value]="'Ng'">NG</md-option>
             <md-option [value]="'NotTest'">NotTest</md-option>
           </md-select>
-        </md-list-item>
+        </div>
       </md-list>
     </md-card>
 

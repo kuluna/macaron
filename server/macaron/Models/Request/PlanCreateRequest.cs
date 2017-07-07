@@ -21,7 +21,7 @@ namespace macaron.Models.Request
         /// Test pattern
         /// </summary>
         [Required]
-        public PlanPattern Pattern { get; set; }
+        public PlanPattern? Pattern { get; set; }
         /// <summary>
         /// Target branch name
         /// </summary>
