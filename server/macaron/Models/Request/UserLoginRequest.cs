@@ -14,8 +14,8 @@ namespace macaron.Models.Request
         /// <summary>
         /// Email
         /// </summary>
-        [Required, EmailAddress]
-        public string Email { get; set; }
+        [Required, AppUserName]
+        public string UserName { get; set; }
         /// <summary>
         /// Password
         /// </summary>

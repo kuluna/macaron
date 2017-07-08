@@ -12,13 +12,14 @@ using System;
 using macaron.Services;
 using Macaron.Models.Response;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace macaron.Controllers
 {
     /// <summary>
     /// Projects API
     /// </summary>
-    [Route("api/projects")]
+    [Route("api/projects"), Authorize]
     public class ProjectsController : Controller
     {
         private DatabaseContext db;

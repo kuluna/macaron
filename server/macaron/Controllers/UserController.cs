@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using macaron.Models;
 using macaron.Models.Request;
 using macaron.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Macaron.Models.Response;
 
 namespace macaron.Controllers
 {
     /// <summary>
     /// User API
     /// </summary>
-    [Route("api/user")]
+    [Route("api")]
     public class UserController : Controller
     {
         private readonly DatabaseContext db;
@@ -38,13 +36,13 @@ namespace macaron.Controllers
         /// <returns>User</returns>
         /// <response code="401">Anauthorize</response>
         /// <response code="404">Not found</response>
-        [HttpGet("{username}"), Authorize]
-        public async Task<IActionResult> GetMember(string username)
+        [HttpGet("user/{username}"), Authorize]
+        public async Task<IActionResult> GetUser(string username)
         {
-            var member = await userManager.FindByNameAsync(username);
-            if (member != null)
+            var user = await userManager.FindByNameAsync(username);
+            if (user != null)
             {
-                return Ok(member);
+                return Ok(new AppUserResponse(user));
             }
             else
             {
@@ -59,10 +57,10 @@ namespace macaron.Controllers
         /// <returns>created user</returns>
         /// <response code="201">Creted user</response>
         /// <response code="400">Invalid request body (or duplicate)</response>
-        [HttpPost("create")]
+        [HttpPost("signup")]
         public async Task<IActionResult> Create([FromBody] UserCreateRequest req)
         {
-            // delayable
+            // Must delay
             await Task.Delay(1000);
 
             if (!ModelState.IsValid)
@@ -78,16 +76,37 @@ namespace macaron.Controllers
             }
 
             // create user
-            var newMember = req.ToMember();
-            var create = await userManager.CreateAsync(newMember, req.Password);
+            var newUser = req.ToMember();
+            var create = await userManager.CreateAsync(newUser, req.Password);
             if (create.Succeeded)
             {
-                await signInManager.SignInAsync(newMember, true);
-                return Created(Request.Host.ToUriComponent() + "/" + newMember.UserName, newMember);
+                await signInManager.SignInAsync(newUser, true);
+                return Created(Request.Host.ToUriComponent() + "/" + newUser.UserName, new AppUserResponse(newUser));
             }
             else
             {
                 return BadRequest(create.Errors);
+            }
+        }
+
+        /// <summary>
+        /// Delete the user
+        /// </summary>
+        /// <param name="username">username</param>
+        /// <response code="204">Deleted</response>
+        /// <response code="404">User not found</response>
+        [HttpDelete("user/{username}"), Authorize]
+        public async Task<IActionResult> Delete(string username)
+        {
+            var user = await userManager.FindByNameAsync(username);
+            if (user != null)
+            {
+                await userManager.DeleteAsync(user);
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
             }
         }
 
@@ -113,13 +132,13 @@ namespace macaron.Controllers
             // block double login
             await SignOut();
             
-            var member = await userManager.FindByEmailAsync(req.Email);
-            if (member != null)
+            var user = await userManager.FindByNameAsync(req.UserName);
+            if (user != null)
             {
-                var signin = await signInManager.PasswordSignInAsync(member, req.Password, true, false);
+                var signin = await signInManager.PasswordSignInAsync(user, req.Password, true, false);
                 if (signin.Succeeded)
                 {
-                    return Ok(member);
+                    return Ok(new AppUserResponse(user));
                 }
             }
             
