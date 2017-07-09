@@ -5,10 +5,12 @@
     <form #form="ngForm" (ngSubmit)="onSubmit(form.value)">
       <md-card-content fxLayout="column">
           <md-input-container>
-            <input type="email" name="email" required ngModel mdInput placeholder="Email">
+            <input name="userName" required ngModel mdInput placeholder="User name">
+            <md-error>Required.</md-error>
           </md-input-container>
           <md-input-container>
             <input type="password" name="password" required ngModel mdInput placeholder="Password" minlength="6">
+            <md-error>Required.</md-error>
           </md-input-container>
       </md-card-content>
       <md-card-actions fxLayoutAlign="end center">

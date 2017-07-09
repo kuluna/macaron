@@ -60,7 +60,7 @@ export class ProjectsClient {
   // generic http get function
   private get<T>(path: string): Observable<T> {
     console.log('run http get: ' + path);
-    return this.http.get(env.apiBaseAddress + path).map(res => res.json() as T);
+    return this.http.get(env.apiBaseAddress + path, {withCredentials: true}).map(res => res.json() as T);
   }
 
   // generic http post function

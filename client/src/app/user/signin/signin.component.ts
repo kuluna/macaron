@@ -23,19 +23,19 @@ export class SigninComponent implements OnInit {
     this.errorMessage = '';
 
     // login
-    this.http.post(env.apiBaseAddress + 'api/user/signin', value).subscribe(res => {
+    this.http.post(env.apiBaseAddress + 'api/signin', value, {withCredentials: true}).subscribe(res => {
         // success
         console.log(res.json().userName);
         this.route.navigate(['/projects']);
     }, error => {
         // fail
-        this.errorMessage = 'Invalid email or password.';
+        this.errorMessage = 'Invalid username or password.';
         console.log(error);
     });
   }
 }
 
 interface ISignIn {
-  email: string;
+  userName: string;
   password: string;
 }

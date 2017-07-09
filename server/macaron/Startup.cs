@@ -49,6 +49,7 @@ namespace macaron
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.Cookies.ApplicationCookie.AutomaticChallenge = false;
+                options.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
 
                 options.User.RequireUniqueEmail = true;
 
@@ -62,8 +63,6 @@ namespace macaron
                     .AddDefaultTokenProviders();
 
             services.AddMvc();
-
-            services.AddCors();
 
             services.AddSwaggerGen(c =>
             {
@@ -94,7 +93,12 @@ namespace macaron
             app.UseIdentity();
             app.UseCookieAuthentication();
 
-            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            // Add CORS
+            app.Use((context, next) => {
+                context.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "http://localhost:4200" });
+                context.Response.Headers.Add("Access-Control-Allow-Credentials", new[] { "true" });
+                return next.Invoke();
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
