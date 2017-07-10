@@ -62,6 +62,8 @@ namespace macaron
                     .AddEntityFrameworkStores<DatabaseContext>()
                     .AddDefaultTokenProviders();
 
+            services.AddCors();
+
             services.AddMvc();
 
             services.AddSwaggerGen(c =>
@@ -92,13 +94,9 @@ namespace macaron
 
             app.UseIdentity();
             app.UseCookieAuthentication();
+            
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
-            // Add CORS
-            app.Use((context, next) => {
-                context.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "http://localhost:4200" });
-                context.Response.Headers.Add("Access-Control-Allow-Credentials", new[] { "true" });
-                return next.Invoke();
-            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");

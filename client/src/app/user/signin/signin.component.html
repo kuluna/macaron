@@ -1,21 +1,44 @@
-<div fxLayout="column" fxLayoutAlign="center center">
-  <md-card style="width: 300px">
+<div fxLayout="column" fxLayoutAlign=" center">
+  <md-card style="margin:24px;max-width: 300px">
     <h1>Sign in</h1>
 
-    <form #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+    <form #loginForm="ngForm" (ngSubmit)="siginin(loginForm.value)">
       <md-card-content fxLayout="column">
           <md-input-container>
             <input name="userName" required ngModel mdInput placeholder="User name">
             <md-error>Required.</md-error>
           </md-input-container>
           <md-input-container>
-            <input type="password" name="password" required ngModel mdInput placeholder="Password" minlength="6">
+            <input type="password" name="password" required ngModel mdInput placeholder="Password">
             <md-error>Required.</md-error>
           </md-input-container>
       </md-card-content>
       <md-card-actions fxLayoutAlign="end center">
         <span class="color-warn">{{errorMessage}}</span>
-        <button type="submit" md-raised-button color='primary'>Sign in</button>
+        <button type="submit" md-raised-button color='primary' [disabled]="loginForm.form.invalid || submitting">SIGN IN</button>
+      </md-card-actions>
+    </form>
+  </md-card>
+  or
+  <md-card style="margin-top:24px">
+    <h1>Sign up</h1>
+    <form #signupForm="ngForm" (ngSubmit)="register(signupForm.value)">
+      <md-card-content fxLayout="column">
+        <md-input-container color="accent">
+            <input type="email" name="email" email required ngModel mdInput placeholder="Email">
+            <md-error>Required.</md-error>
+          </md-input-container>
+          <md-input-container color="accent">
+            <input name="userName" required ngModel mdInput placeholder="User name">
+            <md-error>Required.</md-error>
+          </md-input-container>
+          <md-input-container color="accent">
+            <input type="password" name="password" minlength="6" required ngModel mdInput placeholder="Password">
+            <md-error>Required 6 charactors and more.</md-error>
+          </md-input-container>
+      </md-card-content>
+      <md-card-actions fxLayoutAlign="end center">
+        <button type="submit" md-raised-button color='accent' [disabled]="signupForm.form.invalid || submitting">REGISTER</button>
       </md-card-actions>
     </form>
   </md-card>

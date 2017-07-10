@@ -58,15 +58,15 @@ export class ProjectsClient {
   }
 
   // generic http get function
-  private get<T>(path: string): Observable<T> {
+  private get<T>(path: string, credentials = true): Observable<T> {
     console.log('run http get: ' + path);
-    return this.http.get(env.apiBaseAddress + path, {withCredentials: true}).map(res => res.json() as T);
+    return this.http.get(env.apiBaseAddress + path, { withCredentials: credentials }).map(res => res.json() as T);
   }
 
   // generic http post function
-  private post<T>(path: string, body: any): Observable<T> {
+  private post<T>(path: string, body: any, credentials = true): Observable<T> {
     console.log('run http post: ' + path);
-    return this.http.post(env.apiBaseAddress + path, body).map(res => res.json() as T);
+    return this.http.post(env.apiBaseAddress + path, body, { withCredentials: credentials }).map(res => res.json() as T);
   }
 
   private put<T>(path: string, body: any): Observable<T> {

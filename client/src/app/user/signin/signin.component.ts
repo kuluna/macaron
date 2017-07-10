@@ -11,6 +11,7 @@ import { environment as env } from '../../../environments/environment';
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
+  submitting = false;
   // login error message
   errorMessage: string;
 
@@ -19,18 +20,32 @@ export class SigninComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit(value: ISignIn) {
+  siginin(value: ISignIn) {
+    this.submitting = true;
     this.errorMessage = '';
 
     // login
-    this.http.post(env.apiBaseAddress + 'api/signin', value, {withCredentials: true}).subscribe(res => {
+    this.http.post(env.apiBaseAddress + 'api/signin', value, { withCredentials: true }).subscribe(res => {
         // success
-        console.log(res.json().userName);
         this.route.navigate(['/projects']);
     }, error => {
         // fail
-        this.errorMessage = 'Invalid username or password.';
         console.log(error);
+        this.errorMessage = 'Invalid username or password.';
+        this.submitting = false;
+    });
+  }
+
+  register(value: ISignUp) {
+    this.submitting = true;
+
+    this.http.post(env.apiBaseAddress + 'api/signup', value).subscribe(res => {
+     // success
+        this.route.navigate(['/projects']);
+    }, error => {
+        // fail
+        console.log(error);
+        this.submitting = false;
     });
   }
 }
@@ -38,4 +53,8 @@ export class SigninComponent implements OnInit {
 interface ISignIn {
   userName: string;
   password: string;
+}
+
+interface ISignUp extends ISignIn {
+  email: string;
 }
