@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Case, CaseCreateRequest } from '../../../../services/apiclient.service';
+import { ApiClient, Case, CaseCreateRequest } from '../../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-projectcasenew',
   templateUrl: './projectcasenew.component.html',
   styleUrls: ['./projectcasenew.component.scss'],
-  providers: [ProjectsClient]
+  providers: [ApiClient]
 })
 export class ProjectCaseNewComponent implements OnInit {
   projectId: Observable<number>;
@@ -20,7 +20,7 @@ export class ProjectCaseNewComponent implements OnInit {
   constructor(private router: Router,
               private route: ActivatedRoute,
               private snackBar: MdSnackBar,
-              private projectsClient: ProjectsClient) { }
+              private api: ApiClient) { }
 
   ngOnInit() {
     this.projectId = this.route.params.map(params => Number(params['projectId'])).shareReplay();
@@ -32,7 +32,7 @@ export class ProjectCaseNewComponent implements OnInit {
     value.isCarefully = value.isCarefully ? value.isCarefully : false;
 
     this.submitting = true;
-    this.projectId.switchMap(projectId => this.projectsClient.postCase(projectId, value))
+    this.projectId.switchMap(projectId => this.api.postCase(projectId, value))
                   .subscribe(_ => {
                     this.snackBar.open('Created.', null, { duration: 1500 });
                     if (this.moreCreate) {

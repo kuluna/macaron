@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, ProjectCreateRequest } from '../../../services/apiclient.service';
+import { ApiClient, ProjectCreateRequest } from '../../../services/apiclient.service';
 
 @Component({
   selector: 'app-projectnew',
   templateUrl: './projectnew.component.html',
   styleUrls: ['./projectnew.component.scss'],
-  providers: [ProjectsClient]
+  providers: [ApiClient]
 })
 export class ProjectNewComponent implements OnInit {
   submitting = false;
@@ -17,7 +17,7 @@ export class ProjectNewComponent implements OnInit {
   constructor(private router: Router,
               private route: ActivatedRoute,
               private snackBar: MdSnackBar,
-              private api: ProjectsClient) { }
+              private api: ApiClient) { }
 
   ngOnInit() {
   }

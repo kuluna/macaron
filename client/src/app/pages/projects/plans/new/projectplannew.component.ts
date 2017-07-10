@@ -3,13 +3,13 @@ import { NgForm } from '@angular/forms';
 import { MdSnackBar, MdCheckboxChange } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import { ProjectsClient, Case, Plan, PlanCreateRequest } from '../../../../services/apiclient.service';
+import { ApiClient, Case, Plan, PlanCreateRequest } from '../../../../services/apiclient.service';
 
 @Component({
   selector: 'app-projectplannew',
   templateUrl: './projectplannew.component.html',
   styleUrls: ['./projectplannew.component.scss'],
-  providers: [ProjectsClient]
+  providers: [ApiClient]
 })
 export class ProjectPlanNewComponent implements OnInit {
   projectId: Observable<number>;
@@ -22,12 +22,12 @@ export class ProjectPlanNewComponent implements OnInit {
   constructor(private router: Router,
               private route: ActivatedRoute,
               private snackBar: MdSnackBar,
-              private projectsClient: ProjectsClient) { }
+              private api: ApiClient) { }
 
   ngOnInit() {
     this.projectId = this.route.params.map(params => Number(params['projectId']))
                                       .shareReplay();
-    this.sectionNames = this.projectId.switchMap(id => this.projectsClient.getGroupedCases(id))
+    this.sectionNames = this.projectId.switchMap(id => this.api.getGroupedCases(id))
                                       .map(cases => cases.map(group => group.sectionName));
   }
 
@@ -48,21 +48,21 @@ export class ProjectPlanNewComponent implements OnInit {
     value.sections = this.selectedSections;
     this.submitting = true;
 
-    this.route.params.map(params => params['projectId'] as number)
-                    .switchMap(projectId => this.projectsClient.postPlan(projectId, value))
-                    .subscribe(testplan => {
-                      this.snackBar.open('Created.', null, { duration: 1500 });
-                      if (this.moreCreate) {
-                        form.reset();
-                        form.resetForm();
-                        this.submitting = false;
-                      } else {
-                        this.router.navigate(['../'], { relativeTo: this.route });
-                      }
-                    }, error => {
-                      this.submitting = false;
-                      console.warn(error);
-                      this.snackBar.open('Error. Try again.', null, { duration: 1500 });
-                    });
+    this.route.params.map(params => Number(params['projectId']))
+                     .switchMap(projectId => this.api.postPlan(projectId, value))
+                     .subscribe(testplan => {
+                       this.snackBar.open('Created.', null, { duration: 1500 });
+                       if (this.moreCreate) {
+                         form.reset();
+                         form.resetForm();
+                         this.submitting = false;
+                       } else {
+                         this.router.navigate(['../'], { relativeTo: this.route });
+                       }
+                     }, error => {
+                       this.submitting = false;
+                       console.warn(error);
+                       this.snackBar.open('Error. Try again.', null, { duration: 1500 });
+                     });
   }
 }

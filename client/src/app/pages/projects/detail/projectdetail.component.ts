@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Project } from '../../../services/apiclient.service';
+import { ApiClient, Project } from '../../../services/apiclient.service';
 
 @Component({
   selector: 'app-projectdetail',
   templateUrl: './projectdetail.component.html',
   styleUrls: ['./projectdetail.component.scss'],
-  providers: [ProjectsClient]
+  providers: [ApiClient]
 })
 export class ProjectDetailComponent implements OnInit {
   project: Project;
 
-  constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }
+  constructor(private route: ActivatedRoute, private api: ApiClient) { }
 
   ngOnInit() {
-    this.activeRoute.params.map(params => params['projectId'] as number)
-                           .switchMap(id => this.projectsClient.getProject(id))
-                           .subscribe(project => this.project = project);
+    this.route.params.map(params => Number(params['projectId']))
+                     .switchMap(id => this.api.getProject(id))
+                     .subscribe(project => this.project = project);
   }
 }

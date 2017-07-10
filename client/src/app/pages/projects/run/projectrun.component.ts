@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProjectsClient, Case, Plan, RunCreateRequest, TestResult } from '../../../services/apiclient.service';
+import { ApiClient, Case, Plan, RunCreateRequest, TestResult } from '../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-projectrun',
   templateUrl: './projectrun.component.html',
   styleUrls: ['./projectrun.component.scss'],
-  providers: [ProjectsClient]
+  providers: [ApiClient]
 })
 export class ProjectRunComponent implements OnInit {
   projectId: Observable<number>;
@@ -22,7 +22,7 @@ export class ProjectRunComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private snackBar: MdSnackBar,
-              private api: ProjectsClient) { }
+              private api: ApiClient) { }
 
   ngOnInit() {
     this.projectId = this.route.params.map(params => Number(params['projectId']))
@@ -30,27 +30,6 @@ export class ProjectRunComponent implements OnInit {
 
     this.projectId.switchMap(projectId => this.api.getPlans(projectId, true))
                   .subscribe(plans => this.plans = plans);
-/*
-    this.route.queryParams.filter(query => query['testplanId'])
-                          .map(query => Number(query['testplanId']))
-                          .filter(f => this.testplans.length > 0)
-                          .map((testplanId) => this.testplans.find(t => t.id === testplanId))
-                          .subscribe(testplan => {
-                            this.selectTestplan = testplan;
-                            this.selectTestplanId = testplan.id;
-                          });
-
-    this.route.queryParams.filter(query => query['testcaseId'])
-                          .map(query => Number(query['testcaseId']))
-                          .filter(f => this.testplans.length > 0)
-                          .map(testcaseId => {
-                            return this.testplans.find(t => t.id === this.selectTestplanId).cases.find(t => t.id === testcaseId);
-                          })
-                          .subscribe(testcase => {
-                            this.selectTestcaseId = testcase.id;
-                            this.selectTestcase = testcase;
-                          });
-*/
   }
 
   onSelectPlan(planid: number) {

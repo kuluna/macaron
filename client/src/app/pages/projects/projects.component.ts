@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectsClient, Project } from '../../services/apiclient.service';
+import { ApiClient, Project } from '../../services/apiclient.service';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss'],
-  providers: [ProjectsClient]
+  providers: [ApiClient]
 })
 export class ProjectsComponent implements OnInit {
   projects: Project[];
 
-  constructor(private projectsClient: ProjectsClient) { }
+  constructor(private api: ApiClient) { }
 
   ngOnInit() {
-    this.projectsClient.getProjects()
-        .subscribe(projects => this.projects = projects);
+    this.api.getProjects().subscribe(projects => this.projects = projects);
   }
 }

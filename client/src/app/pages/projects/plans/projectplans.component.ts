@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Plan } from '../../../services/apiclient.service';
+import { ApiClient, Plan } from '../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-projectplans',
   templateUrl: './projectplans.component.html',
   styleUrls: ['./projectplans.component.scss'],
-  providers: [ProjectsClient]
+  providers: [ApiClient]
 })
 export class ProjectPlansComponent implements OnInit {
   projectId: Observable<number>;
@@ -17,12 +17,12 @@ export class ProjectPlansComponent implements OnInit {
   activePlans: Plan[] = [] ;
   completedPlans: Plan[] = [];
 
-  constructor(private activeRoute: ActivatedRoute, private projectsClient: ProjectsClient) { }
+  constructor(private route: ActivatedRoute, private api: ApiClient) { }
 
   ngOnInit() {
-    this.projectId = this.activeRoute.params.map(params => Number(params['projectId']))
-                                            .shareReplay();
-    this.testplans = this.projectId.switchMap(id => this.projectsClient.getPlans(id, false))
+    this.projectId = this.route.params.map(params => Number(params['projectId']))
+                                      .shareReplay();
+    this.testplans = this.projectId.switchMap(id => this.api.getPlans(id, false))
                                    .switchMap(testplans => Observable.from(testplans))
                                    .publish().refCount();
 

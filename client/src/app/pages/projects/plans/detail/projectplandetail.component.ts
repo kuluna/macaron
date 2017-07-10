@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, GroupedCase, GroupedPlan, PlanUpdateRequest } from '../../../../services/apiclient.service';
+import { ApiClient, GroupedCase, GroupedPlan, PlanUpdateRequest } from '../../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-projectplandetail',
   templateUrl: './projectplandetail.component.html',
   styleUrls: ['./projectplandetail.component.scss'],
-  providers: [ProjectsClient]
+  providers: [ApiClient]
 })
 export class ProjectPlanDetailComponent implements OnInit {
   projectId: Observable<number>;
@@ -16,7 +16,7 @@ export class ProjectPlanDetailComponent implements OnInit {
   submitting = false;
 
   constructor(private route: ActivatedRoute,
-              private api: ProjectsClient) {}
+              private api: ApiClient) {}
 
   ngOnInit() {
     const ids = this.route.params.map(params => {
