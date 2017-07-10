@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SigninComponent } from './user/signin/signin.component';
+import { SigninComponent } from './pages/user/signin/signin.component';
 
-import { ProjectsComponent } from './projects/projects.component';
-import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
-import { ProjectNewComponent } from './projects/new/projectnew.component';
+import { ProjectsComponent } from './pages/projects/projects.component';
+import { ProjectDetailComponent } from './pages/projects/detail/projectdetail.component';
+import { ProjectNewComponent } from './pages/projects/new/projectnew.component';
 
-import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases.component';
-import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
+import { ProjectCasesComponent } from './pages/projects/cases/projectcases.component';
+import { ProjectCaseNewComponent } from './pages/projects/cases/new/projectcasenew.component';
 
-import { ProjectTestplansComponent } from './projects/testplans/projecttestplans.component';
-import { ProjectTestplanDetailComponent } from './projects/testplans/detail/projecttestplandetail.component';
-import { ProjectTestplanNewComponent } from './projects/testplans/new/projecttestplannew.component';
+import { ProjectPlansComponent } from './pages/projects/plans/projectplans.component';
+import { ProjectPlanDetailComponent } from './pages/projects/plans/detail/projectplandetail.component';
+import { ProjectPlanNewComponent } from './pages/projects/plans/new/projectplannew.component';
 
-import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
+import { ProjectRunComponent } from './pages/projects/run/projectrun.component';
 
 const routes: Routes = [
   { path: 'user/signin', component: SigninComponent },
@@ -25,15 +25,15 @@ const routes: Routes = [
   { path: 'projects/:projectId', children: [
       { path: '', component: ProjectDetailComponent },
       { path: 'cases', children: [
-        { path: '', component: ProjectTestcasesComponent },
-        { path: 'new', component: ProjectTestcaseNewComponent }
+        { path: '', component: ProjectCasesComponent },
+        { path: 'new', component: ProjectCaseNewComponent }
       ]},
       { path: 'plans', children: [
-        { path: '', component: ProjectTestplansComponent },
-        { path: 'new', component: ProjectTestplanNewComponent },
-        { path: ':planId', component: ProjectTestplanDetailComponent }
+        { path: '', component: ProjectPlansComponent },
+        { path: 'new', component: ProjectPlanNewComponent },
+        { path: ':planId', component: ProjectPlanDetailComponent }
       ] },
-      { path: 'runs', component: ProjectTestrunComponent }
+      { path: 'runs', component: ProjectRunComponent }
     ]
   }
 ];

@@ -3,15 +3,15 @@ import { NgForm } from '@angular/forms';
 import { MdSnackBar, MdCheckboxChange } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import { ProjectsClient, Case, Plan, PlanCreateRequest } from '../../../apiclient.service';
+import { ProjectsClient, Case, Plan, PlanCreateRequest } from '../../../../services/apiclient.service';
 
 @Component({
-  selector: 'app-projecttestplannew',
-  templateUrl: './projecttestplannew.component.html',
-  styleUrls: ['./projecttestplannew.component.scss'],
+  selector: 'app-projectplannew',
+  templateUrl: './projectplannew.component.html',
+  styleUrls: ['./projectplannew.component.scss'],
   providers: [ProjectsClient]
 })
-export class ProjectTestplanNewComponent implements OnInit {
+export class ProjectPlanNewComponent implements OnInit {
   projectId: Observable<number>;
   submitting = false;
   moreCreate = false;

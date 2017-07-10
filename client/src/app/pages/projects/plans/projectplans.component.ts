@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Plan } from '../../apiclient.service';
+import { ProjectsClient, Plan } from '../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
-  selector: 'app-projecttestplans',
-  templateUrl: './projecttestplans.component.html',
-  styleUrls: ['./projecttestplans.component.scss'],
+  selector: 'app-projectplans',
+  templateUrl: './projectplans.component.html',
+  styleUrls: ['./projectplans.component.scss'],
   providers: [ProjectsClient]
 })
-export class ProjectTestplansComponent implements OnInit {
+export class ProjectPlansComponent implements OnInit {
   projectId: Observable<number>;
   showCompletes = false;
   testplans: Observable<Plan>;

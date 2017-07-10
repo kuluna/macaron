@@ -10,23 +10,23 @@ import { NgPipesModule } from 'ngx-pipes';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BodyContentComponent } from './bodycontent.component';
-import { ProjectNavComponent } from './projectnav.component';
+import { BodyContentComponent } from './components/bodycontent.component';
+import { ProjectNavComponent } from './components/projectnav.component';
 
-import { SigninComponent } from './user/signin/signin.component';
+import { SigninComponent } from './pages/user/signin/signin.component';
 
-import { ProjectsComponent } from './projects/projects.component';
-import { ProjectDetailComponent } from './projects/detail/projectdetail.component';
-import { ProjectNewComponent } from './projects/new/projectnew.component';
+import { ProjectsComponent } from './pages/projects/projects.component';
+import { ProjectDetailComponent } from './pages/projects/detail/projectdetail.component';
+import { ProjectNewComponent } from './pages/projects/new/projectnew.component';
 
-import { ProjectTestcasesComponent } from './projects/testcases/projecttestcases.component';
-import { ProjectTestcaseNewComponent } from './projects/testcases/new/projecttestcasenew.component';
+import { ProjectCasesComponent } from './pages/projects/cases/projectcases.component';
+import { ProjectCaseNewComponent } from './pages/projects/cases/new/projectcasenew.component';
 
-import { ProjectTestplansComponent } from './projects/testplans/projecttestplans.component';
-import { ProjectTestplanDetailComponent } from './projects/testplans/detail/projecttestplandetail.component';
-import { ProjectTestplanNewComponent } from './projects/testplans/new/projecttestplannew.component';
+import { ProjectPlansComponent } from './pages/projects/plans/projectplans.component';
+import { ProjectPlanDetailComponent } from './pages/projects/plans/detail/projectplandetail.component';
+import { ProjectPlanNewComponent } from './pages/projects/plans/new/projectplannew.component';
 
-import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.component';
+import { ProjectRunComponent } from './pages/projects/run/projectrun.component';
 
 @NgModule({
   declarations: [
@@ -37,12 +37,12 @@ import { ProjectTestrunComponent } from './projects/testrun/projecttestrun.compo
     ProjectsComponent,
     ProjectDetailComponent,
     ProjectNewComponent,
-    ProjectTestcasesComponent,
-    ProjectTestcaseNewComponent,
-    ProjectTestrunComponent,
-    ProjectTestplansComponent,
-    ProjectTestplanDetailComponent,
-    ProjectTestplanNewComponent
+    ProjectCasesComponent,
+    ProjectCaseNewComponent,
+    ProjectRunComponent,
+    ProjectPlansComponent,
+    ProjectPlanDetailComponent,
+    ProjectPlanNewComponent
   ],
   imports: [
     BrowserAnimationsModule,

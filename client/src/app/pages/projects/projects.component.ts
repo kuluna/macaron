@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectsClient, Project } from '../apiclient.service';
+import { ProjectsClient, Project } from '../../services/apiclient.service';
 
 @Component({
   selector: 'app-projects',

@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, Case, CaseCreateRequest } from '../../../apiclient.service';
+import { ProjectsClient, Case, CaseCreateRequest } from '../../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
-  selector: 'app-projecttestcasenew',
-  templateUrl: './projecttestcasenew.component.html',
-  styleUrls: ['./projecttestcasenew.component.scss'],
+  selector: 'app-projectcasenew',
+  templateUrl: './projectcasenew.component.html',
+  styleUrls: ['./projectcasenew.component.scss'],
   providers: [ProjectsClient]
 })
-export class ProjectTestcaseNewComponent implements OnInit {
+export class ProjectCaseNewComponent implements OnInit {
   projectId: Observable<number>;
 
   submitting = false;

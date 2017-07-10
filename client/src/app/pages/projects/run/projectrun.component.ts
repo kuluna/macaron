@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProjectsClient, Case, Plan, RunCreateRequest, TestResult } from '../../apiclient.service';
+import { ProjectsClient, Case, Plan, RunCreateRequest, TestResult } from '../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
-  selector: 'app-projecttestrun',
-  templateUrl: './projecttestrun.component.html',
-  styleUrls: ['./projecttestrun.component.scss'],
+  selector: 'app-projectrun',
+  templateUrl: './projectrun.component.html',
+  styleUrls: ['./projectrun.component.scss'],
   providers: [ProjectsClient]
 })
-export class ProjectTestrunComponent implements OnInit {
+export class ProjectRunComponent implements OnInit {
   projectId: Observable<number>;
   plans: Plan[] = [];
 

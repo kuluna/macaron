@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectsClient, GroupedCase } from '../../apiclient.service';
+import { ProjectsClient, GroupedCase } from '../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
-  selector: 'app-projecttestcases',
-  templateUrl: './projecttestcases.component.html',
-  styleUrls: ['./projecttestcases.component.scss'],
+  selector: 'app-projectcases',
+  templateUrl: './projectcases.component.html',
+  styleUrls: ['./projectcases.component.scss'],
   providers: [ProjectsClient]
 })
-export class ProjectTestcasesComponent implements OnInit {
+export class ProjectCasesComponent implements OnInit {
   projectId: Observable<number>;
   cases: GroupedCase[];
 

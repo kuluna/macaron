@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, ProjectCreateRequest } from '../../apiclient.service';
+import { ProjectsClient, ProjectCreateRequest } from '../../../services/apiclient.service';
 
 @Component({
   selector: 'app-projectnew',

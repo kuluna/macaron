@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProjectsClient, GroupedCase, GroupedPlan, PlanUpdateRequest } from '../../../apiclient.service';
+import { ProjectsClient, GroupedCase, GroupedPlan, PlanUpdateRequest } from '../../../../services/apiclient.service';
 import { Observable } from 'rxjs/Rx';
 
 @Component({
-  selector: 'app-projecttestplandetail',
-  templateUrl: './projecttestplandetail.component.html',
-  styleUrls: ['./projecttestplandetail.component.scss'],
+  selector: 'app-projectplandetail',
+  templateUrl: './projectplandetail.component.html',
+  styleUrls: ['./projectplandetail.component.scss'],
   providers: [ProjectsClient]
 })
-export class ProjectTestplanDetailComponent implements OnInit {
+export class ProjectPlanDetailComponent implements OnInit {
   projectId: Observable<number>;
   plan: GroupedPlan;
 
