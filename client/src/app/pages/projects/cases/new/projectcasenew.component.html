@@ -8,8 +8,12 @@
         <md-card-content fxLayout="column">
           <div fxLayout="row" fxLayoutAlign=" center">
             <md-input-container fxFlex>
-              <input name="sectionName" ngModel mdInput placeholder="Section name(default: Test)">
+              <input name="sectionName" ngModel mdInput [mdAutocomplete]="auto" [formControl]="sectionNameForm" placeholder="Section name(default: Test)">
             </md-input-container>
+            <md-autocomplete #auto="mdAutocomplete">
+              <md-option *ngFor="let name of filterdNames | async" [value]="name">{{name}}</md-option>
+            </md-autocomplete>
+
             <md-slide-toggle name="isCarefully" ngModel color="primary" style="margin-left: 16px">Carefully</md-slide-toggle>
           </div>
           <md-input-container>

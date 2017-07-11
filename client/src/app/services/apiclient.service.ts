@@ -33,6 +33,10 @@ export class ApiClient {
     return this.post<Case>('api/projects/' + projectId + '/cases', body);
   }
 
+  getSectionNames(projectId: number): Observable<SectionName> {
+    return this.get<SectionName>('api/projects/' + projectId + '/sections');
+  }
+
   getPlans(projectId: number, runnable: boolean): Observable<Plan[]> {
     return this.get<Plan[]>('api/projects/' + projectId + '/plans?runnable=' + runnable);
   }
@@ -59,18 +63,18 @@ export class ApiClient {
 
   // generic http get function
   private get<T>(path: string, credentials = true): Observable<T> {
-    console.log('run http get: ' + path);
+    console.log('http get: ' + path);
     return this.http.get(env.apiBaseAddress + path, { withCredentials: credentials }).map(res => res.json() as T);
   }
 
   // generic http post function
   private post<T>(path: string, body: any, credentials = true): Observable<T> {
-    console.log('run http post: ' + path);
+    console.log('http post: ' + path);
     return this.http.post(env.apiBaseAddress + path, body, { withCredentials: credentials }).map(res => res.json() as T);
   }
 
   private put<T>(path: string, body: any): Observable<T> {
-    console.log('run http put: ' + path);
+    console.log('http put: ' + path);
     return this.http.put(env.apiBaseAddress + path, body).map(res => res.json() as T);
   }
 }
@@ -120,6 +124,10 @@ export class GroupedCase {
   okCount: number;
   ngCount: number;
   notTestCount: number;
+}
+
+export class SectionName {
+  sectionNames: string[];
 }
 
 export class Plan implements BasePlan {

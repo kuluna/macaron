@@ -404,5 +404,22 @@ namespace macaron.Controllers
         }
 
 #endregion
+
+        /// <summary>
+        /// Get all section names
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <returns>Sections.</returns>
+        [HttpGet("{projectId}/sections")]
+        public async Task<IActionResult> GetSections(int projectId)
+        {
+            var names = await db.Cases.Where(c => c.ProjectId == projectId)
+                                      .Select(c => c.SectionName)
+                                      .Distinct()
+                                      .OrderBy(n => n)
+                                      .ToListAsync();
+            var response = new { sectionNames = names };
+            return Ok(response);
+        }
     }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormControl } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiClient, Case, CaseCreateRequest } from '../../../../services/apiclient.service';
@@ -13,9 +13,13 @@ import { Observable } from 'rxjs/Rx';
 })
 export class ProjectCaseNewComponent implements OnInit {
   projectId: Observable<number>;
+  sectionNames: string[] = [];
+  filterdNames: Observable<string[]>;
 
   submitting = false;
   moreCreate = false;
+
+  sectionNameForm = new FormControl();
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -24,6 +28,15 @@ export class ProjectCaseNewComponent implements OnInit {
 
   ngOnInit() {
     this.projectId = this.route.params.map(params => Number(params['projectId'])).shareReplay();
+    this.projectId.switchMap(id => this.api.getSectionNames(id))
+                  .subscribe(s => this.sectionNames = s.sectionNames);
+
+    this.filterdNames = this.sectionNameForm.valueChanges.startWith(null)
+                                                         .map(name => this.filter(name));
+  }
+
+  filter(name: string): string[] {
+    return name ? this.sectionNames.filter(n => n.indexOf(name) === 0) : this.sectionNames;
   }
 
   onSubmit(form: NgForm) {
