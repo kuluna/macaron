@@ -14,7 +14,12 @@
             <md-list-item *ngFor="let case of group.cases; let i = index">
               <span>{{i + 1}}: </span>
               <span fxFlex>{{case.step}}</span>
-              <span>{{case.isCarefully}}</span>
+              <span *ngIf="case.isCarefully">Carefully</span>
+              <button md-button [mdMenuTriggerFor]="caseMenu">MENU</button>
+              <md-menu #caseMenu="mdMenu">
+                <button md-menu-item (click)="editCase(case.id)">EDIT</button>
+                <button md-menu-item disabled>DELETE</button>
+              </md-menu>
             </md-list-item>
         </md-list>
       </md-card-content>

@@ -21,6 +21,7 @@ import { ProjectNewComponent } from './pages/projects/new/projectnew.component';
 
 import { ProjectCasesComponent } from './pages/projects/cases/projectcases.component';
 import { ProjectCaseNewComponent } from './pages/projects/cases/new/projectcasenew.component';
+import { ProjectCaseEditComponent } from './pages/projects/cases/edit/projectcaseedit.component';
 
 import { ProjectPlansComponent } from './pages/projects/plans/projectplans.component';
 import { ProjectPlanDetailComponent } from './pages/projects/plans/detail/projectplandetail.component';
@@ -39,6 +40,7 @@ import { ProjectRunComponent } from './pages/projects/run/projectrun.component';
     ProjectNewComponent,
     ProjectCasesComponent,
     ProjectCaseNewComponent,
+    ProjectCaseEditComponent,
     ProjectRunComponent,
     ProjectPlansComponent,
     ProjectPlanDetailComponent,

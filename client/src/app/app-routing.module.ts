@@ -9,6 +9,7 @@ import { ProjectNewComponent } from './pages/projects/new/projectnew.component';
 
 import { ProjectCasesComponent } from './pages/projects/cases/projectcases.component';
 import { ProjectCaseNewComponent } from './pages/projects/cases/new/projectcasenew.component';
+import { ProjectCaseEditComponent } from './pages/projects/cases/edit/projectcaseedit.component';
 
 import { ProjectPlansComponent } from './pages/projects/plans/projectplans.component';
 import { ProjectPlanDetailComponent } from './pages/projects/plans/detail/projectplandetail.component';
@@ -26,7 +27,10 @@ const routes: Routes = [
       { path: '', component: ProjectDetailComponent },
       { path: 'cases', children: [
         { path: '', component: ProjectCasesComponent },
-        { path: 'new', component: ProjectCaseNewComponent }
+        { path: 'new', component: ProjectCaseNewComponent },
+        { path: ':caseId', children: [
+          { path: 'edit', component: ProjectCaseEditComponent }
+        ]}
       ]},
       { path: 'plans', children: [
         { path: '', component: ProjectPlansComponent },
