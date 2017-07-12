@@ -1,4 +1,71 @@
-<app-projectnav [projectId]="(identity | async)?.projectId" [activeTabName]="'cases'"></app-projectnav>
+<app-projectnav [projectId]="(identity | async)[0]" [activeTabName]="'cases'"></app-projectnav>
 <app-bodycontent>
-  <h2>Edit case</h2>
+  <div fxLayout="row" fxLayoutAlign=" center" style="margin-bottom: 16px">
+    <h2 fxFlex>Edit case</h2>
+    <a md-button color="warn">DELETE</a>
+  </div>
+
+  <md-card *ngIf="targetCase">
+    <form #caseForm="ngForm" (ngSubmit)="onSubmit(caseForm.value)">
+      <md-card-content fxLayout="column">
+          <div fxLayout="row" fxLayoutAlign=" center">
+            <md-input-container fxFlex>
+              <input name="sectionName" [(ngModel)]="targetCase.sectionName" mdInput [mdAutocomplete]="auto" (ngModelChange)="filter(targetCase.sectionName)" placeholder="Section name(default: Test)">
+            </md-input-container>
+
+            <md-slide-toggle name="isCarefully" [(ngModel)]="targetCase.isCarefully" color="primary" style="margin-left: 16px">Carefully</md-slide-toggle>
+          </div>
+          <md-input-container>
+            <input type="number" step="1" min="0" required name="estimates" [(ngModel)]="targetCase.estimates" mdInput placeholder="Estimates (min)">
+            <md-error>Required.</md-error>
+          </md-input-container>
+
+          <h3>Precondition</h3>
+          <md-tab-group>
+            <md-tab label="Markdown">
+              <md-input-container style="width:100%">
+                <textarea rows="4" name="precondition" [(ngModel)]="targetCase.precondition" mdInput placeholder="Precondition" style="resize:vertical"></textarea>
+              </md-input-container>
+            </md-tab>
+            <md-tab label="Preview">
+              <markdown *ngIf="caseForm.form.value.precondition" [data]="caseForm.form.value.precondition"></markdown>
+            </md-tab>
+          </md-tab-group>
+
+          <h3>Step</h3>
+          <md-tab-group>
+            <md-tab label="Markdown">
+              <md-input-container style="width:100%">
+                <textarea required rows="4" name="step" [(ngModel)]="targetCase.step" mdInput placeholder="Step" style="resize:vertical"></textarea>
+                <md-error>Required.</md-error>
+              </md-input-container>
+            </md-tab>
+            <md-tab label="Preview">
+              <markdown *ngIf="caseForm.form.value.step" [data]="caseForm.form.value.step"></markdown>
+            </md-tab>
+          </md-tab-group>
+          
+          <h3>Expectation</h3>
+          <md-tab-group>
+            <md-tab label="Markdown">
+              <md-input-container style="width:100%">
+                <textarea rows="4" name="expectation" [(ngModel)]="targetCase.expectation" mdInput placeholder="Expectation" style="resize:vertical"></textarea>
+              </md-input-container>
+            </md-tab>
+            <md-tab label="Preview">
+              <markdown *ngIf="caseForm.form.value.expectation" [data]="caseForm.form.value.expectation"></markdown>
+            </md-tab>
+          </md-tab-group>
+      </md-card-content>
+
+      <md-card-actions fxLayoutAlign="end center">
+        <div [hidden]="!submitting"><md-spinner color="accent" style="width:24px;height: 24px;margin: 8px 0;"></md-spinner></div>
+        <button type="submit" [disabled]="caseForm.form.invalid || submitting" md-raised-button color="primary">UPDATE</button>
+      </md-card-actions>
+    </form>
+  </md-card>
 </app-bodycontent>
+
+<md-autocomplete #auto="mdAutocomplete">
+  <md-option *ngFor="let name of filterdNames" [value]="name">{{name}}</md-option>
+</md-autocomplete>

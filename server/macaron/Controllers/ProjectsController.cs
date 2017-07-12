@@ -161,6 +161,32 @@ namespace macaron.Controllers
         }
 
         /// <summary>
+        /// Get all cases
+        /// </summary>
+        /// <param name="projectId">Project ID</param>
+        /// <param name="caseId">Case ID</param>
+        /// <param name="revision">Revision</param>
+        /// <returns>Cases</returns>
+        [HttpGet("{projectId}/cases/{caseId}")]
+        public async Task<IActionResult> GetCase(int projectId, int caseId, [FromQuery] int? revision = null)
+        {
+            var revisions = await db.Cases.Where(t => t.ProjectId == projectId && t.AllocateId == caseId)
+                                          .OrderByDescending(t => t.Revision)
+                                          .ToListAsync();
+
+            var target = (revision != null) ? revisions.Where(c => c.Revision == revision).SingleOrDefault()
+                                            : revisions.FirstOrDefault();
+            if (target != null)
+            {
+                return Ok(new CaseResponse(target));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        /// <summary>
         /// Add case
         /// </summary>
         /// <param name="projectId">Project ID</param>
@@ -413,7 +439,7 @@ namespace macaron.Controllers
         [HttpGet("{projectId}/sections")]
         public async Task<IActionResult> GetSections(int projectId)
         {
-            var names = await db.Cases.Where(c => c.ProjectId == projectId)
+            var names = await db.Cases.Where(c => c.ProjectId == projectId && !c.IsOutdated)
                                       .Select(c => c.SectionName)
                                       .Distinct()
                                       .OrderBy(n => n)

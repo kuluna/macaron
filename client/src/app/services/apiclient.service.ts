@@ -29,8 +29,16 @@ export class ApiClient {
     return this.get<GroupedCase[]>('api/projects/' + projectId + '/cases?groupBySection=true');
   }
 
+  getCase(projectId: number, caseId: number): Observable<Case> {
+    return this.get<Case>('api/projects/' + projectId + '/cases/' + caseId);
+  }
+
   postCase(projectId: number, body: CaseCreateRequest): Observable<Case> {
     return this.post<Case>('api/projects/' + projectId + '/cases', body);
+  }
+
+  putCase(projectId: number, caseId: number, body: CaseUpdateRequest): Observable<Case> {
+    return this.put<Case>('api/projects/' + projectId + '/cases/' + caseId, body);
   }
 
   getSectionNames(projectId: number): Observable<SectionName> {
@@ -73,9 +81,9 @@ export class ApiClient {
     return this.http.post(env.apiBaseAddress + path, body, { withCredentials: credentials }).map(res => res.json() as T);
   }
 
-  private put<T>(path: string, body: any): Observable<T> {
+  private put<T>(path: string, body: any, credentials = true): Observable<T> {
     console.log('http put: ' + path);
-    return this.http.put(env.apiBaseAddress + path, body).map(res => res.json() as T);
+    return this.http.put(env.apiBaseAddress + path, body, { withCredentials: credentials }).map(res => res.json() as T);
   }
 }
 
@@ -187,6 +195,10 @@ export class CaseCreateRequest {
   precondition: string | null;
   step: string;
   expectation: string | null;
+}
+
+export class CaseUpdateRequest extends CaseCreateRequest {
+  order: number | null;
 }
 
 export class PlanCreateRequest {
