@@ -18,6 +18,10 @@ namespace macaron.Models.Request
         [Required, MinLength(1)]
         public string Name { get; set; }
         /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
         /// Test pattern
         /// </summary>
         [Required]
@@ -84,6 +88,7 @@ namespace macaron.Models.Request
             return new Plan()
             {
                 Name = Name,
+                Description = Description,
                 LeaderName = LeaderName,
                 Cases = FindCase(project).ToList(),
                 DueDate = DueDate,

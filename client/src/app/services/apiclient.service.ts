@@ -88,10 +88,11 @@ export class ApiClient {
 }
 
 // models
-interface BasePlan {
+abstract class BasePlan {
   id: number;
   projectId: number;
   name: string;
+  description: string | null;
   runs: Run[];
   leaderName: string;
   dueDate: Date | null;
@@ -138,30 +139,12 @@ export class SectionName {
   sectionNames: string[];
 }
 
-export class Plan implements BasePlan {
-  id: number;
-  projectId: number;
-  name: string;
+export class Plan extends BasePlan {
   cases: Case[];
-  runs: Run[];
-  leaderName: string;
-  dueDate: Date | null;
-  completed: boolean;
-  createdDate: Date;
-  lastUpdateDate: Date;
 }
 
-export class GroupedPlan implements BasePlan {
-  id: number;
-  projectId: number;
-  name: string;
+export class GroupedPlan extends BasePlan {
   cases: GroupedCase[];
-  runs: Run[];
-  leaderName: string;
-  dueDate: Date | null;
-  completed: boolean;
-  createdDate: Date;
-  lastUpdateDate: Date;
 }
 
 export class Run {
@@ -203,6 +186,7 @@ export class CaseUpdateRequest extends CaseCreateRequest {
 
 export class PlanCreateRequest {
   name: string;
+  description: string | null;
   pattern: TestPattern;
   sections: string[] | null;
   CaseIds: CaseIdentity[] | null;
@@ -217,6 +201,7 @@ export class PlanUpdateRequest extends PlanCreateRequest {
     super();
     if (plan) {
       this.name = plan.name;
+      this.description = plan.description;
       this.pattern = 'Custom';
       this.leaderName = 'Admin';
     }

@@ -25,6 +25,7 @@ namespace macaron.Models.Request
             if (!Completed)
             {
                 model.Name = Name;
+                model.Description = Description;
                 model.LeaderName = LeaderName;
                 model.Cases = FindCase(project).ToList();
                 model.DueDate = DueDate;

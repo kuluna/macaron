@@ -70,6 +70,10 @@ namespace Macaron.Models.Response
         /// </summary>
         public string Name { get; }
         /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
         /// Leader
         /// </summary>
         public AppUser Leader { get; }
@@ -100,6 +104,7 @@ namespace Macaron.Models.Response
             Id = model.Id;
             ProjectId = model.ProjectId;
             Name = model.Name;
+            Description = model.Description;
             Leader = users.Where(u => u.UserName.Equals(model.LeaderName)).FirstOrDefault();
             DueDate = model.DueDate;
             Completed = model.Completed;

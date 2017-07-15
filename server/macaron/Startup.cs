@@ -95,8 +95,8 @@ namespace macaron
             app.UseIdentity();
             app.UseCookieAuthentication();
             
-            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");

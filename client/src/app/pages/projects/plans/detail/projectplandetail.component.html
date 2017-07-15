@@ -4,6 +4,7 @@
   <div fxLayout="row" fxLayoutAlign=" center">
     <div fxFlex>
       <h2>{{plan.name}} <span *ngIf="plan.completed">(Completed)</span></h2>
+      <markdown [data]="plan.description"></markdown>
       Due date:
       <span *ngIf="plan.dueDate; else tbd">{{plan.dueDate}}</span>
       <ng-template #tbd>TBD</ng-template>

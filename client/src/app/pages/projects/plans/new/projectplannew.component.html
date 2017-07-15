@@ -10,15 +10,19 @@
           <input name="name" required ngModel mdInput placeholder="Name">
           <md-error>Required.</md-error>
         </md-input-container>
+        <md-input-container>
+          <input name="description" ngModel mdInput placeholder="Description">
+          <md-error>Required.</md-error>
+        </md-input-container>
 
         <h4>Case</h4>
-        <md-radio-group name="testPattern" required ngModel="Section" style="margin-bottom: 16px">
+        <md-radio-group name="pattern" required ngModel="Section" style="margin-bottom: 16px">
           <md-radio-button value="Section" checked="checked">Sections</md-radio-button>
           <md-radio-button value="Fail">All failed tests</md-radio-button>
           <md-radio-button value="Custom" disabled>Custom</md-radio-button>
         </md-radio-group>
 
-        <div *ngIf="testplanForm.form.value.testPattern == 'Section'">
+        <div *ngIf="testplanForm.form.value.pattern == 'Section'">
           <h4>Select sections.</h4>
           <div *ngFor="let section of sectionNames | async">
             <md-checkbox name="sections[]" value="{{section}}" (change)="onChangeSelect($event)">{{section}}</md-checkbox>

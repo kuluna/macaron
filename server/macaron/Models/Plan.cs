@@ -25,6 +25,10 @@ namespace macaron.Models
         [Required, MinLength(1)]
         public string Name { get; set; }
         /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
         /// Target cases
         /// </summary>
         public virtual IList<Case> Cases { get; set; }
