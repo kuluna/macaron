@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign=" center">
-  <md-card style="margin:24px;max-width: 300px">
+  <md-card style="margin:24px 0;min-width:300px">
     <h1>Sign in</h1>
 
     <form #loginForm="ngForm" (ngSubmit)="siginin(loginForm.value)">
@@ -20,7 +20,7 @@
     </form>
   </md-card>
   or
-  <md-card style="margin-top:24px">
+  <md-card style="margin:24px 0;min-width:300px">
     <h1>Sign up</h1>
     <form #signupForm="ngForm" (ngSubmit)="register(signupForm.value)">
       <md-card-content fxLayout="column">
