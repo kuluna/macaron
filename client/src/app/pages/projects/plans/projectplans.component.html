@@ -26,8 +26,10 @@
     </button>
   </div>
   <md-card *ngIf="showCompletes">
-    <div *ngFor="let plan of completedPlans">
-      {{plan | json}}
-    </div>
+    <md-list>
+      <md-list-item *ngFor="let plan of completedPlans">
+        {{plan.name}}
+      </md-list-item>
+    </md-list>
   </md-card>
 </app-bodycontent>
